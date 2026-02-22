@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimate Defensive Driving School - Kenya's Premier Driving School</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="fonts/css/all.min.css">
+    <script src="js/api-endpoints.js"></script>
+    <style>
+        /* Logo styles */
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+        .school-name {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #fff;
+            line-height: 1.2;
+            text-transform: uppercase;
+        }
+        .school-subname {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: rgba(255,255,255,0.9);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        /* Contact Section */
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo-container">
+                <a href="index.html" class="logo">
+                    <img src="logo/UDDS LOGO.jpg" alt="Ultimate Defensive Driving School Logo" class="logo-image">
+                </a>
+                <div class="logo-text">
+                    <span class="school-name">ULTIMATE DEFENSIVE</span>
+                    <span class="school-subname">DRIVING SCHOOL & COMPUTER COLLEGE</span>
+                </div>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="courses.html">Courses</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li><a href="login.html" id="authNavLink" class="btn-login">Student Login</a></li>
+            </ul>
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <i class="fas fa-check-circle"></i>
+                    <span>NTSA Certified Training</span>
+                </div>
+                <h1>Master Safe Driving with <span>Ultimate Defensive</span></h1>
+                <p>Kenya's most trusted defensive driving school. Learn from certified instructors and become a confident, safe driver on Kenyan roads with our comprehensive training programs.</p>
+                <div class="hero-buttons">
+                    <a href="apply.html" class="btn btn-primary btn-large">
+                        <i class="fas fa-graduation-cap"></i>
+                        Enroll Now
+                    </a>
+                    <a href="courses.html" class="btn btn-outline btn-large">
+                        <i class="fas fa-book"></i>
+                        View Courses
+                    </a>
+                </div>
+                <div class="hero-stats">
+                    <div class="hero-stat">
+                        <span class="number">10,000+</span>
+                        <span class="label">Students Trained</span>
+                    </div>
+                    <div class="hero-stat">
+                        <span class="number">98%</span>
+                        <span class="label">Pass Rate</span>
+                    </div>
+                    <div class="hero-stat">
+                        <span class="number">15+</span>
+                        <span class="label">Years Experience</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="hero-image">
+            <div style="background: rgba(255,255,255,0.1); border-radius: 20px; padding: 60px; text-align: center;">
+                <i class="fas fa-car-side" style="font-size: 8rem; color: rgba(255,255,255,0.3);"></i>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about" id="about">
+        <div class="container">
+            <div class="about-grid">
+                <div class="about-image">
+                    <div style="background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); border-radius: 20px; padding: 80px; text-align: center;">
+                        <i class="fas fa-car-side" style="font-size: 6rem; color: rgba(255,255,255,0.9);"></i>
+                    </div>
+                    <div class="about-image-overlay">
+                        <i class="fas fa-award"></i>
+                    </div>
+                </div>
+                <div class="about-content">
+                    <h2>Welcome to Ultimate Defensive Driving School</h2>
+                    <p>We are Kenya's leading defensive driving school, dedicated to creating safer roads through professional driver education since 2009.</p>
+                    <p>Our certified instructors use proven teaching methods to help you become a confident and responsible driver, whether you're a beginner or looking to refresh your skills.</p>
+                    <div class="about-features">
+                        <div class="about-feature">
+                            <div class="about-feature-icon">
+                                <i class="fas fa-certificate"></i>
+                            </div>
+                            <div class="about-feature-text">
+                                <h4>NTSA Certified</h4>
+                                <p>Fully licensed by NTSA</p>
+                            </div>
+                        </div>
+                        <div class="about-feature">
+                            <div class="about-feature-icon">
+                                <i class="fas fa-car"></i>
+                            </div>
+                            <div class="about-feature-text">
+                                <h4>Modern Fleet</h4>
+                                <p>Well-maintained vehicles</p>
+                            </div>
+                        </div>
+                        <div class="about-feature">
+                            <div class="about-feature-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="about-feature-text">
+                                <h4>Flexible Schedule</h4>
+                                <p>Morning & evening classes</p>
+                            </div>
+                        </div>
+                        <div class="about-feature">
+                            <div class="about-feature-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div class="about-feature-text">
+                                <h4>Easy Access</h4>
+                                <p>Located along Mombasa Road</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="services" id="services">
+        <div class="container">
+            <h2 class="section-title">Our Training Programs</h2>
+            <p class="section-subtitle">Professional driving courses designed for every need and skill level</p>
+            <div class="services-grid" id="courses-preview">
+                <!-- Courses loaded from backend API -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose Us -->
+    <section class="why-choose-us">
+        <div class="container">
+            <h2 class="section-title">Why Choose Ultimate?</h2>
+            <p class="section-subtitle">What makes us the preferred choice for driving education in Kenya</p>
+            <div class="why-choose-grid">
+                <div class="why-choose-item">
+                    <div class="why-choose-icon">
+                        <i class="fas fa-user-tie"></i>
+                    </div>
+                    <h3>Expert Instructors</h3>
+                    <p>Highly qualified, NTSA certified instructors with years of experience</p>
+                </div>
+                <div class="why-choose-item">
+                    <div class="why-choose-icon">
+                        <i class="fas fa-car-alt"></i>
+                    </div>
+                    <h3>Modern Fleet</h3>
+                    <p>Well-maintained vehicles equipped with dual controls for safety</p>
+                </div>
+                <div class="why-choose-item">
+                    <div class="why-choose-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h3>Flexible Hours</h3>
+                    <p>Morning, evening, and weekend classes to fit your schedule</p>
+                </div>
+                <div class="why-choose-item">
+                    <div class="why-choose-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <h3>Convenient Location</h3>
+                    <p>Easily accessible from all major areas in Nairobi</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials">
+        <div class="container">
+            <h2 class="section-title">What Our Students Say</h2>
+            <p class="section-subtitle">Real feedback from our successful graduates</p>
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">"Excellent driving school! The instructors are patient and professional. I passed my driving test on the first try thanks to Ultimate."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">AK</div>
+                        <div class="author-info">
+                            <strong>Anna Kariuki</strong>
+                            <span>Class B License Graduate</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">"Best decision I made was to enroll at Ultimate. The defensive driving techniques I learned have made me a much safer driver on Kenyan roads."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">MO</div>
+                        <div class="author-info">
+                            <strong>Michael Omondi</strong>
+                            <span>Defensive Driving Course</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">"Very professional and affordable. The flexible schedule made it easy for me to complete my training while working full-time."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">SN</div>
+                        <div class="author-info">
+                            <strong>Sarah Njeri</strong>
+                            <span>Class C License Graduate</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact" id="contact">
+        <div class="container">
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <h2>Get In Touch</h2>
+                    <p>Have questions? We'd love to hear from you. Send us a message and we'll respond as soon as possible.</p>
+                    <div class="contact-details">
+                        <div class="contact-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <div>
+                                <strong>Address</strong>
+                                <p>Along Mombasa Road, Near Kenya Bus Station<br>Nairobi, Kenya</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-phone-alt"></i>
+                            <div>
+                                <strong>Phone</strong>
+                                <p>+254 700 123 456</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <div>
+                                <strong>Email</strong>
+                                <p>info@ultimatedefensivedriving.co.ke</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-clock"></i>
+                            <div>
+                                <strong>Working Hours</strong>
+                                <p>Mon - Sat: 8:00 AM - 6:00 PM<br>Sunday: 9:00 AM - 2:00 PM</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="contact-form-wrapper">
+                    <form class="contact-form" id="contactForm">
+                        <h3>Send Us a Message</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="name">Full Name</label>
+                                <input type="text" id="name" name="name" required placeholder="Enter your name">
+                            </div>
+                            <div class="form-group">
+                                <label for="contact-email">Email Address</label>
+                                <input type="email" id="contact-email" name="email" required placeholder="Enter your email">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="phone">Phone Number</label>
+                                <input type="tel" id="phone" name="phone" required placeholder="Enter your phone">
+                            </div>
+                            <div class="form-group">
+                                <label for="subject">Subject</label>
+                                <input type="text" id="subject" name="subject" placeholder="What is this regarding?">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Message</label>
+                            <textarea id="message" name="message" rows="4" required placeholder="How can we help you?"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block btn-large">
+                            <i class="fas fa-paper-plane"></i>
+                            Send Message
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <img src="logo/UDDS LOGO.jpg" alt="Ultimate Defensive Driving School Logo" style="width: 50px; height: 50px; border-radius: 10px; object-fit: cover;">
+                    </div>
+                    <p>Kenya's premier defensive driving school, committed to creating safer roads through professional driver education since 2009.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="courses.html">Courses</a></li>
+                        <li><a href="#about">About Us</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Our Courses</h4>
+                    <ul>
+                        <li><a href="courses.html">Class B License</a></li>
+                        <li><a href="courses.html">Class C License</a></li>
+                        <li><a href="courses.html">Class D License</a></li>
+                        <li><a href="courses.html">Motorcycle Training</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact Info</h4>
+                    <ul class="contact-info-list">
+                        <li><i class="fas fa-map-marker-alt"></i> Along Mombasa Road, Nairobi</li>
+                        <li><i class="fas fa-phone-alt"></i> +254 700 123 456</li>
+                        <li><i class="fas fa-envelope"></i> info@ultimatedefensivedriving.co.ke</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Ultimate Defensive Driving School. All rights reserved.</p>
+                <p class="designer">Designed for safe driving in Kenya</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/app.js"></script>
+    <script>
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const navLinks = document.querySelector('.nav-links');
+            const menuBtn = document.querySelector('.mobile-menu-btn');
+            navLinks.classList.toggle('mobile-open');
+            menuBtn.classList.toggle('active');
+        }
+
+        // Close mobile menu when clicking a link
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', function() {
+                const navLinks = document.querySelector('.nav-links');
+                const menuBtn = document.querySelector('.mobile-menu-btn');
+                navLinks.classList.remove('mobile-open');
+                menuBtn.classList.remove('active');
+            });
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Contact form submission
+        document.getElementById('contactForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const form = e.target;
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            
+            // Create a hash of the message content to detect duplicates
+            const formData = {
+                name: form.name.value.trim(),
+                email: form.email.value.trim(),
+                phone: form.phone.value.trim(),
+                subject: form.subject.value.trim(),
+                message: form.message.value.trim()
+            };
+            
+            // Check for duplicate submission (same email + message within 1 minute)
+            const messageHash = btoa(formData.email + '|' + formData.message);
+            const lastSubmission = localStorage.getItem('lastContactSubmission');
+            if (lastSubmission === messageHash) {
+                showToast('You have already submitted this message recently. Please wait before submitting again.', 'warning');
+                return;
+            }
+            
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+            submitBtn.disabled = true;
+            
+            try {
+                const response = await fetch('/api/contact', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: new URLSearchParams(formData)
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Store the submission hash to prevent duplicates
+                    localStorage.setItem('lastContactSubmission', messageHash);
+                    showToast('Thank you for your message! We will get back to you soon.', 'success');
+                    form.reset();
+                } else if (data.duplicate) {
+                    showToast('This message has already been submitted. We will respond to your original message.', 'info');
+                } else {
+                    showToast('Failed to send message: ' + data.error, 'error');
+                }
+            } catch (error) {
+                showToast('Error sending message: ' + error.message, 'error');
+            } finally {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+        
+        // Authentication status check - update navigation
+        function updateAuthNav() {
+            const token = localStorage.getItem('ultimate_token');
+            const userData = localStorage.getItem('ultimate_user');
+            const authNavLink = document.getElementById('authNavLink');
+            
+            if (token && userData) {
+                const user = JSON.parse(userData);
+                if (user.role === 'admin') {
+                    // User is admin - show Admin Panel
+                    authNavLink.innerHTML = '<i class="fas fa-cog"></i> Admin Panel';
+                    authNavLink.href = 'admin.html';
+                } else {
+                    // User is regular student - show Dashboard
+                    authNavLink.innerHTML = '<i class="fas fa-user-circle"></i> Dashboard';
+                    authNavLink.href = 'dashboard.html';
+                }
+            } else {
+                // User is not logged in - show Login
+                authNavLink.innerHTML = '<i class="fas fa-sign-in-alt"></i> Login';
+                authNavLink.href = 'login.html';
+            }
+        }
+        
+        // Initialize auth navigation
+        updateAuthNav();
+        
+        // Highlight active nav link
+        const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+        const navLinks = document.querySelectorAll('.nav-links a:not(.btn-login)');
+        navLinks.forEach(link => {
+            const href = link.getAttribute('href');
+            if (href === currentPage || (currentPage === '' && href === 'index.html')) {
+                link.classList.add('active');
+            }
+        });
+        
+        // Last Visited Tracking
+        function trackLastVisit() {
+            const now = new Date();
+            const lastVisit = localStorage.getItem('ultimate_last_visit');
+            
+            // Update last visit to current time
+            localStorage.setItem('ultimate_last_visit', now.toISOString());
+            
+            // Display last visit
+            const lastVisitedDisplay = document.getElementById('lastVisitedDate');
+            if (lastVisit) {
+                const lastVisitDate = new Date(lastVisit);
+                const options = { 
+                    weekday: 'long', 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                };
+                lastVisitedDisplay.textContent = lastVisitDate.toLocaleDateString('en-US', options);
+            } else {
+                lastVisitedDisplay.textContent = 'This is your first visit!';
+            }
+        }
+        
+        // Initialize last visited tracking
+        trackLastVisit();
+        
+        // Load courses preview from backend API
+        async function loadCoursesPreview() {
+            const container = document.getElementById('courses-preview');
+            if (!container) return;
+            
+            try {
+                const data = await courses.getAll();
+                
+                if (data.success && data.courses && data.courses.length > 0) {
+                    container.innerHTML = '';
+                    
+                    // Show first 6 courses
+                    data.courses.slice(0, 6).forEach(course => {
+                        const card = document.createElement('div');
+                        card.className = 'service-card';
+                        
+                        // Get icon based on course category
+                        const icon = getCourseIcon(course.category, course.name);
+                        
+                        // Check if course is new (created within last 30 days)
+                        const createdDate = new Date(course.created_at);
+                        const now = new Date();
+                        const daysDiff = (now - createdDate) / (1000 * 60 * 60 * 24);
+                        const isNew = daysDiff <= 30;
+                        
+                        const badgeHtml = isNew ? `
+                            <div style="position: absolute; top: 10px; right: 10px; background: var(--primary-color); color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; display: flex; align-items: center; gap: 5px;">
+                                <i class="fas fa-book"></i> Latest
+                            </div>
+                        ` : '';
+                        
+                        card.innerHTML = `
+                            <div class="service-icon">
+                                <i class="fas ${icon}"></i>
+                            </div>
+                            ${badgeHtml}
+                            <h3>${course.name}</h3>
+                            <p>${course.description || 'Comprehensive course designed to help you master the skills you need.'}</p>
+                            <div style="margin-top: 12px; font-size: 0.9rem; color: var(--primary-color); font-weight: 600;">
+                                <i class="far fa-clock"></i> ${course.duration_hours || 'Contact'} Hours | KSh ${parseFloat(course.price || 0).toLocaleString()}
+                            </div>
+                            <a href="courses.html" class="service-link">Learn More <i class="fas fa-arrow-right"></i></a>
+                        `;
+                        container.appendChild(card);
+                    });
+                } else {
+                    // No courses in database, show fallback static cards
+                    showStaticCourses();
+                }
+            } catch (error) {
+                console.error('Error loading courses:', error);
+                showStaticCourses();
+            }
+        }
+        
+        // Show static course cards if API fails
+        function showStaticCourses() {
+            const container = document.getElementById('courses-preview');
+            if (!container) return;
+            
+            container.innerHTML = `
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-car"></i>
+                    </div>
+                    <h3>Class B License</h3>
+                    <p>Complete training for manual and automatic transmission vehicles.</p>
+                    <a href="courses.html" class="service-link">Learn More <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-truck"></i>
+                    </div>
+                    <h3>Class C License</h3>
+                    <p>Professional truck driving training for heavy vehicles.</p>
+                    <a href="courses.html" class="service-link">Learn More <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-bus"></i>
+                    </div>
+                    <h3>Class D License</h3>
+                    <p>Bus and passenger vehicle training.</p>
+                    <a href="courses.html" class="service-link">Learn More <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-motorcycle"></i>
+                    </div>
+                    <h3>Motorcycle Training</h3>
+                    <p>Safe motorcycle riding course covering basic to advanced techniques.</p>
+                    <a href="courses.html" class="service-link">Learn More <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-laptop"></i>
+                    </div>
+                    <h3>Certification Courses</h3>
+                    <p>MS Office, programming, accounting, and more.</p>
+                    <a href="courses.html" class="service-link">Learn More <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Defensive Driving</h3>
+                    <p>Advanced techniques to anticipate and avoid hazards.</p>
+                    <a href="courses.html" class="service-link">Learn More <i class="fas fa-arrow-right"></i></a>
+                </div>
+            `;
+        }
+        
+        // Get icon based on course category
+        function getCourseIcon(category, name) {
+            const categoryLower = (category || '').toLowerCase();
+            const nameLower = (name || '').toLowerCase();
+            
+            if (nameLower.includes('class b') || nameLower.includes('license') && !nameLower.includes('class c') && !nameLower.includes('class d')) {
+                return 'fa-car';
+            } else if (nameLower.includes('class c') || nameLower.includes('truck') || nameLower.includes('heavy')) {
+                return 'fa-truck';
+            } else if (nameLower.includes('class d') || nameLower.includes('bus') || nameLower.includes('passenger')) {
+                return 'fa-bus';
+            } else if (nameLower.includes('motorcycle') || nameLower.includes('bike')) {
+                return 'fa-motorcycle';
+            } else if (nameLower.includes('computer') || nameLower.includes('programming') || nameLower.includes('software') || nameLower.includes('office')) {
+                return 'fa-laptop';
+            } else if (nameLower.includes('defensive') || nameLower.includes('safety') || nameLower.includes('road')) {
+                return 'fa-shield-alt';
+            } else if (categoryLower === 'driving' || nameLower.includes('driving')) {
+                return 'fa-car';
+            } else {
+                return 'fa-graduation-cap';
+            }
+        }
+        
+        // Initialize courses preview
+        loadCoursesPreview();
+    </script>
+</body>
+</html>

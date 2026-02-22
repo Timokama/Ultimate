@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Courses - Ultimate Defensive Driving School</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="fonts/css/all.min.css">
+    <script src="js/api-endpoints.js"></script>
+    <style>
+        /* Logo styles */
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+        .school-name {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #fff;
+            line-height: 1.2;
+            text-transform: uppercase;
+        }
+        .school-subname {
+            font-size: 0.65rem;
+            font-weight: 500;
+            color: rgba(255,255,255,0.9);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        @media (max-width: 768px) {
+            .logo-container {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                gap: 10px;
+            }
+            .logo-text {
+                display: flex;
+                flex-direction: column;
+                flex: 1;
+                text-align: left;
+            }
+            .school-name {
+                font-size: 1rem;
+            }
+            .school-subname {
+                font-size: 0.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo-container">
+                <a href="index.html" class="logo">
+                    <img src="logo/UDDS LOGO.jpg" alt="Ultimate Defensive Driving School Logo" class="logo-image">
+                </a>
+                <div class="logo-text">
+                    <span class="school-name">ULTIMATE DEFENSIVE</span>
+                    <span class="school-subname">DRIVING SCHOOL & COMPUTER COLLEGE</span>
+                </div>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="courses.html" class="active">Courses</a></li>
+                <li><a href="index.html#about">About</a></li>
+                <li><a href="index.html#services">Services</a></li>
+                <li><a href="index.html#contact">Contact</a></li>
+                <li><a href="login.html" id="authNavLink" class="btn-login">Student Login</a></li>
+            </ul>
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <header class="hero" style="min-height: 40vh; padding: 140px 0 60px;">
+        <div class="container">
+            <div class="hero-content text-center">
+                <h1>Our Training Courses</h1>
+                <p style="max-width: 600px; margin: 0 auto;">Professional driving training programs designed for every skill level. Choose the course that fits your needs and start your journey today.</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Courses Section -->
+    <section class="services" id="services">
+        <div class="container">
+            <h2 class="section-title">All Courses</h2>
+            <p class="section-subtitle">Professional training programs for every need</p>
+            <div class="services-grid" id="courses-grid">
+                <!-- Courses loaded from backend API -->
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta" style="padding: 80px 0; background: linear-gradient(135deg, var(--dark-color) 0%, #0f172a 100%);">
+        <div class="container">
+            <div class="cta-content text-center" style="max-width: 700px; margin: 0 auto; text-align: center;">
+                <h2 style="color: var(--white); margin-bottom: 16px; font-size: 2.5rem;">Ready to Start Your Driving Journey?</h2>
+                <p style="color: rgba(255,255,255,0.9); margin-bottom: 32px; font-size: 1.1rem;">Enroll today and take the first step towards becoming a safe, confident driver.</p>
+                <a href="apply.html" class="btn btn-secondary btn-large">
+                    <i class="fas fa-paper-plane"></i>
+                    Apply Now
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <img src="logo/UDDS LOGO.jpg" alt="Ultimate Defensive Driving School Logo" style="width: 50px; height: 50px; border-radius: 10px; object-fit: cover;">
+                    </div>
+                    <p>Kenya's premier defensive driving school, committed to creating safer roads through professional driver education since 2009.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="courses.html">Courses</a></li>
+                        <li><a href="index.html#about">About Us</a></li>
+                        <li><a href="index.html#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Our Courses</h4>
+                    <ul>
+                        <li><a href="#">Class B License</a></li>
+                        <li><a href="#">Class C License</a></li>
+                        <li><a href="#">Class D License</a></li>
+                        <li><a href="#">Motorcycle Training</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact Info</h4>
+                    <ul class="contact-info-list">
+                        <li><i class="fas fa-map-marker-alt"></i> Along Mombasa Road, Nairobi</li>
+                        <li><i class="fas fa-phone-alt"></i> +254 700 123 456</li>
+                        <li><i class="fas fa-envelope"></i> info@ultimatedefensivedriving.co.ke</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Ultimate Defensive Driving School. All rights reserved.</p>
+                <p class="designer">Designed for safe driving in Kenya</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/app.js"></script>
+    <script>
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const navLinks = document.querySelector('.nav-links');
+            const menuBtn = document.querySelector('.mobile-menu-btn');
+            navLinks.classList.toggle('mobile-open');
+            menuBtn.classList.toggle('active');
+        }
+
+        // Close mobile menu when clicking a link
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', function() {
+                const navLinks = document.querySelector('.nav-links');
+                const menuBtn = document.querySelector('.mobile-menu-btn');
+                navLinks.classList.remove('mobile-open');
+                menuBtn.classList.remove('active');
+            });
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Get icon based on course category or name (matching homepage icons)
+        function getCourseIcon(category, name) {
+            const categoryLower = (category || '').toLowerCase();
+            const nameLower = (name || '').toLowerCase();
+            
+            // Match homepage service icons
+            if (nameLower.includes('class b') || nameLower.includes('license') && !nameLower.includes('class c') && !nameLower.includes('class d')) {
+                return 'fa-car';
+            } else if (nameLower.includes('class c') || nameLower.includes('truck') || nameLower.includes('heavy')) {
+                return 'fa-truck';
+            } else if (nameLower.includes('class d') || nameLower.includes('bus') || nameLower.includes('passenger')) {
+                return 'fa-bus';
+            } else if (nameLower.includes('motorcycle') || nameLower.includes('bike')) {
+                return 'fa-motorcycle';
+            } else if (nameLower.includes('computer') || nameLower.includes('programming') || nameLower.includes('software') || nameLower.includes('office')) {
+                return 'fa-laptop';
+            } else if (nameLower.includes('defensive') || nameLower.includes('safety') || nameLower.includes('road')) {
+                return 'fa-shield-alt';
+            } else if (categoryLower === 'driving' || nameLower.includes('driving')) {
+                return 'fa-car';
+            } else {
+                return 'fa-graduation-cap';
+            }
+        }
+
+        // Load courses from API with homepage-style cards
+        async function loadApiCourses() {
+            const container = document.getElementById('courses-grid');
+            if (!container) return;
+            
+            try {
+                const data = await courses.getAll();
+                
+                if (data.success && data.courses && data.courses.length > 0) {
+                    data.courses.forEach(course => {
+                        const card = document.createElement('div');
+                        card.className = 'service-card';
+                        
+                        const icon = getCourseIcon(course.category, course.name);
+                        
+                        // Determine duration text
+                        const durationText = course.duration_hours 
+                            ? `${course.duration_hours} Hours` 
+                            : (course.duration_weeks 
+                                ? `${course.duration_weeks} Weeks` 
+                                : 'Contact for duration');
+                        
+                        card.innerHTML = `
+                            <div class="service-icon">
+                                <i class="fas ${icon}"></i>
+                            </div>
+                            <h3>${course.name}</h3>
+                            <p>${course.description || 'Course description not available'}</p>
+                            <div style="margin-top: 12px; font-size: 0.9rem; color: var(--primary-color); font-weight: 600;">
+                                <i class="far fa-clock"></i> ${durationText} | KSh ${parseFloat(course.price || 0).toLocaleString()}
+                            </div>
+                            <a href="apply.html" class="service-link">Enroll Now <i class="fas fa-arrow-right"></i></a>
+                        `;
+                        container.appendChild(card);
+                    });
+                } else {
+                    // No courses in database, show message
+                    container.innerHTML = '<p style="text-align: center; color: #666; grid-column: 1/-1;">No courses available at the moment. Please check back later.</p>';
+                }
+            } catch (error) {
+                console.error('Error loading courses:', error);
+                container.innerHTML = '<p style="text-align: center; color: #666; grid-column: 1/-1;">Unable to load courses. Please try again later.</p>';
+            }
+        }
+
+        // Load courses on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadApiCourses();
+            
+            // Update auth navigation
+            const token = localStorage.getItem('ultimate_token');
+            const userData = localStorage.getItem('ultimate_user');
+            const authNavLink = document.getElementById('authNavLink');
+            
+            if (token && userData) {
+                const user = JSON.parse(userData);
+                if (user.role === 'admin') {
+                    authNavLink.innerHTML = '<i class="fas fa-cog"></i> Admin Panel';
+                    authNavLink.href = 'admin.html';
+                } else {
+                    authNavLink.innerHTML = '<i class="fas fa-user-circle"></i> Dashboard';
+                    authNavLink.href = 'dashboard.html';
+                }
+            } else {
+                authNavLink.innerHTML = '<i class="fas fa-sign-in-alt"></i> Student Login';
+                authNavLink.href = 'login.html';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+# SQL files (database scripts should be in separate repo)
+*.sql
+
+# Compiled Java class files
+*.class
+
+# JAR files
+*.jar
+
+# Build directories
+bin/
+out/
+
+# Logs
+server.log
+*.log
+
+# Cookies/temp files
+cookies.txt
+users_data.csv
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Backup files
+*_backup.sql
+*.bak

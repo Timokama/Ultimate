@@ -1,0 +1,27 @@
+REM Manual Compilation Steps for Ultimate Server
+REM Run these commands one at a time:
+
+cd "c:/Users/user/timo/project/Java_project/Ultimate"
+
+REM Step 1: Delete old class files
+del *.class
+
+REM Step 2: Compile base classes first
+javac -cp ".;postgresql-42.7.8.jar" ApiHandler.java
+javac -cp ".;postgresql-42.7.8.jar" DBConnection.java
+javac -cp ".;postgresql-42.7.8.jar" JWTUtil.java
+
+REM Step 3: Compile handlers
+javac -cp ".;postgresql-42.7.8.jar" ContactHandler.java
+javac -cp ".;postgresql-42.7.8.jar" StaffHandler.java
+javac -cp ".;postgresql-42.7.8.jar" ApplicationHandler.java
+javac -cp ".;postgresql-42.7.8.jar" AuthHandler.java
+javac -cp ".;postgresql-42.7.8.jar" CourseHandler.java
+javac -cp ".;postgresql-42.7.8.jar" UserHandler.java
+javac -cp ".;postgresql-42.7.8.jar" StaticHandler.java
+
+REM Step 4: Compile main server
+javac -cp ".;postgresql-42.7.8.jar" UltimateServer.java
+
+REM Step 5: Run the server
+java UltimateServer

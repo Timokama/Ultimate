@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calming Starfield</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            overflow: hidden;
+            background: linear-gradient(to bottom, #0d1b2a 0%, #1b263b 50%, #415a77 100%);
+            min-height: 100vh;
+        }
+
+        canvas {
+            display: block;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
+        .title {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: rgba(255, 255, 255, 0.15);
+            font-family: 'Georgia', serif;
+            font-size: 3rem;
+            font-weight: 300;
+            letter-spacing: 1em;
+            text-transform: uppercase;
+            pointer-events: none;
+            z-index: 1;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+            transition: opacity 0.5s ease;
+        }
+
+        .hint {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255, 255, 255, 0.2);
+            font-family: 'Arial', sans-serif;
+            font-size: 0.75rem;
+            letter-spacing: 0.3em;
+            pointer-events: none;
+            z-index: 1;
+            transition: opacity 0.5s ease;
+        }
+
+        .hint.hidden {
+            opacity: 0;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="starfield"></canvas>
+    <div class="title">Breathe</div>
+    <div class="hint">Move gently through the stars</div>
+
+    <script>
+        const canvas = document.getElementById('starfield');
+        const ctx = canvas.getContext('2d');
+        const title = document.querySelector('.title');
+        const hint = document.querySelector('.hint');
+
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        // Mouse state with smooth interpolation
+        const mouse = {
+            x: width / 2,
+            y: height / 2,
+            targetX: width / 2,
+            targetY: height / 2,
+            vx: 0,
+            vy: 0
+        };
+
+        // Configuration
+        const STAR_COUNT = 300;
+        const STAR_LAYERS = 4;
+        const TRAIL_POINTS = 20;
+        
+        const stars = [];
+        const trailPoints = [];
+
+        // Color palettes for stars
+        const starColors = [
+            { h: 220, s: 30, l: 90 },  // Soft blue
+            { h: 270, s: 25, l: 85 },  // Lavender
+            { h: 180, s: 20, l: 88 },  // Cyan tint
+            { h: 300, s: 20, l: 85 },  // Pink tint
+            { h: 45, s: 30, l: 90 }    // Warm white
+        ];
+
+        class TrailPoint {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.alpha = 0;
+                this.maxAlpha = 0.03;
+                this.size = 0;
+            }
+
+            update() {
+                this.alpha *= 0.95;
+                this.size *= 0.98;
+            }
+
+            draw() {
+                if (this.alpha < 0.001) return;
+                const gradient = ctx.createRadialGradient(
+                    this.x, this.y, 0,
+                    this.x, this.y, 50 + this.size
+                );
+                gradient.addColorStop(0, `rgba(200, 220, 255, ${this.alpha})`);
+                gradient.addColorStop(1, 'transparent');
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, 50 + this.size, 0, Math.PI * 2);
+                ctx.fillStyle = gradient;
+                ctx.fill();
+            }
+        }
+
+        class Star {
+            constructor() {
+                this.reset();
+                // Spread initially across entire canvas
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+            }
+
+            reset() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.baseSize = Math.random() * 2 + 0.5;
+                this.size = this.baseSize;
+                this.color = starColors[Math.floor(Math.random() * starColors.length)];
+                this.twinkleSpeed = Math.random() * 0.015 + 0.003;
+                this.twinklePhase = Math.random() * Math.PI * 2;
+                this.parallaxDepth = Math.random() * 0.8 + 0.2;
+                this.driftSpeed = (Math.random() - 0.5) * 0.1;
+                this.driftAngle = Math.random() * Math.PI * 2;
+            }
+
+            update(time) {
+                // Calculate mouse influence with smooth easing
+                const mouseOffsetX = (mouse.x - width / 2) * this.parallaxDepth;
+                const mouseOffsetY = (mouse.y - height / 2) * this.parallaxDepth;
+                
+                // Slow natural drift
+                this.driftAngle += this.driftSpeed * 0.01;
+                const driftX = Math.cos(this.driftAngle) * 0.02;
+                const driftY = Math.sin(this.driftAngle) * 0.02;
+
+                // Apply movement
+                this.x += driftX + mouseOffsetX * 0.002;
+                this.y += driftY + mouseOffsetY * 0.002;
+
+                // Wrap around edges smoothly
+                const margin = 50;
+                if (this.x < -margin) this.x = width + margin;
+                if (this.x > width + margin) this.x = -margin;
+                if (this.y < -margin) this.y = height + margin;
+                if (this.y > height + margin) this.y = -margin;
+
+                // Gentle twinkle
+                this.twinklePhase += this.twinkleSpeed;
+                const twinkle = Math.sin(this.twinklePhase) * 0.4 + 0.6;
+                this.alpha = twinkle;
+
+                // Size pulse
+                this.size = this.baseSize * (1 + Math.sin(time * 0.5 + this.twinklePhase) * 0.2);
+            }
+
+            draw() {
+                // Core star
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = `hsla(${this.color.h}, ${this.color.s}%, ${this.color.l}%, ${this.alpha})`;
+                ctx.fill();
+
+                // Outer glow for larger stars
+                if (this.size > 1.2) {
+                    const glowSize = this.size * 4;
+                    const gradient = ctx.createRadialGradient(
+                        this.x, this.y, 0,
+                        this.x, this.y, glowSize
+                    );
+                    gradient.addColorStop(0, `hsla(${this.color.h}, ${this.color.s}%, ${this.color.l + 5}%, ${this.alpha * 0.3})`);
+                    gradient.addColorStop(0.5, `hsla(${this.color.h}, ${this.color.s}%, ${this.color.l + 10}%, ${this.alpha * 0.1})`);
+                    gradient.addColorStop(1, 'transparent');
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, glowSize, 0, Math.PI * 2);
+                    ctx.fillStyle = gradient;
+                    ctx.fill();
+                }
+            }
+        }
+
+        // Breathing circle around mouse
+        class BreathCircle {
+            constructor() {
+                this.x = 0;
+                this.y = 0;
+                this.radius = 0;
+                this.targetRadius = 0;
+                this.phase = 0;
+            }
+
+            update(time) {
+                this.x = mouse.x;
+                this.y = mouse.y;
+                this.phase += 0.02;
+                this.targetRadius = 30 + Math.sin(this.phase) * 10 + Math.sqrt(mouse.vx * mouse.vx + mouse.vy * mouse.vy) * 2;
+                this.radius += (this.targetRadius - this.radius) * 0.05;
+            }
+
+            draw() {
+                const alpha = 0.1 + Math.sin(this.phase) * 0.05;
+                const gradient = ctx.createRadialGradient(
+                    this.x, this.y, 0,
+                    this.x, this.y, this.radius
+                );
+                gradient.addColorStop(0, `rgba(200, 220, 255, ${alpha})`);
+                gradient.addColorStop(0.7, `rgba(150, 180, 255, ${alpha * 0.3})`);
+                gradient.addColorStop(1, 'transparent');
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = gradient;
+                ctx.fill();
+            }
+        }
+
+        const breathCircle = new BreathCircle();
+
+        // Initialize stars
+        function initStars() {
+            stars.length = 0;
+            for (let i = 0; i < STAR_COUNT; i++) {
+                stars.push(new Star());
+            }
+        }
+
+        // Initialize trail points
+        function initTrail() {
+            for (let i = 0; i < TRAIL_POINTS; i++) {
+                trailPoints.push(new TrailPoint(width / 2, height / 2));
+            }
+            trailPoints.forEach(p => {
+                p.x = mouse.x;
+                p.y = mouse.y;
+            });
+        }
+
+        // Mouse event listeners
+        let hasMoved = false;
+        let hideHintTimeout;
+
+        document.addEventListener('mousemove', (e) => {
+            mouse.targetX = e.clientX;
+            mouse.targetY = e.clientY;
+            
+            if (!hasMoved) {
+                hasMoved = true;
+                hint.classList.add('hidden');
+                title.style.opacity = '0.3';
+            }
+
+            clearTimeout(hideHintTimeout);
+            if (e.movementX === 0 && e.movementY === 0) return;
+            
+            hideHintTimeout = setTimeout(() => {
+                hint.classList.remove('hidden');
+                title.style.opacity = '0.15';
+            }, 2000);
+
+            // Add trail point
+            const trailPoint = trailPoints.shift();
+            if (trailPoint) {
+                trailPoint.x = mouse.x;
+                trailPoint.y = mouse.y;
+                trailPoint.alpha = trailPoint.maxAlpha;
+                trailPoint.size = Math.sqrt(mouse.vx * mouse.vx + mouse.vy * mouse.vy);
+                trailPoints.push(trailPoint);
+            }
+        });
+
+        document.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            mouse.targetX = e.touches[0].clientX;
+            mouse.targetY = e.touches[0].clientY;
+        }, { passive: false });
+
+        // Handle resize
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+
+        // Handle mouse leaving window
+        document.addEventListener('mouseleave', () => {
+            mouse.targetX = width / 2;
+            mouse.targetY = height / 2;
+        });
+
+        // Animation loop
+        let time = 0;
+        function animate() {
+            time += 0.016;
+
+            // Smooth mouse interpolation
+            mouse.x += (mouse.targetX - mouse.x) * 0.08;
+            mouse.y += (mouse.targetY - mouse.y) * 0.08;
+            
+            // Calculate mouse velocity
+            mouse.vx = mouse.targetX - mouse.x;
+            mouse.vy = mouse.targetY - mouse.y;
+
+            // Clear with fade effect for trails
+            ctx.fillStyle = 'rgba(13, 27, 42, 0.15)';
+            ctx.fillRect(0, 0, width, height);
+
+            // Draw trail points
+            for (const point of trailPoints) {
+                point.update();
+                point.draw();
+            }
+
+            // Draw breath circle
+            breathCircle.update(time);
+            breathCircle.draw();
+
+            // Update and draw stars
+            for (const star of stars) {
+                star.update(time);
+                star.draw();
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        // Initialize and start
+        initStars();
+        initTrail();
+        animate();
+    </script>
+</body>
+</html>

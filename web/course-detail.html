@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Details - Ultimate Defensive Driving School</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="fonts/css/all.min.css">
+    <style>
+        /* Logo styles */
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+        .school-name {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #fff;
+            line-height: 1.2;
+            text-transform: uppercase;
+        }
+        .school-subname {
+            font-size: 0.65rem;
+            font-weight: 500;
+            color: rgba(255,255,255,0.9);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        @media (max-width: 768px) {
+            .logo-container {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                gap: 10px;
+            }
+            .logo-text {
+                display: flex;
+                flex-direction: column;
+                flex: 1;
+                text-align: left;
+            }
+            .school-name {
+                font-size: 1rem;
+            }
+            .school-subname {
+                font-size: 0.6rem;
+            }
+        }
+        
+        /* Course detail styles */
+        .course-detail {
+            padding: 120px 0 60px;
+        }
+        .course-detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 40px;
+            align-items: start;
+        }
+        
+        @media (max-width: 992px) {
+            .course-detail-grid {
+                grid-template-columns: 1fr;
+            }
+            .enroll-card {
+                position: static !important;
+            }
+        }
+        
+        /* Footer styles */
+        .footer-logo img {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo-container">
+                <a href="index.html" class="logo">
+                    <img src="logo/UDDS LOGO.jpg" alt="Ultimate Defensive Driving School Logo" class="logo-image">
+                </a>
+                <div class="logo-text">
+                    <span class="school-name">ULTIMATE DEFENSIVE</span>
+                    <span class="school-subname">DRIVING SCHOOL & COMPUTER COLLEGE</span>
+                </div>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="courses.html">Courses</a></li>
+                <li><a href="index.html#about">About</a></li>
+                <li><a href="index.html#services">Services</a></li>
+                <li><a href="index.html#contact">Contact</a></li>
+                <li><a href="login.html" id="authNavLink" class="btn-login">Student Login</a></li>
+            </ul>
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Course Detail Section -->
+    <section class="course-detail">
+        <div class="container">
+            <div id="course-detail">
+                <div class="text-center" style="padding: 100px 0;">
+                    <div class="course-loader" style="margin: 0 auto;"></div>
+                    <p style="margin-top: 20px;">Loading course details...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <img src="logo/UDDS LOGO.jpg" alt="Ultimate Defensive Driving School Logo">
+                    </div>
+                    <p>Kenya's premier defensive driving school, committed to creating safer roads through professional driver education since 2009.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="courses.html">Courses</a></li>
+                        <li><a href="index.html#about">About Us</a></li>
+                        <li><a href="index.html#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Our Courses</h4>
+                    <ul>
+                        <li><a href="#">Class B License</a></li>
+                        <li><a href="#">Class C License</a></li>
+                        <li><a href="#">Class D License</a></li>
+                        <li><a href="#">Motorcycle Training</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section" id="contact">
+                    <h4>Contact Us</h4>
+                    <ul>
+                        <li><i class="fas fa-map-marker-alt"></i> 123 Driving School Ave, Nairobi</li>
+                        <li><i class="fas fa-phone"></i> (555) 123-4567</li>
+                        <li><i class="fas fa-envelope"></i> info@ultimatedriving.com</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Ultimate Defensive Driving School. All rights reserved.</p>
+                <p class="designer">Designed for safe driving in Kenya</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCourseDetail();
+            
+            // Update auth navigation
+            const token = localStorage.getItem('ultimate_token');
+            const userData = localStorage.getItem('ultimate_user');
+            const authNavLink = document.getElementById('authNavLink');
+            
+            if (token && userData) {
+                const user = JSON.parse(userData);
+                if (user.role === 'admin') {
+                    authNavLink.innerHTML = '<i class="fas fa-cog"></i> Admin Panel';
+                    authNavLink.href = 'admin.html';
+                } else {
+                    authNavLink.innerHTML = '<i class="fas fa-user-circle"></i> Dashboard';
+                    authNavLink.href = 'dashboard.html';
+                }
+            } else {
+                authNavLink.innerHTML = '<i class="fas fa-sign-in-alt"></i> Login';
+                authNavLink.href = 'login.html';
+            }
+            
+            // Highlight active nav link
+            const currentPage = window.location.pathname.split('/').pop() || 'course-detail.html';
+            const navLinks = document.querySelectorAll('.nav-links a:not([id="authNavLink"])');
+            navLinks.forEach(link => {
+                const href = link.getAttribute('href');
+                if (href === currentPage || href === 'courses.html') {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

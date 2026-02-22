@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Ultimate Defensive Driving School</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="fonts/css/all.min.css">
+    <script src="js/api-endpoints.js"></script>
+</head>
+<body>
+    <!-- Login Section -->
+    <section class="auth-section">
+        <div class="container">
+            <div class="auth-wrapper">
+                <div class="auth-card" id="login-card">
+                    <div class="auth-header">
+                        <div class="auth-logo">
+                            <img src="logo/UDDS LOGO.jpg" alt="UDDS Logo" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;">
+                        </div>
+                        <h2>Welcome Back</h2>
+                        <p>Login to access your student dashboard</p>
+                    </div>
+
+                    <!-- Login Form -->
+                    <form class="auth-form" id="login-form" onsubmit="handleLoginSubmit(event)">
+                        <div class="form-group">
+                            <label for="login-email">Email Address</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-envelope"></i>
+                                <input type="email" id="login-email" name="email" required placeholder="Enter your email">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="login-password">Password</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-lock"></i>
+                                <input type="password" id="login-password" name="password" required placeholder="Enter your password">
+                            </div>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="remember">
+                                <span>Remember me</span>
+                            </label>
+                            <a href="#" class="forgot-password">Forgot Password?</a>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary btn-block btn-large">Login</button>
+                    </form>
+                    
+                    <div class="auth-divider">
+                        <span>Or continue with</span>
+                    </div>
+                    
+                    <div class="social-login">
+                        <button class="social-btn google">
+                            <i class="fab fa-google"></i>
+                            <span>Google</span>
+                        </button>
+                        <button class="social-btn facebook">
+                            <i class="fab fa-facebook-f"></i>
+                            <span>Facebook</span>
+                        </button>
+                    </div>
+                    
+                    <div class="auth-footer">
+                        <p>Don't have an account? <a href="#" onclick="switchToRegister(); return false;">Register here</a></p>
+                    </div>
+                </div>
+
+                <!-- Register Form -->
+                <div class="auth-card register-card" id="register-card" style="display: none;">
+                    <div class="auth-header">
+                        <div class="auth-logo">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                        <h2>Create Account</h2>
+                        <p>Register to apply for driving courses</p>
+                    </div>
+
+                    <form class="auth-form" id="register-form" onsubmit="handleRegisterSubmit(event)">
+                        <div class="form-group">
+                            <label for="reg-full-name">Full Name</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-user"></i>
+                                <input type="text" id="reg-full-name" name="full_name" required placeholder="Enter your full name">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="reg-email">Email Address</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-envelope"></i>
+                                <input type="email" id="reg-email" name="email" required placeholder="Enter your email">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="reg-phone">Phone Number</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-phone"></i>
+                                <input type="tel" id="reg-phone" name="phone" required placeholder="Enter your phone number">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="reg-password">Password</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-lock"></i>
+                                <input type="password" id="reg-password" name="password" required placeholder="Create a password">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="reg-confirm-password">Confirm Password</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-lock"></i>
+                                <input type="password" id="reg-confirm-password" name="confirm_password" required placeholder="Confirm your password">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="terms" required>
+                                <span>I agree to the <a href="#" style="color: var(--primary-color);">Terms and Conditions</a></span>
+                            </label>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary btn-block btn-large">Create Account</button>
+                    </form>
+                    
+                    <div class="auth-footer">
+                        <p>Already have an account? <a href="#" onclick="switchToLogin(); return false;">Login here</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer" style="background: transparent; padding-top: 0;">
+        <div class="container">
+            <div class="footer-bottom" style="border-top: none; padding-top: 0;">
+                <p>&copy; 2026 Ultimate Defensive Driving School. All rights reserved.</p>
+                <p class="designer">Designed for safe driving in Kenya</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/app.js"></script>
+    <script>
+        // Auth tab switching
+        function switchToRegister() {
+            document.getElementById('login-card').style.display = 'none';
+            document.getElementById('register-card').style.display = 'block';
+        }
+
+        function switchToLogin() {
+            document.getElementById('register-card').style.display = 'none';
+            document.getElementById('login-card').style.display = 'block';
+        }
+
+        // Form submissions
+        async function handleLoginSubmit(e) {
+            e.preventDefault();
+            
+            const form = e.target;
+            const email = form.email.value;
+            const password = form.password.value;
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Logging in...';
+            submitBtn.disabled = true;
+            
+            try {
+                const user = await auth.login(email, password);
+                showToast('Login successful! Redirecting...', 'success');
+                
+                // Clear any cached credentials
+                if (window.PasswordCredential) {
+                    navigator.credentials.preventSilentAccess();
+                }
+                
+                // Redirect based on user role
+                let redirect = 'dashboard.html';
+                if (user.role === 'admin') {
+                    redirect = 'admin.html';
+                } else if (user.role === 'staff') {
+                    redirect = 'staff.html';
+                }
+                
+                setTimeout(() => {
+                    window.location.href = redirect;
+                }, 1000);
+                
+            } catch (error) {
+                const errorMsg = error.message || 'Unknown error';
+                if (errorMsg.includes('401') || errorMsg.toLowerCase().includes('invalid')) {
+                    showToast('Login failed: Invalid email or password. Please check your credentials.', 'error');
+                } else if (errorMsg.includes('403') || errorMsg.toLowerCase().includes('forbidden')) {
+                    showToast('Login failed: Access denied. Your account may have been restricted.', 'error');
+                } else if (errorMsg.includes('network') || errorMsg.includes('Failed to fetch')) {
+                    showToast('Login failed: Unable to connect to the server. Please check your internet connection.', 'error');
+                } else {
+                    showToast('Login failed: ' + errorMsg, 'error');
+                }
+            } finally {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }
+        }
+
+        async function handleRegisterSubmit(e) {
+            e.preventDefault();
+            
+            const form = e.target;
+            const fullName = form.full_name.value;
+            const email = form.email.value;
+            const phone = form.phone.value;
+            const password = form.password.value;
+            const confirmPassword = form.confirm_password.value;
+            
+            if (password !== confirmPassword) {
+                showToast('Passwords do not match', 'error');
+                return;
+            }
+            
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating account...';
+            submitBtn.disabled = true;
+            
+            try {
+                const formData = {
+                    full_name: fullName,
+                    email: email,
+                    phone: phone,
+                    password: password
+                };
+                
+                await auth.register(formData);
+                showToast('Account created successfully! Redirecting...', 'success');
+                
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 1000);
+                
+            } catch (error) {
+                showToast('Registration failed: ' + (error.message || 'Unknown error'), 'error');
+            } finally {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>

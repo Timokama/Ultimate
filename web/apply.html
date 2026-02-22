@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apply Now - Ultimate Defensive Driving School</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="fonts/css/all.min.css">
+    <style>
+        /* Logo styles */
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+        .school-name {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #fff;
+            line-height: 1.2;
+            text-transform: uppercase;
+        }
+        .school-subname {
+            font-size: 0.65rem;
+            font-weight: 500;
+            color: rgba(255,255,255,0.9);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        @media (max-width: 768px) {
+            .logo-container {
+                flex-direction: column;
+                text-align: center;
+                gap: 4px;
+            }
+            .school-name {
+                font-size: 1rem;
+            }
+            .school-subname {
+                font-size: 0.55rem;
+            }
+        }
+        /* Mobile responsive styles for apply page */
+        @media (max-width: 992px) {
+            .contact-grid {
+                grid-template-columns: 1fr !important;
+                gap: 30px !important;
+            }
+            .contact-info {
+                order: 2;
+            }
+            .contact-form-wrapper {
+                order: 1;
+                padding: 24px !important;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hero {
+                min-height: 30vh !important;
+                padding: 120px 0 40px !important;
+            }
+            .hero h1 {
+                font-size: 2rem;
+            }
+            .hero p {
+                font-size: 1rem;
+            }
+            .services {
+                padding: 40px 0 60px !important;
+            }
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            .form-row .form-group {
+                margin-bottom: 16px;
+            }
+            .contact-form-wrapper {
+                padding: 20px 16px !important;
+            }
+            .contact-form-wrapper h3 {
+                font-size: 1.25rem;
+                margin-bottom: 16px !important;
+            }
+            .about-feature {
+                flex-direction: row !important;
+                align-items: flex-start;
+            }
+            .about-feature-icon {
+                font-size: 1.5rem;
+                width: 40px;
+                flex-shrink: 0;
+            }
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            .footer-section {
+                text-align: center;
+            }
+            .social-links {
+                justify-content: center;
+            }
+            .contact-info-list {
+                align-items: center;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .hero {
+                padding: 100px 0 30px !important;
+            }
+            .hero h1 {
+                font-size: 1.75rem;
+            }
+            .hero p {
+                font-size: 0.9rem;
+            }
+            .contact-form-wrapper h3 {
+                font-size: 1.1rem;
+            }
+            .form-group label {
+                font-size: 0.9rem;
+            }
+            .btn-large {
+                padding: 12px 20px;
+                font-size: 1rem;
+            }
+            select, input, textarea {
+                font-size: 16px; /* Prevents zoom on iOS */
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo-container">
+                <a href="index.html" class="logo">
+                    <img src="logo/UDDS LOGO.jpg" alt="Ultimate Defensive Driving School Logo" class="logo-image">
+                </a>
+                <div class="logo-text">
+                    <span class="school-name">ULTIMATE DEFENSIVE</span>
+                    <span class="school-subname">DRIVING SCHOOL & COMPUTER COLLEGE</span>
+                </div>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="courses.html">Courses</a></li>
+                <li><a href="index.html#about">About</a></li>
+                <li><a href="index.html#contact">Contact</a></li>
+                <li><a href="login.html" id="authNavLink" class="btn-login">Student Login</a></li>
+            </ul>
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <header class="hero" style="min-height: 40vh; padding: 140px 0 60px;">
+        <div class="container">
+            <div class="hero-content text-center">
+                <h1>Apply Now</h1>
+                <p>Fill out the form below to enroll in your driving course</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Application Section -->
+    <section class="services" style="padding: 60px 0 100px;">
+        <div class="container">
+            <div class="contact-grid" style="grid-template-columns: 1fr 1.5fr; gap: 50px;">
+                <div class="contact-info">
+                    <h2>Start Your Driving Journey Today</h2>
+                    <p>Complete the application form and our team will contact you within 24 hours to confirm your enrollment.</p>
+                    
+                    <div style="margin-top: 40px;">
+                        <div class="about-feature" style="margin-bottom: 16px;">
+                            <div class="about-feature-icon">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div class="about-feature-text">
+                                <h4>Quick Registration</h4>
+                                <p>Simple online application process</p>
+                            </div>
+                        </div>
+                        <div class="about-feature" style="margin-bottom: 16px;">
+                            <div class="about-feature-icon">
+                                <i class="fas fa-phone-alt"></i>
+                            </div>
+                            <div class="about-feature-text">
+                                <h4>Personal Callback</h4>
+                                <p>We contact you to confirm details</p>
+                            </div>
+                        </div>
+                        <div class="about-feature" style="margin-bottom: 16px;">
+                            <div class="about-feature-icon">
+                                <i class="fas fa-calendar-check"></i>
+                            </div>
+                            <div class="about-feature-text">
+                                <h4>Flexible Scheduling</h4>
+                                <p>Choose your preferred class times</p>
+                            </div>
+                        </div>
+                        <div class="about-feature">
+                            <div class="about-feature-icon">
+                                <i class="fas fa-graduation-cap"></i>
+                            </div>
+                            <div class="about-feature-text">
+                                <h4>Expert Training</h4>
+                                <p>Learn from certified instructors</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="contact-form-wrapper" style="padding: 40px;">
+                    <form id="application-form" onsubmit="handleApplicationSubmit(event)">
+                        <!-- Personal Information -->
+                        <h3 style="margin-bottom: 24px; text-align: left;">Personal Information</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="first_name">First Name *</label>
+                                <input type="text" id="first_name" name="first_name" required placeholder="Enter first name">
+                            </div>
+                            <div class="form-group">
+                                <label for="last_name">Last Name *</label>
+                                <input type="text" id="last_name" name="last_name" required placeholder="Enter last name">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="email">Email Address *</label>
+                                <input type="email" id="email" name="email" required placeholder="Enter email address">
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Phone Number *</label>
+                                <input type="tel" id="phone" name="phone" required placeholder="Enter phone number">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="date_of_birth">Date of Birth *</label>
+                                <input type="date" id="date_of_birth" name="date_of_birth" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="id_number">ID/Passport Number *</label>
+                                <input type="text" id="id_number" name="id_number" required placeholder="Enter ID number">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="address">Address</label>
+                            <textarea id="address" name="address" rows="2" placeholder="Enter your address"></textarea>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="city">City</label>
+                                <input type="text" id="city" name="city" placeholder="Enter city">
+                            </div>
+                            <div class="form-group">
+                                <label for="postal_code">Postal Code</label>
+                                <input type="text" id="postal_code" name="postal_code" placeholder="Enter postal code">
+                            </div>
+                        </div>
+
+                        <!-- Course Selection -->
+                        <h3 style="margin-top: 32px; margin-bottom: 24px; text-align: left;">Course Selection</h3>
+                        <p style="margin-bottom: 20px; color: #666;">Select the course(s) you want to enroll in. You can choose driving courses, certification courses, or both.</p>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="driving_course">Driving Course</label>
+                                <select id="driving_course" name="driving_course" onchange="calculateFees()">
+                                    <option value="">-- Select Driving Course --</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="computer_course">Certification Course</label>
+                                <select id="computer_course" name="computer_course" onchange="calculateFees()">
+                                    <option value="">-- Select Certification Course --</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Total School Fees</label>
+                            <div id="total-fees-display" style="padding: 12px; background: #f3f4f6; border-radius: 6px; font-weight: bold; font-size: 1.2em; color: var(--primary-color);">KSh 0.00</div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="preferred_start">Preferred Start Date</label>
+                                <input type="date" id="preferred_start" name="preferred_start">
+                            </div>
+                            <div class="form-group">
+                                <label for="preferred_schedule">Preferred Schedule</label>
+                                <select id="preferred_schedule" name="preferred_schedule">
+                                    <option value="">-- Select Schedule --</option>
+                                    <option value="Morning">Morning (8AM - 12PM)</option>
+                                    <option value="Afternoon">Afternoon (1PM - 5PM)</option>
+                                    <option value="Evening">Evening (5PM - 8PM)</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="location">Training Location *</label>
+                                <select id="location" name="location" required>
+                                    <option value="">-- Select Location --</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="license_type">License Type</label>
+                                <select id="license_type" name="license_type">
+                                    <option value="">-- Select License Type --</option>
+                                    <option value="Class B">Class B</option>
+                                    <option value="Class C">Class C</option>
+                                    <option value="Class D">Class D</option>
+                                    <option value="Motorcycle">Motorcycle</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="transmission">Transmission Type</label>
+                                <select id="transmission" name="transmission">
+                                    <option value="manual">Manual</option>
+                                    <option value="automatic">Automatic</option>
+                                    <option value="both">Both</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Emergency Contact -->
+                        <h3 style="margin-top: 32px; margin-bottom: 24px; text-align: left;">Emergency Contact</h3>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="emergency_contact">Emergency Contact Name</label>
+                                <input type="text" id="emergency_contact" name="emergency_contact_name" placeholder="Enter emergency contact">
+                            </div>
+                            <div class="form-group">
+                                <label for="emergency_relationship">Relationship</label>
+                                <input type="text" id="emergency_relationship" name="emergency_relationship" placeholder="e.g., Parent, Spouse, Sibling">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="emergency_phone">Emergency Contact Phone</label>
+                                <input type="tel" id="emergency_phone" name="emergency_contact_phone" placeholder="Enter emergency contact phone">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="comments">Comments</label>
+                            <textarea id="comments" name="comments" rows="3" placeholder="Any additional information..."></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="previous_driving_experience" value="true">
+                                <span>I have previous driving experience</span>
+                            </label>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="terms" required>
+                                <span>I agree to the <a href="#" style="color: var(--primary-color);">Terms and Conditions</a> and <a href="#" style="color: var(--primary-color);">Privacy Policy</a> *</span>
+                            </label>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-large" style="width: 100%; margin-top: 16px;">
+                            <i class="fas fa-paper-plane"></i>
+                            Submit Application
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <img src="logo/UDDS LOGO.jpg" alt="Ultimate Defensive Driving School Logo" style="width: 50px; height: 50px; border-radius: 10px; object-fit: cover;">
+                    </div>
+                    <p>Kenya's premier defensive driving school, committed to creating safer roads through professional driver education since 2009.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="courses.html">Courses</a></li>
+                        <li><a href="index.html#about">About Us</a></li>
+                        <li><a href="index.html#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Our Courses</h4>
+                    <ul>
+                        <li><a href="courses.html">Class B License</a></li>
+                        <li><a href="courses.html">Class C License</a></li>
+                        <li><a href="courses.html">Class D License</a></li>
+                        <li><a href="courses.html">Motorcycle Training</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact Info</h4>
+                    <ul class="contact-info-list">
+                        <li><i class="fas fa-map-marker-alt"></i> Along Mombasa Road, Nairobi</li>
+                        <li><i class="fas fa-phone-alt"></i> +254 700 123 456</li>
+                        <li><i class="fas fa-envelope"></i> info@ultimatedefensivedriving.co.ke</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Ultimate Defensive Driving School. All rights reserved.</p>
+                <p class="designer">Designed for safe driving in Kenya</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/api-endpoints.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const navLinks = document.querySelector('.nav-links');
+            const menuBtn = document.querySelector('.mobile-menu-btn');
+            navLinks.classList.toggle('mobile-open');
+            menuBtn.classList.toggle('active');
+        }
+
+        // Close mobile menu when clicking a link
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', function() {
+                const navLinks = document.querySelector('.nav-links');
+                const menuBtn = document.querySelector('.mobile-menu-btn');
+                navLinks.classList.remove('mobile-open');
+                menuBtn.classList.remove('active');
+            });
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Pre-fill form with user data if logged in
+        document.addEventListener('DOMContentLoaded', function() {
+            // Update navigation based on auth status
+            const authNavLink = document.getElementById('authNavLink');
+            const token = localStorage.getItem('ultimate_token');
+            const userData = localStorage.getItem('ultimate_user');
+            
+            if (token && userData) {
+                const user = JSON.parse(userData);
+                if (user.role === 'admin') {
+                    authNavLink.innerHTML = '<i class="fas fa-cog"></i> Admin Panel';
+                    authNavLink.href = 'admin.html';
+                } else {
+                    authNavLink.innerHTML = '<i class="fas fa-user-circle"></i> Dashboard';
+                    authNavLink.href = 'dashboard.html';
+                }
+            } else {
+                authNavLink.innerHTML = '<i class="fas fa-sign-in-alt"></i> Student Login';
+                authNavLink.href = 'login.html';
+            }
+            
+            // Highlight active nav link
+            const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+            const navLinks = document.querySelectorAll('.nav-links a:not(.btn-login)');
+            navLinks.forEach(link => {
+                const href = link.getAttribute('href');
+                if (href === currentPage || (currentPage === '' && href === 'index.html')) {
+                    link.classList.add('active');
+                }
+            });
+            
+            const user = auth.getUser();
+            if (user) {
+                const emailInput = document.getElementById('email');
+                if (emailInput && !emailInput.value) {
+                    emailInput.value = user.email || '';
+                }
+                
+                if (user.full_name) {
+                    const names = user.full_name.split(' ');
+                    const firstNameInput = document.getElementById('first_name');
+                    const lastNameInput = document.getElementById('last_name');
+                    if (firstNameInput && !firstNameInput.value) {
+                        firstNameInput.value = names[0] || '';
+                    }
+                    if (lastNameInput && !lastNameInput.value && names.length > 1) {
+                        lastNameInput.value = names.slice(1).join(' ');
+                    }
+                }
+            }
+            
+            // Load courses from API
+            loadCourses();
+        });
+
+        // Load courses from API and populate dropdowns
+        async function loadCourses() {
+            const drivingSelect = document.getElementById('driving_course');
+            const computerSelect = document.getElementById('computer_course');
+            
+            try {
+                const response = await fetch('/api/courses');
+                const data = await response.json();
+                
+                if (data.success && data.courses && data.courses.length > 0) {
+                    // Build course ID map and price lookup
+                    window.courseIdMap = {};
+                    window.drivingPrices = {};
+                    window.computerPrices = {};
+                    
+                    data.courses.forEach(course => {
+                        // Store course ID for later use
+                        window.courseIdMap[course.name] = course.id;
+                        
+                        const option = document.createElement('option');
+                        option.value = course.name;
+                        option.textContent = `${course.name} - KSh ${parseFloat(course.price || 0).toLocaleString()}`;
+                        option.dataset.price = course.price || 0;
+                        option.dataset.category = course.category || 'general';
+                        option.dataset.courseId = course.id;
+                        
+                        // Categorize courses by name keywords and build price lookup
+                        const name = course.name.toLowerCase();
+                        const price = parseFloat(course.price || 0);
+                        
+                        if (name.includes('computer') || name.includes('programming') || 
+                            name.includes('design') || name.includes('accounting') || 
+                            name.includes('secretarial') || name.includes('spss')) {
+                            window.computerPrices[course.name] = price;
+                            computerSelect.appendChild(option.cloneNode(true));
+                        } else {
+                            // Default to driving courses for backward compatibility
+                            window.drivingPrices[course.name] = price;
+                            drivingSelect.appendChild(option);
+                        }
+                    });
+                    
+                    console.log('Courses loaded successfully:', data.courses.length + ' courses');
+                    console.log('Driving prices:', window.drivingPrices);
+                    console.log('Computer prices:', window.computerPrices);
+                }
+            } catch (error) {
+                console.error('Failed to load courses:', error);
+                // Fallback to default options if API fails
+                showToast('Could not load courses. Using default options.', 'warning');
+                populateDefaultCourses();
+            }
+        }
+
+        // Populate default course options (fallback)
+        function populateDefaultCourses() {
+            const drivingSelect = document.getElementById('driving_course');
+            const computerSelect = document.getElementById('computer_course');
+            
+            // Driving courses
+            const drivingDefaults = [
+                { value: 'Class B License', text: 'Class B License - KSh 15,000', price: 15000 },
+                { value: 'Class C License', text: 'Class C License - KSh 25,000', price: 25000 },
+                { value: 'Class D License', text: 'Class D License - KSh 30,000', price: 30000 },
+                { value: 'Motorcycle Training', text: 'Motorcycle Training - KSh 8,000', price: 8000 },
+                { value: 'Defensive Driving', text: 'Defensive Driving - KSh 10,000', price: 10000 },
+                { value: 'Refresher Course', text: 'Refresher Course - KSh 5,000', price: 5000 }
+            ];
+            
+            drivingDefaults.forEach(course => {
+                const option = document.createElement('option');
+                option.value = course.value;
+                option.textContent = course.text;
+                option.dataset.price = course.price;
+                drivingSelect.appendChild(option);
+            });
+            
+            // Computer courses
+            const computerDefaults = [
+                { value: 'Computer Basics', text: 'Computer Basics - KSh 5,000', price: 5000 },
+                { value: 'Computer Accounting', text: 'Computer Accounting - KSh 10,000', price: 10000 },
+                { value: 'Computer Secretarial', text: 'Computer Secretarial - KSh 8,000', price: 8000 },
+                { value: 'Graphic Design', text: 'Graphic Design - KSh 12,000', price: 12000 },
+                { value: 'Computer Programming', text: 'Computer Programming - KSh 25,000', price: 25000 },
+                { value: 'SPSS', text: 'SPSS - KSh 7,500', price: 7500 }
+            ];
+            
+            computerDefaults.forEach(course => {
+                const option = document.createElement('option');
+                option.value = course.value;
+                option.textContent = course.text;
+                option.dataset.price = course.price;
+                computerSelect.appendChild(option);
+            });
+        }
+
+        // Update price lookup tables from API courses
+        function updatePriceLookup(apiCourses) {
+            window.drivingPrices = {};
+            window.computerPrices = {};
+            
+            apiCourses.forEach(course => {
+                const name = course.name;
+                const price = parseFloat(course.price || 0);
+                const nameLower = name.toLowerCase();
+                
+                if (nameLower.includes('computer') || nameLower.includes('programming') || 
+                    nameLower.includes('design') || nameLower.includes('accounting') || 
+                    nameLower.includes('secretarial') || nameLower.includes('spss')) {
+                    window.computerPrices[name] = price;
+                } else {
+                    window.drivingPrices[name] = price;
+                }
+            });
+        }
+
+        // Form submission
+        async function handleApplicationSubmit(e) {
+            e.preventDefault();
+            
+            const form = e.target;
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalBtnText = submitBtn.innerHTML;
+            
+            console.log('[DEBUG] Auth check - isLoggedIn:', auth.isLoggedIn());
+            
+            if (!auth.isLoggedIn()) {
+                showToast('Please log in to submit your application', 'warning');
+                window.location.href = 'login.html?redirect=apply.html';
+                return;
+            }
+            
+            // Validate that at least one course is selected
+            const drivingCourse = form.driving_course.value;
+            const computerCourse = form.computer_course.value;
+            
+            console.log('[DEBUG] Courses - driving:', drivingCourse, ', computer:', computerCourse);
+            console.log('[DEBUG] Location value:', form.location.value);
+            console.log('[DEBUG] Location ID:', getLocationId(form.location.value));
+            
+            if (!drivingCourse && !computerCourse) {
+                showToast('Please select at least one course (driving or computer)', 'warning');
+                return;
+            }
+            
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+            submitBtn.disabled = true;
+            
+            try {
+                // Calculate total fees
+                const drivingCourse = document.getElementById('driving_course').value;
+                const computerCourse = document.getElementById('computer_course').value;
+                const schoolFees = calculateSchoolFees(drivingCourse, computerCourse);
+                
+                const formData = {
+                    // Get user ID if logged in
+                    user_id: auth.isLoggedIn() ? auth.getUser().id : null,
+                    first_name: form.first_name.value,
+                    last_name: form.last_name.value,
+                    email: form.email.value,
+                    phone: form.phone.value,
+                    date_of_birth: form.date_of_birth.value,
+                    address: form.address.value,
+                    city: form.city.value,
+                    postal_code: form.postal_code.value,
+                    id_number: form.id_number.value,
+                    course_id: getCourseId(drivingCourse),
+                    license_type: form.license_type.value || drivingCourse || 'N/A',
+                    driving_course: drivingCourse,
+                    computer_course: computerCourse,
+                    location_id: form.location.options[form.location.selectedIndex]?.dataset?.locationId || 1,
+                    training_location: form.location.value,
+                    transmission: form.transmission.value,
+                    preferred_schedule: form.preferred_schedule.value,
+                    preferred_start: form.preferred_start.value,
+                    driving_experience: 'none',
+                    // Emergency contact - use correct field names matching backend
+                    emergency_contact_name: form.emergency_contact_name ? form.emergency_contact_name.value : form.emergency_contact ? form.emergency_contact.value : '',
+                    emergency_contact_phone: form.emergency_contact_phone ? form.emergency_contact_phone.value : form.emergency_phone ? form.emergency_phone.value : '',
+                    emergency_contact_relation: form.emergency_relationship ? form.emergency_relationship.value : '',
+                    comments: form.comments.value,
+                    medical_conditions: '',
+                    previous_driving_experience: form.previous_driving_experience ? form.previous_driving_experience.checked : false,
+                    school_fees: schoolFees,
+                    fees_paid: 0,
+                    fees_balance: schoolFees
+                };
+                
+                console.log('[DEBUG] Form data - location_id:', formData.location_id, ', training_location:', formData.training_location);
+                console.log('[DEBUG] Selected location option:', form.location.options[form.location.selectedIndex]);
+                
+                console.log('[DEBUG] Submitting application with data:', JSON.stringify(formData, null, 2));
+                
+                const response = await applications.submit(formData);
+                
+                console.log('[DEBUG] Application submitted successfully:', response);
+                showToast('Application submitted successfully! We will contact you within 24 hours.', 'success');
+                form.reset();
+                document.getElementById('total-fees-display').textContent = 'KSh 0.00';
+                
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 2000);
+                
+            } catch (error) {
+                console.error('[DEBUG] Application submission error:', error);
+                showToast('Failed to submit application: ' + error.message + '\n\nCheck console for details (F12)', 'error');
+            } finally {
+                submitBtn.innerHTML = originalBtnText;
+                submitBtn.disabled = false;
+            }
+        }
+        
+        // Helper function to get location ID from location name
+        function getLocationId(locationName) {
+            const select = document.getElementById('location');
+            if (select && select.selectedIndex >= 0) {
+                const selectedOption = select.options[select.selectedIndex];
+                if (selectedOption && selectedOption.dataset.locationId) {
+                    const id = parseInt(selectedOption.dataset.locationId);
+                    console.log('[DEBUG] getLocationId from dataset:', id);
+                    return id;
+                }
+            }
+            // Fallback to map lookup
+            if (window.locationIdMap && window.locationIdMap[locationName]) {
+                const id = window.locationIdMap[locationName];
+                console.log('[DEBUG] getLocationId from map:', id);
+                return id;
+            }
+            // Default fallback
+            console.log('[DEBUG] getLocationId default: 1');
+            return 1;
+        }
+        
+        // Helper function to get course ID from course name
+        function getCourseId(courseName) {
+            if (!courseName) return null;
+            
+            // First try to get from selected dropdown option's data attribute
+            const drivingSelect = document.getElementById('driving_course');
+            if (drivingSelect) {
+                const selectedOption = drivingSelect.options[drivingSelect.selectedIndex];
+                if (selectedOption && selectedOption.dataset.courseId) {
+                    return parseInt(selectedOption.dataset.courseId);
+                }
+            }
+            // Fallback to course ID map
+            if (window.courseIdMap && window.courseIdMap[courseName]) {
+                return window.courseIdMap[courseName];
+            }
+            return null;
+        }
+        
+        // Load locations from API and populate dropdown (public endpoint - no auth required)
+        async function loadLocationDropdown() {
+            try {
+                const response = await fetch('/api/locations');
+                const data = await response.json();
+                
+                if (data.success && data.locations) {
+                    const select = document.getElementById('location');
+                    if (select) {
+                        select.innerHTML = '<option value="">-- Select Location --</option>';
+                        
+                        // Build location ID map
+                        window.locationIdMap = {};
+                        
+                        data.locations.forEach((loc) => {
+                            const displayName = loc.address 
+                                ? loc.name + ' - ' + loc.address 
+                                : loc.name;
+                            const option = document.createElement('option');
+                            option.value = loc.name;
+                            option.textContent = displayName;
+                            option.dataset.locationId = loc.id; // Store ID in data attribute
+                            select.appendChild(option);
+                            
+                            // Store location ID for later use
+                            window.locationIdMap[loc.name] = loc.id;
+                        });
+                        
+                        console.log('Locations loaded successfully:', data.locations.length + ' locations');
+                        console.log('Location ID map:', window.locationIdMap);
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading locations:', error);
+                showToast('Unable to load locations. Please refresh the page.', 'error');
+            }
+        }
+        
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadLocationDropdown();
+        });
+        
+        // Auto-calculate school fees based on selected courses
+        function calculateFees() {
+            const drivingCourse = document.getElementById('driving_course').value;
+            const computerCourse = document.getElementById('computer_course').value;
+            
+            const totalFees = calculateSchoolFees(drivingCourse, computerCourse);
+            
+            document.getElementById('total-fees-display').textContent = 'KSh ' + totalFees.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        }
+        
+        // Helper function to calculate school fees
+        function calculateSchoolFees(drivingCourse, computerCourse) {
+            let totalFees = 0;
+            
+            // Try to get prices from dynamically loaded data first
+            const drivingSelect = document.getElementById('driving_course');
+            const computerSelect = document.getElementById('computer_course');
+            
+            // Get driving course price
+            const drivingOption = drivingSelect.querySelector(`option[value="${drivingCourse}"]`);
+            if (drivingOption && drivingOption.dataset.price) {
+                totalFees += parseFloat(drivingOption.dataset.price);
+            } else if (window.drivingPrices && window.drivingPrices[drivingCourse]) {
+                totalFees += window.drivingPrices[drivingCourse];
+            } else {
+                // Fallback to default prices
+                const defaultDrivingPrices = {
+                    'Class B License': 15000,
+                    'Class C License': 25000,
+                    'Class D License': 30000,
+                    'Motorcycle Training': 8000,
+                    'Defensive Driving': 10000,
+                    'Refresher Course': 5000
+                };
+                if (defaultDrivingPrices[drivingCourse]) {
+                    totalFees += defaultDrivingPrices[drivingCourse];
+                }
+            }
+            
+            // Get computer course price
+            const computerOption = computerSelect.querySelector(`option[value="${computerCourse}"]`);
+            if (computerOption && computerOption.dataset.price) {
+                totalFees += parseFloat(computerOption.dataset.price);
+            } else if (window.computerPrices && window.computerPrices[computerCourse]) {
+                totalFees += window.computerPrices[computerCourse];
+            } else {
+                // Fallback to default prices
+                const defaultComputerPrices = {
+                    'Computer Basics': 5000,
+                    'Computer Accounting': 10000,
+                    'Computer Secretarial': 8000,
+                    'Graphic Design': 12000,
+                    'Computer Programming': 25000,
+                    'SPSS': 7500
+                };
+                if (defaultComputerPrices[computerCourse]) {
+                    totalFees += defaultComputerPrices[computerCourse];
+                }
+            }
+            
+            console.log('[DEBUG] calculateSchoolFees - driving:', drivingCourse, ', computer:', computerCourse, ', total:', totalFees);
+            return totalFees;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,2281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Dashboard - Ultimate Defensive Driving School</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="fonts/css/all.min.css">
+    <script src="js/api-endpoints.js"></script>
+    <style>
+        /* Logo styles */
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes slideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+        /* Logo styles */
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+        .school-name {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #fff;
+            line-height: 1.2;
+            text-transform: uppercase;
+        }
+        .school-subname {
+            font-size: 0.65rem;
+            font-weight: 500;
+            color: rgba(255,255,255,0.9);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        /* Dashboard Mobile Styles */
+        @media (max-width: 992px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr !important;
+            }
+            .sidebar {
+                position: fixed;
+                left: -280px;
+                top: 70px;
+                width: 280px;
+                height: calc(100vh - 70px);
+                background: var(--white);
+                z-index: 1000;
+                transition: left 0.3s ease;
+                box-shadow: 4px 0 15px rgba(0,0,0,0.1);
+                overflow-y: auto;
+            }
+            .sidebar.mobile-open {
+                left: 0;
+            }
+            .sidebar-overlay {
+                display: none;
+                position: fixed;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                height: calc(100vh - 70px);
+                background: rgba(0,0,0,0.5);
+                z-index: 999;
+            }
+            .sidebar-overlay.show {
+                display: block;
+            }
+            .sidebar-menu {
+                padding: 20px 0;
+            }
+            .sidebar-menu li a {
+                padding: 12px 24px;
+            }
+            .dashboard-content {
+                padding-left: 0 !important;
+            }
+            .sidebar-toggle-btn {
+                display: flex !important;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .logo-container {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                gap: 10px;
+            }
+            .logo-text {
+                display: flex;
+                flex-direction: column;
+                flex: 1;
+                text-align: left;
+            }
+            .school-name {
+                font-size: 1rem;
+            }
+            .school-subname {
+                font-size: 0.6rem;
+            }
+            .dashboard {
+                padding-top: 80px !important;
+            }
+            .dashboard-header {
+                text-align: center;
+                margin-bottom: 24px;
+            }
+            .dashboard-header h1 {
+                font-size: 1.5rem;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr 1fr !important;
+                gap: 12px;
+            }
+            .stat-card {
+                padding: 16px 12px;
+                text-align: center;
+            }
+            .stat-card h3 {
+                font-size: 1.5rem !important;
+                margin-bottom: 4px;
+            }
+            .stat-card p {
+                font-size: 0.75rem;
+            }
+            /* Application Card Mobile Styles */
+            .course-card {
+                padding: 16px !important;
+            }
+            .course-card h3 {
+                font-size: 1.1rem !important;
+            }
+            /* Modal Mobile Styles */
+            .modal.show {
+                padding: 16px;
+                align-items: flex-start;
+            }
+            .modal-content {
+                max-width: 100%;
+                max-height: calc(100vh - 32px);
+                overflow-y: auto;
+            }
+            .modal-header {
+                padding: 16px;
+            }
+            .modal-header h3 {
+                font-size: 1.1rem;
+            }
+            #profile-form {
+                padding: 16px !important;
+            }
+            #my-application-form {
+                padding: 16px !important;
+            }
+            /* Form Mobile Styles */
+            .form-row {
+                flex-direction: column;
+            }
+            .form-group {
+                margin-bottom: 12px;
+            }
+            /* Section Headers */
+            h2 {
+                font-size: 1.25rem;
+                margin-bottom: 16px;
+            }
+            /* Footer Mobile */
+            .footer-bottom {
+                flex-direction: column;
+                gap: 12px;
+                text-align: center;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr !important;
+            }
+            .nav-links {
+                display: none;
+            }
+            .mobile-menu-btn {
+                display: flex;
+            }
+            .course-card > div:first-child {
+                flex-direction: column;
+                gap: 12px;
+            }
+            .course-card .status-badge {
+                align-self: flex-start;
+            }
+        }
+        
+        .sidebar-toggle-btn {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            z-index: 1001;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+        
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 13px;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+        .modal.show {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding-top: 60px;
+        }
+        .modal-content {
+            background: var(--white);
+            border-radius: 0;
+            width: 100%;
+            max-width: 700px;
+            min-height: 100vh;
+            box-shadow: none;
+        }
+        .modal-header {
+            padding: 24px 32px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--primary-color);
+            color: var(--white);
+        }
+        .modal-header h3 {
+            margin: 0;
+            color: var(--white);
+            font-size: 1.5rem;
+        }
+        .modal-close {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: var(--white);
+            width: 44px;
+            height: 44px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        #profile-form {
+            padding: 32px;
+        }
+        #profile-form .form-group {
+            margin-bottom: 24px;
+        }
+        #profile-form label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--text-color);
+            font-size: 15px;
+        }
+        #profile-form input {
+            width: 100%;
+            padding: 16px 20px;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        #profile-form input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo-container">
+                <a href="index.html" class="logo">
+                    <img src="logo/UDDS LOGO.jpg" alt="Ultimate Defensive Driving School Logo" class="logo-image">
+                </a>
+                <div class="logo-text">
+                    <span class="school-name">ULTIMATE DEFENSIVE</span>
+                    <span class="school-subname">DRIVING SCHOOL & COMPUTER COLLEGE</span>
+                </div>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="courses.html">Courses</a></li>
+                <li><a href="index.html#about">About</a></li>
+                <li><a href="index.html#contact">Contact</a></li>
+                <li><a href="dashboard.html" class="active btn-login">Dashboard</a></li>
+                <li><a href="#" onclick="auth.logout(); return false;" class="btn-login" style="background: var(--secondary-color);">Logout</a></li>
+            </ul>
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+    <button class="sidebar-toggle-btn" onclick="toggleSidebar()" title="Toggle Menu">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Dashboard Section -->
+    <section class="dashboard" data-tab="dashboard">
+        <div class="container">
+            <div class="dashboard-header">
+                <h1 id="welcome-message">My Dashboard</h1>
+                <p>Manage your applications and track your progress</p>
+            </div>
+            
+            <div class="dashboard-grid">
+                <aside class="sidebar">
+                    <div style="text-align: center; padding-bottom: 20px; border-bottom: 1px solid #e2e8f0; margin-bottom: 20px;">
+                        <div style="width: 80px; height: 80px; background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; color: var(--white); font-size: 2rem; font-weight: 700;" id="user-avatar">U</div>
+                        <h4 id="user-name" style="margin-bottom: 4px;">User Name</h4>
+                        <p id="user-email" style="font-size: 0.85rem; color: var(--text-light);">user@email.com</p>
+                    </div>
+                    <ul class="sidebar-menu">
+                        <li><a href="#" class="active" onclick="showDashboardSection()"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                        <li><a href="courses.html"><i class="fas fa-book"></i> Browse Courses</a></li>
+                        <li><a href="apply.html"><i class="fas fa-edit"></i> New Application</a></li>
+                        <li><a href="#" onclick="showStudentSection('applications')"><i class="fas fa-file-alt"></i> My Applications</a></li>
+                        <li><a href="#" onclick="showStudentSection('enrollments')"><i class="fas fa-user-graduate"></i> My Course Enrollments</a></li>
+                        <li><a href="#" onclick="showStudentSection('my-fees')"><i class="fas fa-money-bill-wave"></i> My Fees Details</a></li>
+                        <li><a href="#" onclick="showStudentSection('attendance')"><i class="fas fa-clipboard-check"></i> My Attendance Records</a></li>
+                        <li><a href="#" onclick="showStudentSection('profile')"><i class="fas fa-user-edit"></i> Update Profile</a></li>
+                        <li><a href="#" onclick="auth.logout(); return false;"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                    </ul>
+                </aside>
+                
+                <main class="dashboard-content">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <h3 id="total-applications">0</h3>
+                            <p>Total Applications</p>
+                        </div>
+                        <div class="stat-card" style="background: linear-gradient(135deg, var(--secondary-color), #d97706);">
+                            <h3 id="pending-applications">0</h3>
+                            <p>Pending</p>
+                        </div>
+                        <div class="stat-card" style="background: linear-gradient(135deg, var(--accent-color), #059669);">
+                            <h3 id="approved-applications">0</h3>
+                            <p>Approved</p>
+                        </div>
+                    </div>
+                    
+                    <!-- My Applications Section -->
+                    <div id="section-applications" style="display: none;">
+                        <h2 style="margin-bottom: 20px;">My Applications</h2>
+                        <div class="stats-grid" style="margin-bottom: 30px;">
+                            <div class="stat-card">
+                                <h3 id="my-total-applications">0</h3>
+                                <p>Total Applications</p>
+                            </div>
+                            <div class="stat-card" style="background: linear-gradient(135deg, var(--secondary-color), #d97706);">
+                                <h3 id="my-pending-applications">0</h3>
+                                <p>Pending</p>
+                            </div>
+                            <div class="stat-card" style="background: linear-gradient(135deg, var(--accent-color), #059669);">
+                                <h3 id="my-approved-applications">0</h3>
+                                <p>Approved</p>
+                            </div>
+                        </div>
+                        <div id="my-applications">
+                            <div class="course-card" style="text-align: center; padding: 60px 20px;">
+                                <div class="course-loader"></div>
+                                <p style="margin-top: 16px; color: var(--text-light);">Loading your applications...</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- My Fees Section (Read-only) -->
+                    <div id="section-my-fees" style="display: none;">
+                        <h2 style="margin-bottom: 20px;">My Fees Details</h2>
+                        <div class="stats-grid" style="margin-bottom: 30px;">
+                            <div class="stat-card">
+                                <h3 id="my-total-fees">0</h3>
+                                <p>Total School Fees</p>
+                            </div>
+                            <div class="stat-card" style="background: linear-gradient(135deg, #10b981, #059669);">
+                                <h3 id="my-fees-paid">0</h3>
+                                <p>Amount Paid</p>
+                            </div>
+                            <div class="stat-card" style="background: linear-gradient(135deg, #ef4444, #dc2626);">
+                                <h3 id="my-fees-balance">0</h3>
+                                <p>Balance Due</p>
+                            </div>
+                            <div class="stat-card">
+                                <h3 id="my-payment-status">-</h3>
+                                <p>Payment Status</p>
+                            </div>
+                        </div>
+                        
+                        <div class="course-card" style="margin-bottom: 24px;">
+                            <h4 style="margin-bottom: 16px; color: var(--primary-color);"><i class="fas fa-info-circle"></i> How to Pay via M-Pesa</h4>
+                            <div style="background: #f8fafc; padding: 20px; border-radius: 8px;">
+                                <p style="margin-bottom: 12px;"><strong>Step 1:</strong> Go to M-Pesa on your phone</p>
+                                <p style="margin-bottom: 12px;"><strong>Step 2:</strong> Select <strong>Lipa na M-Pesa</strong> then <strong>Pay Bill</strong></p>
+                                <p style="margin-bottom: 12px;"><strong>Step 3:</strong> Enter Business Number: <strong style="color: var(--primary-color); font-size: 1.2em;">4108993</strong></p>
+                                <p style="margin-bottom: 12px;"><strong>Step 4:</strong> Enter Account Number: <strong style="color: var(--primary-color);">UDDS</strong> followed by your phone number</p>
+                                <p style="margin-bottom: 12px;"><strong>Example:</strong> UDDS254712345678</p>
+                                <p style="margin-bottom: 12px;"><strong>Step 5:</strong> Enter amount and confirm</p>
+                                <p style="margin-bottom: 8px;"><strong>Step 6:</strong> Paste the M-Pesa confirmation message below</p>
+                            </div>
+                        </div>
+                        
+                        <!-- STK Push Form -->
+                        <div class="course-card" style="margin-bottom: 24px;">
+                            <h4 style="margin-bottom: 16px; color: var(--primary-color);"><i class="fas fa-mobile-alt"></i> Quick Payment via STK Push</h4>
+                            <form id="stk-push-form" onsubmit="handleStkPush(event)">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="stk-phone">Phone Number</label>
+                                        <input type="tel" id="stk-phone-dashboard" name="phone" placeholder="254712345678" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="stk-amount">Amount (KSh)</label>
+                                        <input type="number" id="stk-amount-dashboard" name="amount" placeholder="1000" min="1" required>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-paper-plane"></i> Send STK Push
+                                </button>
+                            </form>
+                        </div>
+                        
+                        <div class="course-card">
+                            <h4 style="margin-bottom: 16px; color: var(--primary-color);"><i class="fas fa-comment-alt"></i> Submit M-Pesa Message</h4>
+                            <form id="mpesa-message-form" onsubmit="handleMpesaSubmit(event)">
+                                <div class="form-group">
+                                    <label for="mpesa-message">M-Pesa Confirmation Message</label>
+                                    <textarea id="mpesa-message" name="message" rows="4" placeholder="Paste your M-Pesa confirmation message here..."></textarea>
+                                    <small style="color: var(--text-light);">Include the transaction ID, amount, and date from your M-Pesa message</small>
+                                </div>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-paper-plane"></i> Submit Message
+                                </button>
+                            </form>
+                        </div>
+                        
+                        <h3 style="margin: 30px 0 20px;">My M-Pesa Transactions</h3>
+                        <div id="my-mpesa-transactions">
+                            <div class="course-card" style="text-align: center; padding: 40px 20px;">
+                                <div class="course-loader"></div>
+                                <p style="margin-top: 16px; color: var(--text-light);">Loading transactions...</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Attendance Section -->
+                    <div id="section-attendance" style="display: none;">
+                        <h2 style="margin-bottom: 20px;">My Attendance Records</h2>
+                        <div class="stats-grid" style="margin-bottom: 30px;">
+                            <div class="stat-card">
+                                <h3 id="total-attendance">0</h3>
+                                <p>Total Sessions</p>
+                            </div>
+                            <div class="stat-card" style="background: linear-gradient(135deg, #10b981, #059669);">
+                                <h3 id="present-attendance">0</h3>
+                                <p>Present</p>
+                            </div>
+                            <div class="stat-card" style="background: linear-gradient(135deg, #ef4444, #dc2626);">
+                                <h3 id="absent-attendance">0</h3>
+                                <p>Absent</p>
+                            </div>
+                        </div>
+                        
+                        <div class="course-card">
+                            <h4 style="margin-bottom: 16px; color: var(--primary-color);"><i class="fas fa-filter"></i> Filter Attendance</h4>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="attendance-date">Date</label>
+                                    <input type="date" id="attendance-date" onchange="loadAttendance()">
+                                </div>
+                                <div class="form-group">
+                                    <label for="attendance-course">Course</label>
+                                    <select id="attendance-course" onchange="loadAttendance()">
+                                        <option value="">All Courses</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <h3 style="margin: 30px 0 20px;">Attendance Records</h3>
+                        <div id="attendance-records">
+                            <div class="course-card" style="text-align: center; padding: 40px 20px;">
+                                <div class="course-loader"></div>
+                                <p style="margin-top: 16px; color: var(--text-light);">Loading attendance records...</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Profile Section -->
+                    <div id="section-profile" style="display: none;">
+                        <h2 style="margin-bottom: 20px;">Login Details</h2>
+                        <div class="course-card">
+                            <h4 style="margin-bottom: 16px; color: var(--primary-color);"><i class="fas fa-key"></i> Update Login Credentials</h4>
+                            <form id="profile-login-form">
+                                <div class="form-group">
+                                    <label for="profile-email">Email Address</label>
+                                    <input type="email" id="profile-email" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="profile-phone">Phone Number</label>
+                                    <input type="tel" id="profile-phone">
+                                </div>
+                                <div class="form-group">
+                                    <label for="profile-password">New Password (leave blank to keep current)</label>
+                                    <input type="password" id="profile-password" autocomplete="new-password" placeholder="Enter new password">
+                                </div>
+                                <p style="margin: 16px 0; color: var(--text-light); font-size: 0.9rem;">
+                                    <i class="fas fa-info-circle"></i> Leave password field empty if you don't want to change your password.
+                                </p>
+                                <button type="button" class="btn btn-primary" onclick="saveLoginDetails()" style="margin-top: 20px;">
+                                    <i class="fas fa-save"></i> Save Changes
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    <!-- Enrollment Section -->
+                    <div id="section-enrollments" style="display: none;">
+                        <h2 style="margin-bottom: 20px;">My Course Enrollments</h2>
+                        <div class="stats-grid" style="margin-bottom: 30px;">
+                            <div class="stat-card">
+                                <h3 id="total-enrollments">0</h3>
+                                <p>Total Enrollments</p>
+                            </div>
+                            <div class="stat-card" style="background: linear-gradient(135deg, var(--secondary-color), #d97706);">
+                                <h3 id="active-enrollments">0</h3>
+                                <p>Active</p>
+                            </div>
+                            <div class="stat-card" style="background: linear-gradient(135deg, var(--accent-color), #059669);">
+                                <h3 id="completed-enrollments">0</h3>
+                                <p>Completed</p>
+                            </div>
+                        </div>
+                        
+                        <div class="course-card" style="margin-bottom: 24px;">
+                            <h4 style="margin-bottom: 16px; color: var(--primary-color);"><i class="fas fa-filter"></i> Filter Enrollments</h4>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="enrollment-course">Course</label>
+                                    <select id="enrollment-course" onchange="loadEnrollments()">
+                                        <option value="">All Courses</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="enrollment-date">Enrollment Date</label>
+                                    <input type="date" id="enrollment-date" onchange="loadEnrollments()">
+                                </div>
+                                <div class="form-group">
+                                    <label for="enrollment-status">Status</label>
+                                    <select id="enrollment-status" onchange="loadEnrollments()">
+                                        <option value="">All Statuses</option>
+                                        <option value="enrolled">Enrolled</option>
+                                        <option value="active">Active</option>
+                                        <option value="completed">Completed</option>
+                                        <option value="dropped">Dropped</option>
+                                        <option value="suspended">Suspended</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div id="enrollment-records">
+                            <div class="course-card" style="text-align: center; padding: 40px 20px;">
+                                <div class="course-loader"></div>
+                                <p style="margin-top: 16px; color: var(--text-light);">Loading enrollments...</p>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </section>
+
+    <!-- Profile Update Modal -->
+    <div id="profile-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-user-edit"></i> Update Profile</h3>
+                <button class="modal-close" onclick="closeProfileModal()">&times;</button>
+            </div>
+            <form id="profile-form" onsubmit="handleProfileUpdate(event)">
+                <div class="form-group">
+                    <label for="profile-full_name">Full Name *</label>
+                    <input type="text" id="profile-full_name" name="full_name" required placeholder="Enter your full name">
+                </div>
+                <div class="form-group">
+                    <label for="profile-email">Email Address *</label>
+                    <input type="email" id="profile-email" name="email" required placeholder="Enter your email">
+                </div>
+                <div class="form-group">
+                    <label for="profile-phone">Phone Number *</label>
+                    <input type="tel" id="profile-phone" name="phone" required placeholder="Enter your phone number">
+                </div>
+                <div class="form-group">
+                    <label for="profile-password">New Password (leave blank to keep current)</label>
+                    <input type="password" id="profile-password" name="password" placeholder="Enter new password">
+                </div>
+                <div style="display: flex; gap: 12px; margin-top: 20px;">
+                    <button type="button" class="btn btn-outline" style="flex: 1;" onclick="closeProfileModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary" style="flex: 1;">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- My Application Edit Modal -->
+    <div id="my-application-modal" class="modal">
+        <div class="modal-content" style="max-width: 800px;">
+            <div class="modal-header">
+                <h3><i class="fas fa-edit"></i> Edit Application</h3>
+                <button class="modal-close" onclick="closeMyApplicationModal()">&times;</button>
+            </div>
+            
+            <!-- Tab Navigation -->
+            <div style="display: flex; border-bottom: 2px solid #e5e7eb; margin-bottom: 20px;">
+                <button type="button" class="tab-btn active" onclick="switchMyAppTab('personal')" data-tab="personal" style="
+                    padding: 12px 24px; border: none; background: none; cursor: pointer; font-size: 14px; font-weight: 500;
+                    color: var(--primary-color); border-bottom: 2px solid var(--primary-color); margin-bottom: -2px;">
+                    <i class="fas fa-user"></i> Personal Information
+                </button>
+                <button type="button" class="tab-btn" onclick="switchMyAppTab('course')" data-tab="course" style="
+                    padding: 12px 24px; border: none; background: none; cursor: pointer; font-size: 14px; font-weight: 500;
+                    color: var(--text-light); border-bottom: 2px solid transparent; margin-bottom: -2px;">
+                    <i class="fas fa-book"></i> Course Information
+                </button>
+                <button type="button" class="tab-btn" onclick="switchMyAppTab('emergency')" data-tab="emergency" style="
+                    padding: 12px 24px; border: none; background: none; cursor: pointer; font-size: 14px; font-weight: 500;
+                    color: var(--text-light); border-bottom: 2px solid transparent; margin-bottom: -2px;">
+                    <i class="fas fa-phone-alt"></i> Emergency Contact
+                </button>
+            </div>
+            
+            <form id="my-application-form" onsubmit="handleMyApplicationSubmit(event)" style="padding: 0 32px 32px;">
+                <input type="hidden" id="my-application-id" name="application_id">
+                
+                <!-- Personal Information Tab -->
+                <div id="my-app-tab-personal" class="tab-content">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="my-app-firstname">First Name *</label>
+                            <input type="text" id="my-app-firstname" name="first_name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="my-app-lastname">Last Name *</label>
+                            <input type="text" id="my-app-lastname" name="last_name" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="my-app-email">Email *</label>
+                            <input type="email" id="my-app-email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="my-app-phone">Phone *</label>
+                            <input type="text" id="my-app-phone" name="phone" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="my-app-dob">Date of Birth</label>
+                            <input type="date" id="my-app-dob" name="date_of_birth">
+                        </div>
+                        <div class="form-group">
+                            <label for="my-app-idnumber">ID Number</label>
+                            <input type="text" id="my-app-idnumber" name="id_number">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="my-app-address">Address</label>
+                        <textarea id="my-app-address" name="address" rows="2"></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="my-app-city">City</label>
+                            <input type="text" id="my-app-city" name="city">
+                        </div>
+                        <div class="form-group">
+                            <label for="my-app-postalcode">Postal Code</label>
+                            <input type="text" id="my-app-postalcode" name="postal_code">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Course Information Tab -->
+                <div id="my-app-tab-course" class="tab-content" style="display: none;">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="my-app-licensetype">License Type</label>
+                            <select id="my-app-licensetype" name="license_type">
+                                <option value="Class B">Class B</option>
+                                <option value="Class C">Class C</option>
+                                <option value="Class D">Class D</option>
+                                <option value="Motorcycle">Motorcycle</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="my-app-drivingcourse">Driving Course</label>
+                            <select id="my-app-drivingcourse" name="driving_course" onchange="calculateMyFees()">
+                                <option value="">-- Select Driving Course --</option>
+                                <option value="Class B License">Class B License - KSh 15,000</option>
+                                <option value="Class C License">Class C License - KSh 20,000</option>
+                                <option value="Class D License">Class D License - KSh 25,000</option>
+                                <option value="Motorcycle Training">Motorcycle Training - KSh 12,000</option>
+                                <option value="Defensive Driving">Defensive Driving - KSh 10,000</option>
+                                <option value="Refresher Course">Refresher Course - KSh 8,000</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="my-app-computercourse">Certification Course</label>
+                            <select id="my-app-computercourse" name="computer_course" onchange="calculateMyFees()">
+                                <option value="">-- Select Certification Course --</option>
+                                <option value="Computer Basics">Computer Basics - KSh 5,000</option>
+                                <option value="Computer Accounting">Computer Accounting - KSh 10,000</option>
+                                <option value="Computer Secretarial">Computer Secretarial - KSh 8,000</option>
+                                <option value="Graphic Design">Graphic Design - KSh 12,000</option>
+                                <option value="Computer Programming">Computer Programming - KSh 25,000</option>
+                                <option value="SPSS">SPSS - KSh 7,500</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Total School Fees</label>
+                            <div id="my-app-school-fees-display" style="padding: 10px; background: #f3f4f6; border-radius: 6px; font-weight: bold; font-size: 1.1em; color: var(--primary-color);">KSh 0.00</div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="my-app-transmission">Transmission</label>
+                            <select id="my-app-transmission" name="transmission">
+                                <option value="">Select</option>
+                                <option value="Automatic">Automatic</option>
+                                <option value="Manual">Manual</option>
+                                <option value="Both">Both</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="my-app-location">Training Location</label>
+                            <select id="my-app-location" name="location">
+                                <option value="">-- Select Location --</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="my-app-schedule">Preferred Start Date</label>
+                        <input type="date" id="my-app-schedule" name="preferred_start">
+                    </div>
+                    <div class="form-group">
+                        <label for="my-app-preferred-schedule">Preferred Schedule</label>
+                        <select id="my-app-preferred-schedule" name="preferred_schedule">
+                            <option value="">-- Select Schedule --</option>
+                            <option value="Morning">Morning (8 AM - 12 PM)</option>
+                            <option value="Afternoon">Afternoon (12 PM - 4 PM)</option>
+                            <option value="Evening">Evening (4 PM - 8 PM)</option>
+                            <option value="Weekend">Weekend</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Emergency Contact Tab -->
+                <div id="my-app-tab-emergency" class="tab-content" style="display: none;">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="my-app-emergency-name">Contact Name</label>
+                            <input type="text" id="my-app-emergency-name" name="emergency_contact_name">
+                        </div>
+                        <div class="form-group">
+                            <label for="my-app-emergency-phone">Contact Phone</label>
+                            <input type="text" id="my-app-emergency-phone" name="emergency_contact_phone">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="my-app-emergency-relationship">Relationship</label>
+                            <input type="text" id="my-app-emergency-relationship" name="emergency_contact_relation" placeholder="e.g., Parent, Spouse, Sibling">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="my-app-comments">Comments</label>
+                        <textarea id="my-app-comments" name="comments" rows="3" placeholder="Any additional information..."></textarea>
+                    </div>
+                    <div class="form-group" style="display: flex; align-items: center;">
+                        <input type="checkbox" id="my-app-experience" name="previous_driving_experience" style="width: auto; margin-right: 10px;">
+                        <label for="my-app-experience" style="margin-bottom: 0; cursor: pointer;">Previous driving experience</label>
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 12px; margin-top: 24px;">
+                    <button type="button" class="btn btn-outline" style="flex: 1;" onclick="closeMyApplicationModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary" style="flex: 1;"><i class="fas fa-save"></i> Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2026 Ultimate Defensive Driving School. All rights reserved.</p>
+                <p class="designer">Designed with <i class="fas fa-heart"></i> for safe driving in Kenya</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/app.js"></script>
+    <script>
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const navLinks = document.querySelector('.nav-links');
+            const menuBtn = document.querySelector('.mobile-menu-btn');
+            navLinks.classList.toggle('mobile-open');
+            menuBtn.classList.toggle('active');
+        }
+        
+        // Sidebar toggle for mobile
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            const overlay = document.querySelector('.sidebar-overlay');
+            sidebar.classList.toggle('mobile-open');
+            overlay.classList.toggle('show');
+        }
+        
+        function closeSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            const overlay = document.querySelector('.sidebar-overlay');
+            sidebar.classList.remove('mobile-open');
+            overlay.classList.remove('show');
+        }
+        
+        // Auth check - redirect to login if not authenticated
+        function requireAuth(loginPage) {
+            if (!auth.isLoggedIn()) {
+                window.location.href = loginPage || 'login.html';
+                return false;
+            }
+            return true;
+        }
+
+        document.addEventListener('DOMContentLoaded', async function() {
+            if (!requireAuth('login.html')) return;
+            
+            const user = auth.getUser();
+            if (user) {
+                // Redirect admin users to admin panel
+                if (user.role === 'admin') {
+                    window.location.href = 'admin.html';
+                    return;
+                }
+                
+                // Redirect staff users to staff dashboard
+                if (user.role === 'staff') {
+                    window.location.href = 'staff.html';
+                    return;
+                }
+                
+                document.getElementById('welcome-message').textContent = 
+                    user.full_name ? `${user.full_name.split(' ')[0]}'s Dashboard` : 'My Dashboard';
+                
+                document.getElementById('user-name').textContent = user.full_name || 'Student';
+                document.getElementById('user-email').textContent = user.email || '';
+                
+                const initials = user.full_name ? user.full_name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2) : 'U';
+                document.getElementById('user-avatar').textContent = initials;
+            }
+            
+            // Check for last visited section in localStorage
+            const lastSection = localStorage.getItem('lastStudentSection');
+            if (lastSection && lastSection !== 'dashboard') {
+                // Show last visited section instead of default
+                await showStudentSection(lastSection, false);
+            } else {
+                // Show dashboard view and update stats
+                await loadUserApplications();
+                updateStats();
+            }
+            
+            // Highlight active nav link
+            const currentPage = window.location.pathname.split('/').pop() || 'dashboard.html';
+            const navLinks = document.querySelectorAll('.nav-links a:not(.btn-login)');
+            navLinks.forEach(link => {
+                const href = link.getAttribute('href');
+                if (href === currentPage || (currentPage === '' && href === 'index.html')) {
+                    link.classList.add('active');
+                }
+            });
+        });
+        
+        // Show default dashboard section
+        function showDashboardSection() {
+            // Clear saved section
+            localStorage.setItem('lastStudentSection', 'dashboard');
+            
+            // Hide all sections first
+            const allSections = [
+                'section-enrollments',
+                'section-my-fees',
+                'section-attendance',
+                'section-profile',
+                'section-applications'
+            ];
+            
+            allSections.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.style.display = 'none';
+            });
+            
+            // Show the main stats grid and my fees section
+            const statsGrid = document.querySelector('.stats-grid');
+            if (statsGrid) statsGrid.style.display = 'grid';
+            
+            document.getElementById('section-my-fees').style.display = 'block';
+            
+            // Update sidebar active state
+            document.querySelectorAll('.sidebar-menu a').forEach(a => a.classList.remove('active'));
+            document.querySelector('.sidebar-menu a[onclick*="showDashboardSection"]').classList.add('active');
+        }
+        
+        // Show student section
+        async function showStudentSection(section, saveToStorage = true) {
+            // Save to localStorage for next visit
+            if (saveToStorage !== false) {
+                localStorage.setItem('lastStudentSection', section);
+            }
+            
+            // Hide all sections first
+            const allSections = [
+                'section-enrollments',
+                'section-my-fees',
+                'section-attendance',
+                'section-profile',
+                'section-applications'
+            ];
+            
+            allSections.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.style.display = 'none';
+            });
+            
+            // Also hide the main stats grid
+            const statsGrid = document.querySelector('.stats-grid');
+            if (statsGrid) statsGrid.style.display = 'none';
+            
+            // Update sidebar active state
+            document.querySelectorAll('.sidebar-menu a').forEach(a => a.classList.remove('active'));
+            
+            if (section === 'dashboard') {
+                document.querySelector('.stats-grid').style.display = 'grid';
+                document.getElementById('section-my-fees').style.display = 'block';
+                updateStats();
+            } else if (section === 'applications') {
+                // Show only applications section
+                document.getElementById('section-applications').style.display = 'block';
+                await loadUserApplications();
+            } else if (section === 'enrollments') {
+                document.getElementById('section-enrollments').style.display = 'block';
+                await initEnrollmentSection();
+            } else if (section === 'my-fees') {
+                document.getElementById('section-my-fees').style.display = 'block';
+                await loadMyFees();
+                await loadMpesaTransactions();
+            } else if (section === 'attendance') {
+                document.getElementById('section-attendance').style.display = 'block';
+                await initAttendanceSection();
+            } else if (section === 'profile') {
+                document.getElementById('section-profile').style.display = 'block';
+                await initProfileSection();
+            }
+        }
+        
+        // Load my fees (read-only)
+        async function loadMyFees() {
+            try {
+                const data = await applications.getMy();
+                
+                if (data.success && data.applications && data.applications.length > 0) {
+                    // Calculate totals from all applications
+                    let totalSchoolFees = 0;
+                    let totalFeesPaid = 0;
+                    
+                    data.applications.forEach(app => {
+                        totalSchoolFees += parseFloat(app.school_fees) || 0;
+                        totalFeesPaid += parseFloat(app.fees_paid) || 0;
+                    });
+                    
+                    const balance = totalSchoolFees - totalFeesPaid;
+                    
+                    // Determine overall payment status
+                    let paymentStatus = 'unpaid';
+                    if (totalFeesPaid >= totalSchoolFees && totalSchoolFees > 0) {
+                        paymentStatus = 'paid';
+                    } else if (totalFeesPaid > 0) {
+                        paymentStatus = 'partial';
+                    }
+                    
+                    document.getElementById('my-total-fees').textContent = formatNumber(totalSchoolFees);
+                    document.getElementById('my-fees-paid').textContent = formatNumber(totalFeesPaid);
+                    document.getElementById('my-fees-balance').textContent = formatNumber(balance);
+                    
+                    const statusEl = document.getElementById('my-payment-status');
+                    if (paymentStatus === 'paid') {
+                        statusEl.textContent = 'Fully Paid';
+                        statusEl.style.color = '#10b981';
+                    } else if (paymentStatus === 'partial') {
+                        statusEl.textContent = 'Partial';
+                        statusEl.style.color = '#f59e0b';
+                    } else {
+                        statusEl.textContent = 'Unpaid';
+                        statusEl.style.color = '#ef4444';
+                    }
+                } else {
+                    document.getElementById('my-total-fees').textContent = '0';
+                    document.getElementById('my-fees-paid').textContent = '0';
+                    document.getElementById('my-fees-balance').textContent = '0';
+                    document.getElementById('my-payment-status').textContent = '-';
+                }
+            } catch (error) {
+                console.error('Error loading fees:', error);
+            }
+        }
+        
+        // Load my Mpesa transactions (updated endpoint)
+        async function loadMpesaTransactions() {
+            const container = document.getElementById('my-mpesa-transactions');
+            if (!container) return;
+            
+            container.innerHTML = '<div class="course-card" style="text-align: center; padding: 40px 20px;"><div class="course-loader"></div><p style="margin-top: 16px; color: var(--text-light);">Loading transactions...</p></div>';
+            
+            try {
+                const response = await fetch('/api/mpesa/transactions', {
+                    headers: {
+                        'Authorization': 'Bearer ' + auth.getToken()
+                    }
+                });
+                const data = await response.json();
+                
+                container.innerHTML = '';
+                
+                if (data.success && data.transactions && data.transactions.length > 0) {
+                    let html = '<div class="table-container" style="overflow-x: auto;">';
+                    html += '<table style="width: 100%; border-collapse: collapse;">';
+                    html += '<thead><tr style="background: var(--primary-color); color: white;">';
+                    html += '<th style="padding: 12px; text-align: left;">Date</th>';
+                    html += '<th style="padding: 12px; text-align: left;">Transaction ID</th>';
+                    html += '<th style="padding: 12px; text-align: left;">Phone</th>';
+                    html += '<th style="padding: 12px; text-align: left;">Amount</th>';
+                    html += '<th style="padding: 12px; text-align: left;">Status</th>';
+                    html += '</tr></thead><tbody>';
+                    
+                    data.transactions.forEach(tx => {
+                        const statusClass = tx.status === 'completed' ? '#10b981' : tx.status === 'failed' ? '#ef4444' : '#f59e0b';
+                        const statusText = tx.status === 'completed' ? 'Completed' : tx.status === 'failed' ? 'Failed' : 'Pending';
+                        
+                        html += '<tr style="border-bottom: 1px solid #e2e8f0;">';
+                        html += '<td style="padding: 12px;">' + formatDate(tx.created_at) + '</td>';
+                        html += '<td style="padding: 12px;">' + (tx.transaction_id || tx.mpesa_receipt || '-') + '</td>';
+                        html += '<td style="padding: 12px;">' + (tx.phone || '-') + '</td>';
+                        html += '<td style="padding: 12px;">KSh ' + formatNumber(tx.amount || 0) + '</td>';
+                        html += '<td style="padding: 12px;"><span style="background: ' + statusClass + '; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px;">' + statusText + '</span></td>';
+                        html += '</tr>';
+                    });
+                    
+                    html += '</tbody></table></div>';
+                    container.innerHTML = html;
+                } else {
+                    container.innerHTML = `
+                        <div class="course-card" style="text-align: center; padding: 40px 20px;">
+                            <i class="fas fa-money-bill-alt" style="font-size: 36px; color: var(--text-light); margin-bottom: 12px;"></i>
+                            <p style="color: var(--text-light);">No M-Pesa transactions yet.</p>
+                            <p style="color: var(--text-light); font-size: 13px;">Submit your M-Pesa confirmation message or use STK Push above.</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error loading Mpesa transactions:', error);
+                container.innerHTML = '<p class="text-center" style="padding: 40px; color: var(--text-light);">Unable to load transactions: ' + error.message + '</p>';
+            }
+        }
+        
+        // Handle STK Push
+        async function handleStkPush(e) {
+            e.preventDefault();
+            
+            const form = e.target;
+            const phone = form.phone.value;
+            const amount = form.amount.value;
+            
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+            submitBtn.disabled = true;
+            
+            try {
+                const response = await fetch('/api/mpesa/stkpush', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Authorization': 'Bearer ' + auth.getToken()
+                    },
+                    body: new URLSearchParams({ phone, amount })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showToast('STK Push sent! Please check your phone and enter your M-Pesa PIN.', 'success');
+                    form.reset();
+                    setTimeout(loadMpesaTransactions, 3000);
+                } else {
+                    showToast('Failed to send STK Push: ' + (data.message || 'Unknown error'), 'error');
+                }
+            } catch (error) {
+                showToast('Error sending STK Push: ' + error.message, 'error');
+            } finally {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }
+        }
+        
+        // Handle Mpesa message submit (updated endpoint)
+        async function handleMpesaSubmit(e) {
+            e.preventDefault();
+            
+            const message = document.getElementById('mpesa-message').value.trim();
+            if (!message) {
+                showToast('Please paste your M-Pesa confirmation message.', 'warning');
+                return;
+            }
+            
+            try {
+                const user = auth.getUser();
+                const appData = await applications.getMy();
+                
+                if (!appData.success || !appData.applications || appData.applications.length === 0) {
+                    showToast('No application found. Please submit an application first.', 'warning');
+                    return;
+                }
+                
+                const app = appData.applications[0];
+                
+                const response = await fetch('/api/mpesa/transactions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Authorization': 'Bearer ' + auth.getToken()
+                    },
+                    body: new URLSearchParams({
+                        application_id: app.id,
+                        message: message,
+                        phone: user.phone || ''
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showToast('M-Pesa message submitted successfully! Staff will verify it soon.', 'success');
+                    document.getElementById('mpesa-message').value = '';
+                    loadMpesaTransactions();
+                } else {
+                    showToast('Error: ' + (data.error || 'Failed to submit message'), 'error');
+                }
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        }
+        
+        async function updateStats() {
+            try {
+                const data = await applications.getMy();
+                if (data.success && data.applications) {
+                    const total = data.applications.length;
+                    // Handle both null/undefined status and 'pending' string
+                    const pending = data.applications.filter(a => !a.status || a.status === 'pending').length;
+                    const approved = data.applications.filter(a => a.status === 'approved').length;
+                    
+                    // Update main dashboard stats
+                    const totalEl = document.getElementById('total-applications');
+                    const pendingEl = document.getElementById('pending-applications');
+                    const approvedEl = document.getElementById('approved-applications');
+                    
+                    if (totalEl) totalEl.textContent = total;
+                    if (pendingEl) pendingEl.textContent = pending;
+                    if (approvedEl) approvedEl.textContent = approved;
+                    
+                    // Also update the My Applications section stats
+                    const myTotalEl = document.getElementById('my-total-applications');
+                    const myPendingEl = document.getElementById('my-pending-applications');
+                    const myApprovedEl = document.getElementById('my-approved-applications');
+                    
+                    if (myTotalEl) myTotalEl.textContent = total;
+                    if (myPendingEl) myPendingEl.textContent = pending;
+                    if (myApprovedEl) myApprovedEl.textContent = approved;
+                    
+                    console.log('Stats updated:', { total, pending, approved });
+                    
+                    // Calculate fees from all applications
+                    let totalFees = 0;
+                    let feesPaid = 0;
+                    let feesBalance = 0;
+                    
+                    data.applications.forEach(app => {
+                        totalFees += parseFloat(app.school_fees) || 0;
+                        feesPaid += parseFloat(app.fees_paid) || 0;
+                        feesBalance += parseFloat(app.fees_balance) || 0;
+                    });
+                    
+                    const totalFeesEl = document.getElementById('my-total-fees');
+                    const feesPaidEl = document.getElementById('my-fees-paid');
+                    const feesBalanceEl = document.getElementById('my-fees-balance');
+                    
+                    if (totalFeesEl) totalFeesEl.textContent = 'KSh ' + totalFees.toLocaleString();
+                    if (feesPaidEl) feesPaidEl.textContent = 'KSh ' + feesPaid.toLocaleString();
+                    if (feesBalanceEl) feesBalanceEl.textContent = 'KSh ' + feesBalance.toLocaleString();
+                }
+            } catch (error) {
+                console.error('Failed to load stats:', error);
+            }
+        }
+        
+        // Profile Modal Functions
+        function openProfileModal() {
+            const user = auth.getUser();
+            if (user) {
+                document.getElementById('profile-full_name').value = user.full_name || '';
+                document.getElementById('profile-email').value = user.email || '';
+                document.getElementById('profile-phone').value = user.phone || '';
+                document.getElementById('profile-password').value = '';
+                document.getElementById('profile-modal').classList.add('show');
+            }
+        }
+        
+        function closeProfileModal() {
+            document.getElementById('profile-modal').classList.remove('show');
+        }
+        
+        async function handleProfileUpdate(e) {
+            e.preventDefault();
+            const submitBtn = document.querySelector('#profile-form button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+            submitBtn.disabled = true;
+            
+            try {
+                const user = auth.getUser();
+                const fullName = document.getElementById('profile-full_name').value;
+                const email = document.getElementById('profile-email').value;
+                const phone = document.getElementById('profile-phone').value;
+                const password = document.getElementById('profile-password').value;
+                
+                const updates = {
+                    full_name: fullName,
+                    email: email,
+                    phone: phone
+                };
+                
+                if (password && password.trim()) {
+                    updates.password = password;
+                }
+                
+                const data = await api.put('/users/' + user.id, updates);
+                
+                if (data.success) {
+                    // Update stored user data
+                    const updatedUser = { ...user, ...updates };
+                    localStorage.setItem('ultimate_user', JSON.stringify(updatedUser));
+                    
+                    // Update display
+                    document.getElementById('user-name').textContent = updatedUser.full_name || 'Student';
+                    document.getElementById('user-email').textContent = updatedUser.email || '';
+                    
+                    const initials = updatedUser.full_name ? updatedUser.full_name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2) : 'U';
+                    document.getElementById('user-avatar').textContent = initials;
+                    
+                    showToast('Profile updated successfully!', 'success');
+                    closeProfileModal();
+                } else {
+                    showToast('Failed to update profile: ' + (data.message || 'Unknown error'), 'error');
+                }
+            } catch (error) {
+                alert('Error updating profile: ' + error.message);
+            } finally {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }
+        }
+        
+        // Close modal when clicking outside
+        document.getElementById('profile-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeProfileModal();
+            }
+        });
+        
+        async function loadUserApplications() {
+            const container = document.getElementById('my-applications');
+            if (!container) return;
+            
+            try {
+                const data = await applications.getMy();
+                
+                container.innerHTML = '';
+                
+                // Update stats
+                const totalApps = data.applications ? data.applications.length : 0;
+                const pendingApps = data.applications ? data.applications.filter(a => !a.status || a.status === 'pending').length : 0;
+                const approvedApps = data.applications ? data.applications.filter(a => a.status === 'approved').length : 0;
+                
+                const totalEl = document.getElementById('my-total-applications');
+                const pendingEl = document.getElementById('my-pending-applications');
+                const approvedEl = document.getElementById('my-approved-applications');
+                
+                if (totalEl) totalEl.textContent = totalApps;
+                if (pendingEl) pendingEl.textContent = pendingApps;
+                if (approvedEl) approvedEl.textContent = approvedApps;
+                
+                if (data.success && data.applications && data.applications.length > 0) {
+                    let cardsHtml = '<div style="display: grid; gap: 20px;">';
+                    
+                    data.applications.forEach(app => {
+                        const statusClass = !app.status ? 'pending' : app.status === 'approved' ? 'approved' : app.status === 'rejected' ? 'rejected' : 'pending';
+                        const statusText = !app.status ? 'Pending' : app.status.charAt(0).toUpperCase() + app.status.slice(1);
+                        
+                        cardsHtml += `
+                            <div class="course-card" style="padding: 16px;">
+                                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
+                                    <div>
+                                        <h3 style="margin-bottom: 8px;">Application #${app.id}</h3>
+                                        <p style="color: var(--text-light); font-size: 14px;">Submitted on ${formatDate(app.created_at)}</p>
+                                    </div>
+                                    <span class="status-badge ${statusClass}">${statusText}</span>
+                                </div>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
+                                    <div>
+                                        <p style="color: var(--text-light); font-size: 12px; margin-bottom: 4px;">Full Name</p>
+                                        <p style="font-weight: 500; font-size: 14px;">${app.first_name} ${app.last_name}</p>
+                                    </div>
+                                    <div>
+                                        <p style="color: var(--text-light); font-size: 12px; margin-bottom: 4px;">Phone</p>
+                                        <p style="font-weight: 500; font-size: 14px;">${app.phone}</p>
+                                    </div>
+                                    <div>
+                                        <p style="color: var(--text-light); font-size: 12px; margin-bottom: 4px;">Courses</p>
+                                        <p style="font-weight: 500; font-size: 14px;">${[app.driving_course, app.computer_course].filter(Boolean).join(', ') || 'N/A'}</p>
+                                    </div>
+                                    <div>
+                                        <p style="color: var(--text-light); font-size: 12px; margin-bottom: 4px;">Training Location</p>
+                                        <p style="font-weight: 500; font-size: 14px;">${app.training_location || app.location || app.location_id || 'Not set'}</p>
+                                    </div>
+                                    <div>
+                                        <p style="color: var(--text-light); font-size: 12px; margin-bottom: 4px;">Preferred Start Date</p>
+                                        <p style="font-weight: 500; font-size: 14px;">${app.preferred_start ? formatDate(app.preferred_start) : 'Not set'}</p>
+                                    </div>
+                                    <div>
+                                        <p style="color: var(--text-light); font-size: 12px; margin-bottom: 4px;">Preferred Schedule</p>
+                                        <p style="font-weight: 500; font-size: 14px;">${app.preferred_schedule || 'Not set'}</p>
+                                    </div>
+                                </div>
+                                <div style="background: #f8f9fa; border-radius: 8px; padding: 12px; margin-bottom: 16px;">
+                                    <p style="font-weight: 600; font-size: 13px; margin-bottom: 8px; color: var(--text-dark);">Payment Details</p>
+                                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; text-align: center;">
+                                        <div>
+                                            <p style="color: var(--text-light); font-size: 11px;">School Fees</p>
+                                            <p style="font-weight: 600; font-size: 14px; color: var(--primary-color);">KSh ${(app.school_fees || 0).toLocaleString()}</p>
+                                        </div>
+                                        <div>
+                                            <p style="color: var(--text-light); font-size: 11px;">Paid</p>
+                                            <p style="font-weight: 600; font-size: 14px; color: #10b981;">KSh ${(app.fees_paid || 0).toLocaleString()}</p>
+                                        </div>
+                                        <div>
+                                            <p style="color: var(--text-light); font-size: 11px;">Balance</p>
+                                            <p style="font-weight: 600; font-size: 14px; color: ${(app.fees_balance || 0) > 0 ? '#ef4444' : '#10b981'};">KSh ${(app.fees_balance || 0).toLocaleString()}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                                    <button class="btn btn-primary btn-small" onclick="editMyApplication(${app.id})">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </button>
+                                    ${app.status === 'approved' ? '<a href="courses.html" class="btn btn-small" style="background: #10b981; color: white;"><i class="fas fa-book"></i> Courses</a>' : ''}
+                                </div>
+                            </div>
+                        `;
+                    });
+                    
+                    cardsHtml += '</div>';
+                    container.innerHTML = cardsHtml;
+                } else {
+                    container.innerHTML = `
+                        <div class="course-card" style="text-align: center; padding: 60px 20px;">
+                            <i class="fas fa-file-alt" style="font-size: 48px; color: var(--text-light); margin-bottom: 16px;"></i>
+                            <p style="color: var(--text-light);">No applications yet.</p>
+                            <a href="apply.html" class="btn btn-primary" style="margin-top: 16px;">Apply Now</a>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Failed to load applications:', error);
+                // Check if token expired or auth error
+                const errorMsg = error.message || '';
+                if (errorMsg.includes('Token expired') || errorMsg.includes('401') || errorMsg.includes('Invalid token') || errorMsg.includes('403')) {
+                    container.innerHTML = `
+                        <div class="course-card" style="text-align: center; padding: 60px 20px;">
+                            <i class="fas fa-exclamation-triangle" style="font-size: 48px; color: #f59e0b; margin-bottom: 16px;"></i>
+                            <p style="color: var(--text-light); margin-bottom: 16px;">Your session has expired or credentials have changed.</p>
+                            <a href="login.html" class="btn btn-primary" style="margin-top: 8px;">Login Again</a>
+                        </div>
+                    `;
+                } else {
+                    container.innerHTML = `
+                        <div class="course-card" style="text-align: center; padding: 60px 20px;">
+                            <i class="fas fa-exclamation-circle" style="font-size: 48px; color: #ef4444; margin-bottom: 16px;"></i>
+                            <p style="color: var(--text-light); margin-bottom: 16px;">Unable to load applications.</p>
+                            <p style="color: var(--text-light); font-size: 14px;">Error: ${error.message || 'Unknown error'}</p>
+                            <button onclick="location.reload()" class="btn btn-primary" style="margin-top: 16px;">Refresh Page</button>
+                        </div>
+                    `;
+                }
+            }
+        }
+        
+        let myApplicationsData = [];
+        
+        // Helper function to safely set element value
+        function safeSetValue(id, value) {
+            const el = document.getElementById(id);
+            if (el) {
+                el.value = value !== undefined && value !== null ? value : '';
+            } else {
+                console.warn('Element not found: ' + id);
+            }
+        }
+        
+        // Helper function to safely set checkbox
+        function safeSetChecked(id, checked) {
+            const el = document.getElementById(id);
+            if (el) {
+                el.checked = checked === true;
+            } else {
+                console.warn('Element not found: ' + id);
+            }
+        }
+        
+        // Helper function to safely add class
+        function safeAddClass(id, className) {
+            const el = document.getElementById(id);
+            if (el) {
+                el.classList.add(className);
+            }
+        }
+        
+        async function editMyApplication(appId) {
+            try {
+                const response = await fetch(`/api/applications/${appId}`, {
+                    headers: {
+                        'Authorization': 'Bearer ' + auth.getToken()
+                    }
+                });
+                const data = await response.json();
+                
+                if (data.success && data.application) {
+                    const app = data.application;
+                    
+                    // Store app ID
+                    safeSetValue('my-application-id', app.id);
+                    
+                    // Load locations and courses FIRST and await them
+                    await loadLocationDropdown();
+                    await loadCoursesForEdit();
+                    
+                    // Fill form fields AFTER dropdown is loaded
+                    safeSetValue('my-app-firstname', app.first_name);
+                    safeSetValue('my-app-lastname', app.last_name);
+                    safeSetValue('my-app-email', app.email);
+                    safeSetValue('my-app-phone', app.phone);
+                    safeSetValue('my-app-dob', app.date_of_birth);
+                    safeSetValue('my-app-idnumber', app.id_number);
+                    safeSetValue('my-app-address', app.address);
+                    safeSetValue('my-app-city', app.city);
+                    safeSetValue('my-app-postalcode', app.postal_code);
+                    safeSetValue('my-app-licensetype', app.license_type || 'Class B');
+                    
+                    // Set driving course (wait for options to load)
+                    const drivingSelect = document.getElementById('my-app-drivingcourse');
+                    if (drivingSelect) {
+                        drivingSelect.value = app.driving_course || '';
+                    }
+                    
+                    const computerSelect = document.getElementById('my-app-computercourse');
+                    if (computerSelect) {
+                        computerSelect.value = app.computer_course || '';
+                    }
+                    
+                    // Calculate and display fees based on selected courses
+                    calculateMyFees();
+                    
+                    safeSetValue('my-app-transmission', app.transmission);
+                    
+                    // Set location dropdown by location_id first (now dropdown uses IDs as values)
+                    const locationIdValue = app.location_id || '';
+                    safeSetValue('my-app-location', locationIdValue);
+                    
+                    // Set preferred_start (date) and preferred_schedule separately
+                    safeSetValue('my-app-schedule', app.preferred_start || '');
+                    safeSetValue('my-app-preferred-schedule', app.preferred_schedule || '');
+                    
+                    safeSetValue('my-app-emergency-name', app.emergency_contact_name);
+                    safeSetValue('my-app-emergency-phone', app.emergency_contact_phone);
+                    safeSetValue('my-app-emergency-relationship', app.emergency_contact_relation);
+                    safeSetValue('my-app-comments', app.comments);
+                    safeSetChecked('my-app-experience', app.previous_driving_experience === true);
+                    
+                    safeAddClass('my-application-modal', 'show');
+                } else {
+                    showToast('Failed to load application: ' + (data.error || 'Unknown error'), 'error');
+                }
+            } catch (error) {
+                console.error('Error loading application:', error);
+                showToast('Error loading application: ' + error.message, 'error');
+            }
+        }
+        
+        // Switch tab in My Application modal
+        function switchMyAppTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(el => {
+                if (el.id.startsWith('my-app-tab-')) {
+                    el.style.display = 'none';
+                }
+            });
+            
+            // Show selected tab content
+            document.getElementById('my-app-tab-' + tabName).style.display = 'block';
+            
+            // Update tab button styles
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.style.color = 'var(--text-light)';
+                btn.style.borderBottomColor = 'transparent';
+            });
+            
+            // Highlight active tab
+            const activeBtn = document.querySelector('.tab-btn[data-tab="' + tabName + '"]');
+            if (activeBtn) {
+                activeBtn.style.color = 'var(--primary-color)';
+                activeBtn.style.borderBottomColor = 'var(--primary-color)';
+            }
+        }
+        
+        function closeMyApplicationModal() {
+            const el = document.getElementById('my-application-modal');
+            const form = document.getElementById('my-application-form');
+            if (el) {
+                el.classList.remove('show');
+            }
+            if (form) {
+                form.reset();
+            }
+        }
+        
+        // Format number
+        function formatNumber(num) {
+            return new Intl.NumberFormat('en-KE').format(num);
+        }
+        
+        // Show toast notification
+        function ShowToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 16px 24px;
+                border-radius: 8px;
+                color: white;
+                font-weight: 500;
+                z-index: 10000;
+                animation: slideIn 0.3s ease;
+                max-width: 300px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            `;
+            
+            if (type === 'success') {
+                toast.style.background = '#10b981';
+            } else if (type === 'error') {
+                toast.style.background = '#ef4444';
+            } else {
+                toast.style.background = '#3b82f6';
+            }
+            
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+        
+        // Format date
+        function formatDate(dateStr) {
+            if (!dateStr) return '-';
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('en-KE', { year: 'numeric', month: 'short', day: 'numeric' });
+        }
+        
+        // Auto-calculate school fees based on selected courses
+        function calculateMyFees() {
+            const drivingCourseEl = document.getElementById('my-app-drivingcourse');
+            const computerCourseEl = document.getElementById('my-app-computercourse');
+            const feesDisplayEl = document.getElementById('my-app-school-fees-display');
+            
+            if (!drivingCourseEl || !computerCourseEl || !feesDisplayEl) return;
+            
+            const drivingCourse = drivingCourseEl.value;
+            const computerCourse = computerCourseEl.value;
+            
+            // Driving course prices
+            const drivingPrices = {
+                'Class B License': 15000,
+                'Class C License': 20000,
+                'Class D License': 25000,
+                'Motorcycle Training': 12000,
+                'Defensive Driving': 10000,
+                'Refresher Course': 8000
+            };
+            
+            // Computer course prices
+            const computerPrices = {
+                'Computer Basics': 5000,
+                'Computer Accounting': 10000,
+                'Computer Secretarial': 8000,
+                'Graphic Design': 12000,
+                'Computer Programming': 25000,
+                'SPSS': 7500
+            };
+            
+            let totalFees = 0;
+            if (drivingPrices[drivingCourse]) {
+                totalFees += drivingPrices[drivingCourse];
+            }
+            if (computerPrices[computerCourse]) {
+                totalFees += computerPrices[computerCourse];
+            }
+            
+            document.getElementById('my-app-school-fees-display').textContent = 'KSh ' + totalFees.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        }
+        
+        async function handleMyApplicationSubmit(e) {
+            e.preventDefault();
+            
+            const form = e.target;
+            const appId = document.getElementById('my-application-id').value;
+            
+            // Get location value - use the select element directly
+            const locationSelect = document.getElementById('my-app-location');
+            const locationValue = locationSelect ? locationSelect.value : '';
+            const locationText = locationSelect && locationSelect.selectedIndex >= 0 
+                ? locationSelect.options[locationSelect.selectedIndex].text || ''
+                : '';
+            
+            const formData = {
+                id: appId,
+                first_name: form.first_name.value,
+                last_name: form.last_name.value,
+                email: form.email.value,
+                phone: form.phone.value,
+                date_of_birth: form.date_of_birth.value,
+                address: form.address.value,
+                city: form.city.value,
+                postal_code: form.postal_code.value,
+                id_number: form.id_number.value,
+                license_type: form.license_type.value,
+                driving_course: form.driving_course.value,
+                computer_course: form.computer_course.value,
+                // Send location_id (numeric) and training_location (name)
+                location_id: locationValue,
+                training_location: locationText,
+                transmission: form.transmission.value,
+                // Use preferred_schedule for schedule field, preferred_start for date field
+                preferred_schedule: form.preferred_schedule ? form.preferred_schedule.value : '',
+                preferred_start: form.preferred_start ? form.preferred_start.value : '',
+                emergency_contact_name: form.emergency_contact_name.value,
+                emergency_contact_phone: form.emergency_contact_phone.value,
+                emergency_contact_relation: form.emergency_contact_relation.value,
+                comments: form.comments.value,
+                previous_driving_experience: form.previous_driving_experience.checked
+            };
+            
+            console.log('[DEBUG] Updating application with data:', formData);
+            
+            const submitBtn = form.querySelector('button[type="submit"]');
+            if (!submitBtn) {
+                showToast('Error: Submit button not found', 'error');
+                return;
+            }
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+            submitBtn.disabled = true;
+            
+            try {
+                const response = await fetch(`/api/applications/${appId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Authorization': 'Bearer ' + auth.getToken()
+                    },
+                    body: new URLSearchParams(formData)
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showToast('Application updated successfully!', 'success');
+                    closeMyApplicationModal();
+                    await loadUserApplications();
+                    updateStats();
+                } else {
+                    showToast('Error: ' + (data.error || 'Failed to update application'), 'error');
+                }
+            } catch (error) {
+                showToast('Error: ' + error.message, 'error');
+            } finally {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }
+        }
+        
+        // Load locations from API and populate dropdown (like admin.html)
+        async function loadLocationDropdown() {
+            const locationSelect = document.getElementById('my-app-location');
+            if (!locationSelect) return;
+            
+            // Keep the first option (placeholder)
+            const firstOption = locationSelect.options[0];
+            locationSelect.innerHTML = '';
+            if (firstOption) {
+                locationSelect.appendChild(firstOption);
+            } else {
+                const option = document.createElement('option');
+                option.value = '';
+                option.textContent = '-- Select Location --';
+                locationSelect.appendChild(option);
+            }
+            
+            try {
+                const response = await fetch('/api/locations', {
+                    headers: { 'Authorization': 'Bearer ' + auth.getToken() }
+                });
+                const data = await response.json();
+                
+                if (data.success && data.locations) {
+                    data.locations.forEach(loc => {
+                        const option = document.createElement('option');
+                        option.value = loc.id || '';
+                        option.textContent = loc.name || loc;
+                        option.setAttribute('data-name', loc.name || loc);
+                        locationSelect.appendChild(option);
+                    });
+                } else {
+                    // Try courses endpoint for locations as fallback
+                    const coursesResponse = await fetch('/api/courses');
+                    const coursesData = await coursesResponse.json();
+                    
+                    if (coursesData.success && coursesData.locations) {
+                        coursesData.locations.forEach(loc => {
+                            const option = document.createElement('option');
+                            option.value = loc.id || '';
+                            option.textContent = loc.name || loc;
+                            option.setAttribute('data-name', loc.name || loc);
+                            locationSelect.appendChild(option);
+                        });
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading locations:', error);
+                // Fallback to default options
+                const defaultLocations = ['Nairobi - Kahawa', 'Nairobi - CBD', 'Mombasa', 'Kisumu', 'Nakuru'];
+                defaultLocations.forEach(loc => {
+                    const option = document.createElement('option');
+                    option.value = loc;
+                    option.textContent = loc;
+                    locationSelect.appendChild(option);
+                });
+            }
+        }
+        
+        // Load courses for edit modal dropdowns
+        async function loadCoursesForEdit() {
+            try {
+                const response = await fetch('/api/courses');
+                const data = await response.json();
+                
+                if (data.success && data.courses && data.courses.length > 0) {
+                    const drivingSelect = document.getElementById('my-app-drivingcourse');
+                    const computerSelect = document.getElementById('my-app-computercourse');
+                    
+                    // Store course prices
+                    window.drivingPricesEdit = {};
+                    window.computerPricesEdit = {};
+                    
+                    if (drivingSelect) {
+                        const currentDrivingValue = drivingSelect.value;
+                        drivingSelect.innerHTML = '<option value="">Select Driving Course</option>';
+                        
+                        data.courses.forEach(course => {
+                            const name = course.name.toLowerCase();
+                            // Categorize by keywords - computer courses go to computer select
+                            if (name.includes('computer') || name.includes('programming') || 
+                                name.includes('design') || name.includes('accounting') || 
+                                name.includes('secretarial') || name.includes('spss')) {
+                                window.computerPricesEdit[course.name] = parseFloat(course.price || 0);
+                            } else {
+                                window.drivingPricesEdit[course.name] = parseFloat(course.price || 0);
+                                const option = document.createElement('option');
+                                option.value = course.name;
+                                option.textContent = `${course.name} - KSh ${parseFloat(course.price || 0).toLocaleString()}`;
+                                option.dataset.price = course.price || 0;
+                                drivingSelect.appendChild(option);
+                            }
+                        });
+                        
+                        if (currentDrivingValue) {
+                            drivingSelect.value = currentDrivingValue;
+                        }
+                    }
+                    
+                    if (computerSelect) {
+                        const currentComputerValue = computerSelect.value;
+                        computerSelect.innerHTML = '<option value="">-- Select Certification Course --</option>';
+                        
+                        data.courses.forEach(course => {
+                            const name = course.name.toLowerCase();
+                            // Only add computer courses to computer select
+                            if (name.includes('computer') || name.includes('programming') || 
+                                name.includes('design') || name.includes('accounting') || 
+                                name.includes('secretarial') || name.includes('spss')) {
+                                const option = document.createElement('option');
+                                option.value = course.name;
+                                option.textContent = `${course.name} - KSh ${parseFloat(course.price || 0).toLocaleString()}`;
+                                option.dataset.price = course.price || 0;
+                                computerSelect.appendChild(option);
+                            }
+                        });
+                        
+                        if (currentComputerValue) {
+                            computerSelect.value = currentComputerValue;
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading courses:', error);
+            }
+        }
+        
+        // Load courses for attendance dropdown
+        async function loadCourseDropdown() {
+            try {
+                const response = await fetch('/api/courses', {
+                    headers: { 'Authorization': 'Bearer ' + auth.getToken() }
+                });
+                const data = await response.json();
+                
+                if (data.success && data.courses) {
+                    const select = document.getElementById('attendance-course');
+                    if (select) {
+                        const currentValue = select.value;
+                        select.innerHTML = '<option value="">All Courses</option>';
+                        
+                        data.courses.forEach(course => {
+                            const option = document.createElement('option');
+                            option.value = course.id;
+                            option.textContent = course.name;
+                            select.appendChild(option);
+                        });
+                        
+                        if (currentValue) {
+                            select.value = currentValue;
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading courses:', error);
+            }
+        }
+        
+        // Load attendance records
+        async function loadAttendance() {
+            const container = document.getElementById('attendance-records');
+            if (!container) return;
+            
+            const user = auth.getUser();
+            const date = document.getElementById('attendance-date').value;
+            const courseId = document.getElementById('attendance-course').value;
+            
+            let url = '/api/attendance';
+            const params = new URLSearchParams();
+            
+            // Filter by current user ID (student)
+            if (user && user.id) {
+                params.append('student_id', user.id);
+            }
+            if (date) params.append('date', date);
+            if (courseId) params.append('course_id', courseId);
+            
+            if (params.toString()) {
+                url += '?' + params.toString();
+            }
+            
+            container.innerHTML = '<div class="course-card" style="text-align: center; padding: 40px 20px;"><div class="course-loader"></div><p style="margin-top: 16px; color: var(--text-light);">Loading attendance records...</p></div>';
+            
+            try {
+                const response = await fetch(url, {
+                    headers: { 'Authorization': 'Bearer ' + auth.getToken() }
+                });
+                
+                // Handle 401 Unauthorized - redirect to login
+                if (response.status === 401) {
+                    auth.logout();
+                    window.location.href = 'login.html';
+                    return;
+                }
+                
+                const data = await response.json();
+                
+                if (data.success && data.attendance) {
+                    displayAttendanceRecords(data.attendance);
+                    updateAttendanceStats(data.attendance);
+                } else {
+                    container.innerHTML = '<div class="course-card" style="text-align: center; padding: 40px 20px;"><p style="color: var(--text-light);">No attendance records found</p></div>';
+                    updateAttendanceStats([]);
+                }
+            } catch (error) {
+                container.innerHTML = '<div class="course-card" style="text-align: center; padding: 40px 20px;"><p style="color: var(--error-color);">Error loading attendance: ' + error.message + '</p></div>';
+            }
+        }
+        
+        // Display attendance records in table
+        function displayAttendanceRecords(records) {
+            const container = document.getElementById('attendance-records');
+            if (!container) return;
+            
+            if (!records || records.length === 0) {
+                container.innerHTML = '<div class="course-card" style="text-align: center; padding: 40px 20px;"><p style="color: var(--text-light);">No attendance records found</p></div>';
+                return;
+            }
+            
+            let html = '<div class="table-container" style="overflow-x: auto;">';
+            html += '<table style="width: 100%; border-collapse: collapse;">';
+            html += '<thead><tr style="background: var(--primary-color); color: white;">';
+            html += '<th style="padding: 12px; text-align: left;">Date</th>';
+            html += '<th style="padding: 12px; text-align: left;">Course</th>';
+            html += '<th style="padding: 12px; text-align: left;">Status</th>';
+            html += '<th style="padding: 12px; text-align: left;">Time</th>';
+            html += '<th style="padding: 12px; text-align: left;">Notes</th>';
+            html += '</tr></thead><tbody>';
+            
+            records.forEach(record => {
+                const statusClass = record.status === 'Present' ? '#10b981' : record.status === 'Absent' ? '#ef4444' : '#f59e0b';
+                html += '<tr style="border-bottom: 1px solid #e2e8f0;">';
+                html += '<td style="padding: 12px;">' + (record.date || '-') + '</td>';
+                html += '<td style="padding: 12px;">' + (record.course_name || '-') + '</td>';
+                html += '<td style="padding: 12px;"><span style="background: ' + statusClass + '; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px;">' + (record.status || '-') + '</span></td>';
+                html += '<td style="padding: 12px;">' + (record.time || '-') + '</td>';
+                html += '<td style="padding: 12px;">' + (record.notes || '-') + '</td>';
+                html += '</tr>';
+            });
+            
+            html += '</tbody></table></div>';
+            container.innerHTML = html;
+        }
+        
+        // Update attendance statistics
+        function updateAttendanceStats(records) {
+            const total = records ? records.length : 0;
+            const present = records ? records.filter(r => r.status === 'Present').length : 0;
+            const absent = records ? records.filter(r => r.status === 'Absent').length : 0;
+            
+            document.getElementById('total-attendance').textContent = total;
+            document.getElementById('present-attendance').textContent = present;
+            document.getElementById('absent-attendance').textContent = absent;
+        }
+        
+        // Initialize attendance section
+        async function initAttendanceSection() {
+            await loadCourseDropdown();
+            
+            // Set today's date as default
+            const today = new Date().toISOString().split('T')[0];
+            const dateInput = document.getElementById('attendance-date');
+            if (dateInput) {
+                dateInput.value = today;
+            }
+            
+            await loadAttendance();
+        }
+        
+        // Initialize profile section
+        async function initProfileSection() {
+            // Load user info
+            await loadLoginDetails();
+        }
+        
+        // Load user login details from JWT token
+        async function loadLoginDetails() {
+            try {
+                // Get user info from JWT token
+                const token = auth.getToken();
+                if (token) {
+                    const payload = JSON.parse(atob(token.split('.')[1]));
+                    document.getElementById('profile-email').value = payload.email || '';
+                    document.getElementById('profile-phone').value = payload.phone || '';
+                }
+                // Clear password field
+                document.getElementById('profile-password').value = '';
+            } catch (error) {
+                console.error('Error loading login details:', error);
+                // Keep fields empty on error
+                document.getElementById('profile-email').value = '';
+                document.getElementById('profile-phone').value = '';
+            }
+        }
+        
+        // Save login details (like admin.html)
+        async function saveLoginDetails() {
+            const email = document.getElementById('profile-email').value;
+            const phone = document.getElementById('profile-phone').value;
+            const password = document.getElementById('profile-password').value;
+            
+            if (!email) {
+                ShowToast('Email is required', 'error');
+                return;
+            }
+            
+            const formData = {
+                email: email,
+                phone: phone || ''
+            };
+            
+            if (password) {
+                formData.password = password;
+            }
+            
+            try {
+                // Get current user ID from token
+                const token = auth.getToken();
+                const payload = JSON.parse(atob(token.split('.')[1]));
+                const userId = payload.sub;
+                
+                const response = await fetch(`/api/users/${userId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Authorization': 'Bearer ' + token
+                    },
+                    body: new URLSearchParams(formData)
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    ShowToast('Login details saved successfully!', 'success');
+                    document.getElementById('profile-password').value = '';
+                } else {
+                    ShowToast('Error: ' + (data.error || 'Failed to save'), 'error');
+                }
+            } catch (error) {
+                console.error('Error saving login details:', error);
+                ShowToast('Error: ' + error.message, 'error');
+            }
+        }
+        
+        // Load enrollments
+        async function loadEnrollments() {
+            const container = document.getElementById('enrollment-records');
+            if (!container) return;
+            
+            const user = auth.getUser();
+            const courseId = document.getElementById('enrollment-course').value;
+            const date = document.getElementById('enrollment-date').value;
+            const status = document.getElementById('enrollment-status').value;
+            
+            let url = '/api/enrollments';
+            const params = new URLSearchParams();
+            
+            // Filter by current user ID (student)
+            if (user && user.id) {
+                params.append('student_id', user.id);
+            }
+            if (courseId) params.append('course_id', courseId);
+            if (date) params.append('date', date);
+            if (status) params.append('status', status);
+            
+            if (params.toString()) {
+                url += '?' + params.toString();
+            }
+            
+            container.innerHTML = '<div class="course-card" style="text-align: center; padding: 40px 20px;"><div class="course-loader"></div><p style="margin-top: 16px; color: var(--text-light);">Loading enrollments...</p></div>';
+            
+            try {
+                const response = await fetch(url, {
+                    headers: { 'Authorization': 'Bearer ' + auth.getToken() }
+                });
+                
+                // Handle 401 Unauthorized - redirect to login
+                if (response.status === 401) {
+                    auth.logout();
+                    window.location.href = 'login.html';
+                    return;
+                }
+                
+                const data = await response.json();
+                
+                if (data.success && data.enrollments) {
+                    displayEnrollmentRecords(data.enrollments);
+                    updateEnrollmentStats(data.enrollments);
+                } else {
+                    container.innerHTML = '<div class="course-card" style="text-align: center; padding: 40px 20px;"><p style="color: var(--text-light);">No enrollments found</p></div>';
+                    updateEnrollmentStats([]);
+                }
+            } catch (error) {
+                container.innerHTML = '<div class="course-card" style="text-align: center; padding: 40px 20px;"><p style="color: var(--error-color);">Error loading enrollments: ' + error.message + '</p></div>';
+            }
+        }
+        
+        // Display enrollment records
+        function displayEnrollmentRecords(enrollments) {
+            const container = document.getElementById('enrollment-records');
+            if (!container) return;
+            
+            if (!enrollments || enrollments.length === 0) {
+                container.innerHTML = '<div class="course-card" style="text-align: center; padding: 40px 20px;"><p style="color: var(--text-light);">No enrollments found</p></div>';
+                return;
+            }
+            
+            let html = '<div class="table-container" style="overflow-x: auto;">';
+            html += '<table style="width: 100%; border-collapse: collapse;">';
+            html += '<thead><tr style="background: var(--primary-color); color: white;">';
+            html += '<th style="padding: 12px; text-align: left;">Course</th>';
+            html += '<th style="padding: 12px; text-align: left;">Enrollment Date</th>';
+            html += '<th style="padding: 12px; text-align: left;">Status</th>';
+            html += '<th style="padding: 12px; text-align: left;">Progress</th>';
+            html += '</tr></thead><tbody>';
+            
+            enrollments.forEach(enrollment => {
+                // Map status to display
+                let statusClass = '#f59e0b';
+                let statusText = enrollment.status || 'Unknown';
+                
+                if (enrollment.status === 'enrolled') {
+                    statusClass = '#3b82f6';
+                    statusText = 'Enrolled';
+                } else if (enrollment.status === 'active') {
+                    statusClass = '#10b981';
+                    statusText = 'Active';
+                } else if (enrollment.status === 'completed') {
+                    statusClass = '#059669';
+                    statusText = 'Completed';
+                } else if (enrollment.status === 'dropped') {
+                    statusClass = '#ef4444';
+                    statusText = 'Dropped';
+                } else if (enrollment.status === 'suspended') {
+                    statusClass = '#f59e0b';
+                    statusText = 'Suspended';
+                }
+                
+                html += '<tr style="border-bottom: 1px solid #e2e8f0;">';
+                html += '<td style="padding: 12px;">' + (enrollment.course_name || '-') + '</td>';
+                html += '<td style="padding: 12px;">' + formatDate(enrollment.enrollment_date) + '</td>';
+                html += '<td style="padding: 12px;"><span style="background: ' + statusClass + '; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px;">' + statusText + '</span></td>';
+                html += '<td style="padding: 12px;">' + (enrollment.progress_percentage || enrollment.progress || '0') + '%</td>';
+                html += '</tr>';
+            });
+            
+            html += '</tbody></table></div>';
+            container.innerHTML = html;
+        }
+        
+        // Update enrollment statistics
+        function updateEnrollmentStats(enrollments) {
+            const total = enrollments ? enrollments.length : 0;
+            const active = enrollments ? enrollments.filter(e => e.status === 'active' || e.status === 'enrolled').length : 0;
+            const completed = enrollments ? enrollments.filter(e => e.status === 'completed').length : 0;
+            
+            document.getElementById('total-enrollments').textContent = total;
+            document.getElementById('active-enrollments').textContent = active;
+            document.getElementById('completed-enrollments').textContent = completed;
+        }
+        
+        // Initialize enrollment section
+        async function initEnrollmentSection() {
+            await loadEnrollmentCourseDropdown();
+            
+            // Set today's date as default
+            const today = new Date().toISOString().split('T')[0];
+            const dateInput = document.getElementById('enrollment-date');
+            if (dateInput) {
+                dateInput.value = today;
+            }
+            
+            await loadEnrollments();
+        }
+        
+        // Load courses for enrollment dropdown
+        async function loadEnrollmentCourseDropdown() {
+            try {
+                const response = await fetch('/api/courses', {
+                    headers: { 'Authorization': 'Bearer ' + auth.getToken() }
+                });
+                const data = await response.json();
+                
+                if (data.success && data.courses) {
+                    const select = document.getElementById('enrollment-course');
+                    if (select) {
+                        const currentValue = select.value;
+                        select.innerHTML = '<option value="">All Courses</option>';
+                        
+                        data.courses.forEach(course => {
+                            const option = document.createElement('option');
+                            option.value = course.id;
+                            option.textContent = course.name;
+                            select.appendChild(option);
+                        });
+                        
+                        if (currentValue) {
+                            select.value = currentValue;
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading courses:', error);
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,216 @@
+<!-- Add this AFTER the Staff Modal section in admin.html (around line 962) -->
+
+    <!-- Location Modal -->
+    <div id="location-modal" class="modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3 id="location-modal-title">Add New Location</h3>
+                <button class="modal-close" onclick="closeLocationModal()">&times;</button>
+            </div>
+            <form id="location-form" onsubmit="handleLocationSubmit(event)">
+                <div class="modal-body">
+                    <input type="hidden" id="location-id" name="location_id">
+                    
+                    <div class="form-group">
+                        <label for="location-name">Location Name *</label>
+                        <input type="text" id="location-name" name="name" required placeholder="e.g., Sunton Branch">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="location-address">Address</label>
+                        <textarea id="location-address" name="address" rows="2" placeholder="Enter address"></textarea>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="location-phone">Phone</label>
+                            <input type="tel" id="location-phone" name="phone" placeholder="e.g., +254 700 000 000">
+                        </div>
+                        <div class="form-group">
+                            <label for="location-email">Email</label>
+                            <input type="email" id="location-email" name="email" placeholder="e.g., sunton@ultimate.edu">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="location-status">Status</label>
+                        <select id="location-status" name="is_active">
+                            <option value="true">Active</option>
+                            <option value="false">Inactive</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" onclick="closeLocationModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Location</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+<!-- Add these JavaScript functions to admin.html script section (around line 3510) -->
+
+        // Location Management
+        function showAddLocationModal() {
+            document.getElementById('location-modal-title').textContent = 'Add New Location';
+            document.getElementById('location-form').reset();
+            document.getElementById('location-id').value = '';
+            document.getElementById('location-modal').classList.add('show');
+            loadAllLocations();
+        }
+        
+        function closeLocationModal() {
+            document.getElementById('location-modal').classList.remove('show');
+        }
+        
+        async function loadAllLocations() {
+            const container = document.getElementById('all-locations');
+            if (!container) return;
+            
+            container.innerHTML = '<div class="course-card" style="text-align: center; padding: 60px 20px;"><div class="course-loader"></div><p style="margin-top: 16px; color: var(--text-light);">Loading locations...</p></div>';
+            
+            try {
+                const response = await api.get('/staff/locations');
+                let html = '';
+                
+                if (response && response.length > 0) {
+                    html = '<div class="table-container"><table class="applications-table"><thead><tr><th>ID</th><th>Name</th><th>Address</th><th>Phone</th><th>Email</th><th>Status</th><th>Actions</th></tr></thead><tbody>';
+                    
+                    response.forEach(location => {
+                        html += '<tr>';
+                        html += '<td data-label="ID">' + (location.id || 'N/A') + '</td>';
+                        html += '<td data-label="Name"><strong>' + escapeHtml(location.name || '') + '</strong></td>';
+                        html += '<td data-label="Address">' + escapeHtml(location.address || '') + '</td>';
+                        html += '<td data-label="Phone">' + escapeHtml(location.phone || '') + '</td>';
+                        html += '<td data-label="Email">' + escapeHtml(location.email || '') + '</td>';
+                        html += '<td data-label="Status"><span class="status-badge status-' + (location.is_active ? 'active' : 'inactive') + '">' + (location.is_active ? 'Active' : 'Inactive') + '</span></td>';
+                        html += '<td data-label="Actions"><div class="action-buttons"><button class="btn btn-small btn-primary" onclick="editLocation(' + location.id + ')"><i class="fas fa-edit"></i></button><button class="btn btn-small btn-danger" onclick="deleteLocation(' + location.id + ')"><i class="fas fa-trash"></i></button></div></td>';
+                        html += '</tr>';
+                    });
+                    
+                    html += '</tbody></table></div>';
+                } else {
+                    html = '<div class="course-card" style="text-align: center; padding: 60px 20px;"><p style="color: var(--text-light);">No locations found. Click "Add Location" to create one.</p></div>';
+                }
+                
+                container.innerHTML = html;
+            } catch (error) {
+                console.error('Error loading locations:', error);
+                container.innerHTML = '<div class="course-card" style="text-align: center; padding: 60px 20px;"><p style="color: var(--text-light);">Unable to load locations. Error: ' + error.message + '<br><a href="javascript:loadAllLocations();">Try again</a></p></div>';
+            }
+        }
+        
+        async function editLocation(locationId) {
+            try {
+                const locations = await api.get('/staff/locations');
+                const location = locations.find(l => l.id === locationId);
+                
+                if (location) {
+                    document.getElementById('location-modal-title').textContent = 'Edit Location';
+                    document.getElementById('location-id').value = location.id;
+                    document.getElementById('location-name').value = location.name || '';
+                    document.getElementById('location-address').value = location.address || '';
+                    document.getElementById('location-phone').value = location.phone || '';
+                    document.getElementById('location-email').value = location.email || '';
+                    document.getElementById('location-status').value = location.is_active ? 'true' : 'false';
+                    document.getElementById('location-modal').classList.add('show');
+                }
+            } catch (error) {
+                console.error('Error loading location:', error);
+                showToast('Failed to load location: ' + error.message, 'error');
+            }
+        }
+        
+        async function deleteLocation(locationId) {
+            if (!confirm('Are you sure you want to delete this location? This action cannot be undone.')) {
+                return;
+            }
+            
+            try {
+                await api.put('/staff/locations/' + locationId, { is_active: false });
+                showToast('Location deleted successfully', 'success');
+                loadAllLocations();
+            } catch (error) {
+                console.error('Error deleting location:', error);
+                showToast('Failed to delete location: ' + error.message, 'error');
+            }
+        }
+        
+        async function handleLocationSubmit(e) {
+            e.preventDefault();
+            
+            const form = e.target;
+            const formData = {
+                name: form.name.value,
+                address: form.address.value,
+                phone: form.phone.value,
+                email: form.email.value,
+                is_active: form.is_active.value === 'true'
+            };
+            
+            const locationId = document.getElementById('location-id').value;
+            
+            try {
+                if (locationId) {
+                    // Update existing location
+                    await api.put('/staff/locations/' + locationId, formData);
+                    showToast('Location updated successfully', 'success');
+                } else {
+                    // Create new location
+                    await api.post('/staff/locations', formData);
+                    showToast('Location created successfully', 'success');
+                }
+                
+                closeLocationModal();
+                loadAllLocations();
+            } catch (error) {
+                console.error('Error saving location:', error);
+                showToast('Failed to save location: ' + error.message, 'error');
+            }
+        }
+
+        // Add 'locations' to the showSection function (around line 1260)
+        function showSection(sectionName) {
+            // Hide all sections first
+            document.querySelectorAll('.admin-section').forEach(s => s.style.display = 'none');
+            document.querySelectorAll('.sidebar-menu a').forEach(a => a.classList.remove('active'));
+            
+            // Show the selected section
+            const section = document.getElementById('section-' + sectionName);
+            if (section) {
+                section.style.display = 'block';
+            }
+            
+            // Update sidebar active state
+            const links = document.querySelectorAll('.sidebar-menu a');
+            links.forEach(link => {
+                if (link.getAttribute('onclick') && link.getAttribute('onclick').includes("showSection('" + sectionName + "'))) {
+                    link.classList.add('active');
+                }
+            });
+            
+            // Load section data
+            switch(sectionName) {
+                case 'overview':
+                    loadOverviewStats();
+                    break;
+                case 'applicants':
+                    loadAllApplicants();
+                    break;
+                case 'courses':
+                    loadAllCourses();
+                    break;
+                case 'staff':
+                    loadAllStaff();
+                    break;
+                case 'locations':
+                    loadAllLocations();
+                    break;
+                case 'users':
+                    loadAllUsers();
+                    break;
+                case 'messages':
+                    loadAllMessages();
+                    break;
+            }
+        }
