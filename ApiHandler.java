@@ -101,6 +101,94 @@ class ApiHandler implements HttpHandler {
         return params;
     }
     
+    // Simple JSON parser for key-value pairs (handles simple JSON objects)
+    protected Map<String, String> parseJsonBody(String body) {
+        Map<String, String> params = new HashMap<>();
+        if (body == null || body.isEmpty()) {
+            return params;
+        }
+        
+        // Simple parser - handle "key": "value" patterns
+        int len = body.length();
+        int i = 0;
+        while (i < len) {
+            // Skip whitespace
+            while (i < len && Character.isWhitespace(body.charAt(i))) i++;
+            if (i >= len) break;
+            
+            if (body.charAt(i) == '"') {
+                // Find key
+                i++;
+                StringBuilder key = new StringBuilder();
+                while (i < len) {
+                    if (body.charAt(i) == '\\' && i + 1 < len) {
+                        // Handle escape sequences
+                        i++;
+                        char escaped = body.charAt(i);
+                        switch (escaped) {
+                            case 'n': key.append('\n'); break;
+                            case 't': key.append('\t'); break;
+                            case 'r': key.append('\r'); break;
+                            case '\\': key.append('\\'); break;
+                            case '"': key.append('"'); break;
+                            default: key.append(escaped); break;
+                        }
+                        i++;
+                    } else if (body.charAt(i) == '"') {
+                        break; // End of key
+                    } else {
+                        key.append(body.charAt(i++));
+                    }
+                }
+                i++; // skip closing quote
+                
+                // Skip colon
+                while (i < len && (body.charAt(i) == ':' || Character.isWhitespace(body.charAt(i)))) i++;
+                
+                if (i < len) {
+                    StringBuilder value = new StringBuilder();
+                    if (body.charAt(i) == '"') {
+                        // String value
+                        i++;
+                        while (i < len) {
+                            if (body.charAt(i) == '\\' && i + 1 < len) {
+                                // Handle escape sequences
+                                i++;
+                                char escaped = body.charAt(i);
+                                switch (escaped) {
+                                    case 'n': value.append('\n'); break;
+                                    case 't': value.append('\t'); break;
+                                    case 'r': value.append('\r'); break;
+                                    case '\\': value.append('\\'); break;
+                                    case '"': value.append('"'); break;
+                                    default: value.append(escaped); break;
+                                }
+                                i++;
+                            } else if (body.charAt(i) == '"') {
+                                break; // End of value
+                            } else {
+                                value.append(body.charAt(i++));
+                            }
+                        }
+                        i++; // skip closing quote
+                    } else {
+                        // Numeric or other value
+                        while (i < len && body.charAt(i) != ',' && body.charAt(i) != '}') {
+                            value.append(body.charAt(i++));
+                        }
+                    }
+                    params.put(key.toString(), value.toString().trim());
+                }
+            } else {
+                i++;
+            }
+            
+            // Skip comma
+            while (i < len && (body.charAt(i) == ',' || Character.isWhitespace(body.charAt(i)))) i++;
+        }
+        return params;
+    }
+    
     protected Map<String, String> parseQueryParams(URI uri) {
         Map<String, String> params = new HashMap<>();
         String query = uri.getQuery();
@@ -343,13 +431,16 @@ class AuthHandler extends ApiHandler {
             String fullName = (String) user.get("full_name");
             String phone = (String) user.get("phone");
             
-            String token = JWTUtil.generateToken(userId, email, role, phone);
+            Object locationId = user.get("location_id");
+            String locationIdStr = locationId != null ? String.valueOf(locationId) : null;
+            
+            String token = JWTUtil.generateToken(userId, email, role, phone, locationIdStr);
             DBConnection.saveToken(token, userId);
             
             System.err.println("[LOGIN DEBUG] Success for user: " + email + ", role: " + role);
             
             String json = "{\"success\": true, \"token\": \"" + token + "\", \"user\": {\"id\": " + userId + 
-                         ", \"email\": \"" + escapeJson(email) + "\", \"full_name\": \"" + escapeJson(fullName) + "\", \"role\": \"" + escapeJson(role) + "\"}}";
+                         ", \"email\": \"" + escapeJson(email) + "\", \"full_name\": \"" + escapeJson(fullName) + "\", \"role\": \"" + escapeJson(role) + "\", \"location_id\": " + (locationId != null ? locationId : "null") + "}}";
             sendJsonResponse(exchange, 200, json);
         } else {
             System.err.println("[LOGIN DEBUG] Invalid credentials for: " + email);
@@ -1138,7 +1229,27 @@ class CourseHandler extends ApiHandler {
     }
     
     private void handleGetCourses(HttpExchange exchange) throws IOException {
-        List<Map<String, Object>> courses = DBConnection.getAllCourses();
+        // Check for category parameter
+        String query = exchange.getRequestURI().getQuery();
+        String category = null;
+        
+        if (query != null && query.contains("category=")) {
+            String[] params = query.split("&");
+            for (String param : params) {
+                if (param.startsWith("category=")) {
+                    category = param.substring("category=".length());
+                    category = java.net.URLDecoder.decode(category, "UTF-8");
+                    break;
+                }
+            }
+        }
+        
+        List<Map<String, Object>> courses;
+        if (category != null && !category.isEmpty()) {
+            courses = DBConnection.getCoursesByCategory(category);
+        } else {
+            courses = DBConnection.getAllCourses();
+        }
         
         StringBuilder json = new StringBuilder("{\"success\": true, \"courses\": [");
         for (int i = 0; i < courses.size(); i++) {
@@ -1443,15 +1554,55 @@ class ClassHandler extends ApiHandler {
         String code = params.get("code");
         String status = params.get("status");
         
-        // Use DBConnection.updateClass if it exists, otherwise update individual fields
-        boolean success = false;
-        if (status != null && !status.isEmpty()) {
-            success = DBConnection.updateClassStatus(classId, status);
-        } else {
-            // For other updates, we'd need a more comprehensive update method
-            sendErrorResponse(exchange, 400, "Status update only for now");
-            return;
+        // Parse all fields for full update
+        int courseId = 0;
+        int locationId = 0;
+        int instructorId = 0;
+        int maxStudents = 30;
+        double classFee = 0;
+        
+        try {
+            courseId = params.get("course_id") != null && !params.get("course_id").isEmpty() ? 
+                Integer.parseInt(params.get("course_id")) : 0;
+        } catch (NumberFormatException e) {
+            courseId = 0;
         }
+        try {
+            locationId = params.get("location_id") != null && !params.get("location_id").isEmpty() ? 
+                Integer.parseInt(params.get("location_id")) : 0;
+        } catch (NumberFormatException e) {
+            locationId = 0;
+        }
+        try {
+            instructorId = params.get("instructor_id") != null && !params.get("instructor_id").isEmpty() ? 
+                Integer.parseInt(params.get("instructor_id")) : 0;
+        } catch (NumberFormatException e) {
+            instructorId = 0;
+        }
+        try {
+            maxStudents = params.get("max_students") != null && !params.get("max_students").isEmpty() ? 
+                Integer.parseInt(params.get("max_students")) : 30;
+        } catch (NumberFormatException e) {
+            maxStudents = 30;
+        }
+        try {
+            classFee = params.get("class_fee") != null && !params.get("class_fee").isEmpty() ? 
+                Double.parseDouble(params.get("class_fee")) : 0;
+        } catch (NumberFormatException e) {
+            classFee = 0;
+        }
+        
+        String startDate = params.get("start_date");
+        String endDate = params.get("end_date");
+        String startTime = params.get("start_time");
+        String endTime = params.get("end_time");
+        String daysOfWeek = params.get("days_of_week");
+        String description = params.get("description");
+        
+        // Use DBConnection.updateClass to update all fields
+        boolean success = DBConnection.updateClass(classId, courseId, name, code, locationId, 
+            startDate, endDate, startTime, endTime, daysOfWeek, instructorId, maxStudents, 
+            classFee, description, status);
         
         if (success) {
             sendSuccessResponse(exchange, "Class updated successfully");
@@ -2199,3 +2350,4 @@ class LocationHandler extends ApiHandler {
         sendJsonResponse(exchange, 200, json.toString());
     }
 }
+

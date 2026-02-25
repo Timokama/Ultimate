@@ -5,7 +5,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -124,7 +123,7 @@ class EnrollmentHandler extends ApiHandler implements HttpHandler {
             return;
         }
 
-        // Parse request body
+        // Parse request body as form data
         String body = getRequestBody(exchange);
         Map<String, String> params = parseFormData(body);
 
@@ -138,25 +137,51 @@ class EnrollmentHandler extends ApiHandler implements HttpHandler {
         String feeBalanceStr = params.get("fee_balance");
         String paymentStatus = params.get("payment_status");
         String notes = params.get("notes");
-
+        
+        // Location ID for filtering
+        String locationIdStr = params.get("location_id");
+        int locationId = 0;
+        if (locationIdStr != null && !locationIdStr.isEmpty()) {
+            try {
+                locationId = Integer.parseInt(locationIdStr);
+            } catch (NumberFormatException e) {
+                // Invalid location_id, will use 0
+            }
+        }
+        
+        // Course details (alternative to course_id)
+        String licenseType = params.get("license_type");
+        String drivingCourse = params.get("driving_course");
+        String computerCourse = params.get("computer_course");
+        String transmission = params.get("transmission");
+        String preferredSchedule = params.get("preferred_schedule");
+        String trainingLocation = params.get("training_location");
+        
+        // New fields
+        String completionDate = params.get("completion_date");
+        String certificateNumber = params.get("certificate_number");
+        
         // Validate required fields
         if (studentIdStr == null || studentIdStr.isEmpty()) {
             sendErrorResponse(exchange, 400, "Student ID is required");
             return;
         }
-        if (courseIdStr == null || courseIdStr.isEmpty()) {
-            sendErrorResponse(exchange, 400, "Course ID is required");
-            return;
-        }
+        // Course ID is optional when using course details fields
+        // if (courseIdStr == null || courseIdStr.isEmpty()) {
+        //     sendErrorResponse(exchange, 400, "Course ID is required");
+        //     return;
+        // }
 
         int studentId;
-        int courseId;
+        int courseId = 0; // Default to 0 if not provided
         double feeAmount = 0;
         double feePaid = 0;
         double feeBalance = 0;
         try {
             studentId = Integer.parseInt(studentIdStr);
-            courseId = Integer.parseInt(courseIdStr);
+            if (courseIdStr != null && !courseIdStr.isEmpty()) {
+                courseId = Integer.parseInt(courseIdStr);
+            }
             if (feeAmountStr != null && !feeAmountStr.isEmpty()) {
                 feeAmount = Double.parseDouble(feeAmountStr);
             }
@@ -177,20 +202,20 @@ class EnrollmentHandler extends ApiHandler implements HttpHandler {
             return;
         }
 
-        // Validate course exists
-        if (DBConnection.getCourseById(courseId) == null) {
+        // Validate course exists (only if course_id is provided)
+        if (courseId > 0 && DBConnection.getCourseById(courseId) == null) {
             sendErrorResponse(exchange, 404, "Course not found");
             return;
         }
 
-        // Check if already enrolled
-        if (isAlreadyEnrolled(studentId, courseId)) {
+        // Check if already enrolled (only if course_id is provided)
+        if (courseId > 0 && isAlreadyEnrolled(studentId, courseId)) {
             sendErrorResponse(exchange, 409, "Student is already enrolled in this course");
             return;
         }
 
         // Create enrollment
-        int enrollmentId = createEnrollment(studentId, courseId, enrollmentDate, status, startTime, feeAmount, feePaid, feeBalance, paymentStatus, notes);
+        int enrollmentId = createEnrollment(studentId, courseId, enrollmentDate, status, startTime, feeAmount, feePaid, feeBalance, paymentStatus, notes, licenseType, drivingCourse, computerCourse, transmission, preferredSchedule, trainingLocation, completionDate, certificateNumber, locationId);
         if (enrollmentId > 0) {
             String json = "{\"success\": true, \"message\": \"Enrollment created successfully\", \"id\": " + enrollmentId + "}";
             sendJsonResponse(exchange, 201, json);
@@ -235,8 +260,9 @@ class EnrollmentHandler extends ApiHandler implements HttpHandler {
         String courseIdFilter = queryParams.get("course_id");
         String statusFilter = queryParams.get("status");
         String dateFilter = queryParams.get("date");
+        String locationFilter = queryParams.get("location");
 
-        List<Map<String, Object>> enrollments = getEnrollments(studentIdFilter, courseIdFilter, statusFilter, dateFilter);
+        List<Map<String, Object>> enrollments = getEnrollments(studentIdFilter, courseIdFilter, statusFilter, dateFilter, locationFilter);
         String json = "{\"success\": true, \"enrollments\": " + listMapToJson(enrollments) + ", \"count\": " + enrollments.size() + "}";
         sendJsonResponse(exchange, 200, json);
     }
@@ -299,8 +325,9 @@ class EnrollmentHandler extends ApiHandler implements HttpHandler {
         }
 
         String role = JWTUtil.getRole(token);
-        if (!"admin".equals(role)) {
-            sendErrorResponse(exchange, 403, "Admin access required");
+        // Allow admin, staff, and instructor to update enrollments
+        if (!"admin".equals(role) && !"staff".equals(role) && !"instructor".equals(role)) {
+            sendErrorResponse(exchange, 403, "Admin, staff, or instructor access required");
             return;
         }
 
@@ -308,6 +335,19 @@ class EnrollmentHandler extends ApiHandler implements HttpHandler {
         if (!enrollmentExists(enrollmentId)) {
             sendErrorResponse(exchange, 404, "Enrollment not found");
             return;
+        }
+
+        // For staff/instructor, verify enrollment belongs to their location
+        if ("staff".equals(role) || "instructor".equals(role)) {
+            String userLocationId = (String) payload.get("location_id");
+            if (userLocationId != null && !userLocationId.isEmpty()) {
+                // Get enrollment's location
+                String enrollmentLocationId = getEnrollmentLocation(enrollmentId);
+                if (enrollmentLocationId != null && !enrollmentLocationId.equals(userLocationId)) {
+                    sendErrorResponse(exchange, 403, "You can only update enrollments for your location");
+                    return;
+                }
+            }
         }
 
         // Parse request body
@@ -323,6 +363,35 @@ class EnrollmentHandler extends ApiHandler implements HttpHandler {
         String notes = params.get("notes");
         String completionDate = params.get("completion_date");
         String certificateNumber = params.get("certificate_number");
+        
+        // New fields
+        String licenseType = params.get("license_type");
+        String drivingCourse = params.get("driving_course");
+        String computerCourse = params.get("computer_course");
+        String transmission = params.get("transmission");
+        String preferredSchedule = params.get("preferred_schedule");
+        String trainingLocation = params.get("training_location");
+        
+        int locationId = 0;
+        String locationIdStr = params.get("location_id");
+        if (locationIdStr != null && !locationIdStr.isEmpty()) {
+            try {
+                locationId = Integer.parseInt(locationIdStr);
+            } catch (NumberFormatException e) {
+                locationId = 0;
+            }
+        }
+        
+        int progressPercentage = 0;
+        String progressStr = params.get("progress_percentage");
+        if (progressStr != null && !progressStr.isEmpty()) {
+            try {
+                progressPercentage = Integer.parseInt(progressStr);
+            } catch (NumberFormatException e) {
+                progressPercentage = 0;
+            }
+        }
+        String endTime = params.get("end_time");
 
         double feeAmount = 0;
         double feePaid = 0;
@@ -351,7 +420,7 @@ class EnrollmentHandler extends ApiHandler implements HttpHandler {
         }
 
         // Update enrollment
-        boolean updated = updateEnrollment(enrollmentId, status, startTime, feeAmount, feePaid, feeBalance, paymentStatus, notes, completionDate, certificateNumber);
+        boolean updated = updateEnrollment(enrollmentId, status, startTime, feeAmount, feePaid, feeBalance, paymentStatus, notes, completionDate, certificateNumber, licenseType, drivingCourse, computerCourse, transmission, preferredSchedule, trainingLocation, progressPercentage, endTime, locationId);
         if (updated) {
             String json = "{\"success\": true, \"message\": \"Enrollment updated successfully\"}";
             sendJsonResponse(exchange, 200, json);
@@ -459,16 +528,23 @@ class EnrollmentHandler extends ApiHandler implements HttpHandler {
      * Create a new enrollment
      */
     private int createEnrollment(int studentId, int courseId, String enrollmentDate, String status, String startTime, 
-            double feeAmount, double feePaid, double feeBalance, String paymentStatus, String notes) {
+            double feeAmount, double feePaid, double feeBalance, String paymentStatus, String notes,
+            String licenseType, String drivingCourse, String computerCourse, String transmission, 
+            String preferredSchedule, String trainingLocation, String completionDate, String certificateNumber, int locationId) {
         // Generate enrollment number
         String enrollmentNumber = "ENR-" + System.currentTimeMillis();
         // Use provided values or defaults - cast date/timestamp fields in SQL
-        String sql = "INSERT INTO enrollments (student_id, course_id, enrollment_number, enrollment_date, status, start_time, fee_amount, fee_paid, fee_balance, payment_status, notes) " +
-                     "VALUES (?, ?, ?, CAST(? AS DATE), ?, CAST(? AS TIMESTAMP), ?, ?, ?, ?, ?) RETURNING id";
+        String sql = "INSERT INTO enrollments (student_id, course_id, enrollment_number, enrollment_date, status, start_time, fee_amount, fee_paid, fee_balance, payment_status, notes, license_type, driving_course, computer_course, transmission, preferred_schedule, training_location, completion_date, certificate_number, location_id) " +
+                     "VALUES (?, ?, ?, CAST(? AS DATE), ?, CAST(? AS TIMESTAMP), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CAST(? AS DATE), ?, ?) RETURNING id";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, studentId);
-            stmt.setInt(2, courseId);
+            // Handle course_id - use null if 0
+            if (courseId > 0) {
+                stmt.setInt(2, courseId);
+            } else {
+                stmt.setNull(2, java.sql.Types.INTEGER);
+            }
             stmt.setString(3, enrollmentNumber);
             // Handle enrollment_date - use current date if not provided
             if (enrollmentDate != null && !enrollmentDate.isEmpty()) {
@@ -477,12 +553,48 @@ class EnrollmentHandler extends ApiHandler implements HttpHandler {
                 stmt.setString(4, null); // Let DEFAULT handle it
             }
             stmt.setString(5, status != null && !status.isEmpty() ? status : "enrolled");
-            stmt.setString(6, startTime != null && !startTime.isEmpty() ? startTime : null);
+            // Handle start_time - handle both time-only (HH:MM) and full timestamp values
+            if (startTime != null && !startTime.isEmpty()) {
+                String timestampValue;
+                if (startTime.contains("T")) {
+                    // Already a full timestamp from datetime-local input, use as-is
+                    timestampValue = startTime.length() == 16 ? startTime + ":00" : startTime;
+                } else {
+                    // Time-only value (HH:MM), prepend today's date
+                    timestampValue = java.time.LocalDate.now().toString() + " " + startTime + ":00";
+                }
+                stmt.setString(6, timestampValue);
+            } else {
+                stmt.setString(6, null);
+            }
             stmt.setDouble(7, feeAmount);
             stmt.setDouble(8, feePaid);
             stmt.setDouble(9, feeBalance);
             stmt.setString(10, paymentStatus != null && !paymentStatus.isEmpty() ? paymentStatus : "unpaid");
             stmt.setString(11, notes);
+            stmt.setString(12, licenseType);
+            stmt.setString(13, drivingCourse);
+            stmt.setString(14, computerCourse);
+            stmt.setString(15, transmission);
+            stmt.setString(16, preferredSchedule);
+            stmt.setString(17, trainingLocation);
+            // Handle completion_date and certificate_number
+            if (completionDate != null && !completionDate.isEmpty()) {
+                stmt.setString(18, completionDate);
+            } else {
+                stmt.setNull(18, java.sql.Types.DATE);
+            }
+            if (certificateNumber != null && !certificateNumber.isEmpty()) {
+                stmt.setString(19, certificateNumber);
+            } else {
+                stmt.setNull(19, java.sql.Types.VARCHAR);
+            }
+            // Handle location_id
+            if (locationId > 0) {
+                stmt.setInt(20, locationId);
+            } else {
+                stmt.setNull(20, java.sql.Types.INTEGER);
+            }
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 return rs.getInt("id");
@@ -496,7 +608,7 @@ class EnrollmentHandler extends ApiHandler implements HttpHandler {
     /**
      * Get enrollments with optional filtering
      */
-    private List<Map<String, Object>> getEnrollments(String studentIdFilter, String courseIdFilter, String statusFilter, String dateFilter) {
+    private List<Map<String, Object>> getEnrollments(String studentIdFilter, String courseIdFilter, String statusFilter, String dateFilter, String locationFilter) {
         List<Map<String, Object>> enrollments = new ArrayList<>();
         
         StringBuilder sql = new StringBuilder();
@@ -507,23 +619,50 @@ class EnrollmentHandler extends ApiHandler implements HttpHandler {
         sql.append("LEFT JOIN courses c ON e.course_id = c.id ");
         sql.append("WHERE 1=1 ");
         
+        List<Object> params = new ArrayList<>();
+        
         if (studentIdFilter != null && !studentIdFilter.isEmpty()) {
-            sql.append("AND e.student_id = ").append(studentIdFilter).append(" ");
+            sql.append("AND e.student_id = ? ");
+            try {
+                params.add(Integer.parseInt(studentIdFilter));
+            } catch (NumberFormatException e) {
+                params.add(0); // Invalid number will return no results
+            }
         }
         if (courseIdFilter != null && !courseIdFilter.isEmpty()) {
-            sql.append("AND e.course_id = ").append(courseIdFilter).append(" ");
+            // Filter by driving_course OR computer_course name (since we're now using course names)
+            sql.append("AND (e.driving_course = ? OR e.computer_course = ?) ");
+            params.add(courseIdFilter);
+            params.add(courseIdFilter);
         }
         if (statusFilter != null && !statusFilter.isEmpty()) {
-            sql.append("AND e.status = '").append(statusFilter).append("' ");
+            sql.append("AND e.status = ? ");
+            params.add(statusFilter);
         }
         if (dateFilter != null && !dateFilter.isEmpty()) {
-            sql.append("AND DATE(e.enrollment_date) = '").append(dateFilter).append("' ");
+            sql.append("AND DATE(e.enrollment_date) = ? ");
+            params.add(dateFilter);
+        }
+        if (locationFilter != null && !locationFilter.isEmpty()) {
+            // Filter by location_id - convert location name to ID if needed
+            try {
+                int locationId = Integer.parseInt(locationFilter);
+                sql.append("AND e.location_id = ? ");
+                params.add(locationId);
+            } catch (NumberFormatException e) {
+                // If not a number, try to match by training_location name
+                sql.append("AND e.training_location = ? ");
+                params.add(locationFilter);
+            }
         }
         sql.append("ORDER BY e.created_at DESC");
         
         try (Connection conn = DBConnection.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql.toString())) {
+             PreparedStatement stmt = conn.prepareStatement(sql.toString())) {
+            for (int i = 0; i < params.size(); i++) {
+                stmt.setObject(i + 1, params.get(i));
+            }
+            ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 enrollments.add(mapEnrollment(rs));
             }
@@ -538,10 +677,12 @@ class EnrollmentHandler extends ApiHandler implements HttpHandler {
      */
     private Map<String, Object> getEnrollmentById(int enrollmentId) {
         String sql = "SELECT e.*, u.first_name as student_first_name, u.last_name as student_last_name, u.email as student_email, " +
-                     "c.name as course_name, c.code as course_code, c.duration_hours, c.price " +
+                     "c.name as course_name, c.code as course_code, c.duration_hours, c.price, " +
+                     "cl.name as class_name, cl.code as class_code " +
                      "FROM enrollments e " +
                      "LEFT JOIN users u ON e.student_id = u.id " +
                      "LEFT JOIN courses c ON e.course_id = c.id " +
+                     "LEFT JOIN classes cl ON e.class_id = cl.id " +
                      "WHERE e.id = ?";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -595,6 +736,24 @@ class EnrollmentHandler extends ApiHandler implements HttpHandler {
             return false;
         }
     }
+    
+    /**
+     * Get enrollment's location_id
+     */
+    private String getEnrollmentLocation(int enrollmentId) {
+        String sql = "SELECT location_id FROM enrollments WHERE id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, enrollmentId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getString("location_id");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     /**
      * Check if status is valid
@@ -608,14 +767,37 @@ class EnrollmentHandler extends ApiHandler implements HttpHandler {
      * Update enrollment
      */
     private boolean updateEnrollment(int enrollmentId, String status, String startTime, double feeAmount, 
-            double feePaid, double feeBalance, String paymentStatus, String notes, String completionDate, String certificateNumber) {
+            double feePaid, double feeBalance, String paymentStatus, String notes, String completionDate, String certificateNumber,
+            String licenseType, String drivingCourse, String computerCourse, String transmission, 
+            String preferredSchedule, String trainingLocation, int progressPercentage, String endTime, int locationId) {
         StringBuilder sql = new StringBuilder("UPDATE enrollments SET updated_at = CURRENT_TIMESTAMP");
         
         if (status != null && !status.isEmpty()) {
-            sql.append(", status = '").append(status).append("'");
+            sql.append(", status = '").append(escapeJson(status)).append("'");
         }
         if (startTime != null && !startTime.isEmpty()) {
-            sql.append(", start_time = '").append(startTime).append("'");
+            // Handle both datetime-local format (2026-02-24T15:35:00) and time-only format (15:35)
+            String timestampValue;
+            if (startTime.contains("T")) {
+                // Already a full timestamp, just add seconds if missing
+                timestampValue = startTime.length() == 16 ? startTime + ":00" : startTime;
+            } else {
+                // Convert time-only value to timestamp by prepending today's date
+                timestampValue = java.time.LocalDate.now().toString() + " " + startTime + ":00";
+            }
+            sql.append(", start_time = '").append(timestampValue).append("'");
+        }
+        if (endTime != null && !endTime.isEmpty()) {
+            // Handle both datetime-local format and time-only format
+            String timestampValue;
+            if (endTime.contains("T")) {
+                // Already a full timestamp, just add seconds if missing
+                timestampValue = endTime.length() == 16 ? endTime + ":00" : endTime;
+            } else {
+                // Convert time-only value to timestamp by prepending today's date
+                timestampValue = java.time.LocalDate.now().toString() + " " + endTime + ":00";
+            }
+            sql.append(", end_time = '").append(timestampValue).append("'");
         }
         if (feeAmount > 0) {
             sql.append(", fee_amount = ").append(feeAmount);
@@ -637,6 +819,31 @@ class EnrollmentHandler extends ApiHandler implements HttpHandler {
         }
         if (certificateNumber != null && !certificateNumber.isEmpty()) {
             sql.append(", certificate_number = '").append(certificateNumber).append("'");
+        }
+        // Add new fields
+        if (licenseType != null && !licenseType.isEmpty()) {
+            sql.append(", license_type = '").append(escapeJson(licenseType)).append("'");
+        }
+        if (drivingCourse != null && !drivingCourse.isEmpty()) {
+            sql.append(", driving_course = '").append(escapeJson(drivingCourse)).append("'");
+        }
+        if (computerCourse != null && !computerCourse.isEmpty()) {
+            sql.append(", computer_course = '").append(escapeJson(computerCourse)).append("'");
+        }
+        if (transmission != null && !transmission.isEmpty()) {
+            sql.append(", transmission = '").append(escapeJson(transmission)).append("'");
+        }
+        if (preferredSchedule != null && !preferredSchedule.isEmpty()) {
+            sql.append(", preferred_schedule = '").append(escapeJson(preferredSchedule)).append("'");
+        }
+        if (trainingLocation != null && !trainingLocation.isEmpty()) {
+            sql.append(", training_location = '").append(escapeJson(trainingLocation)).append("'");
+        }
+        if (progressPercentage > 0) {
+            sql.append(", progress_percentage = ").append(progressPercentage);
+        }
+        if (locationId > 0) {
+            sql.append(", location_id = ").append(locationId);
         }
         
         sql.append(" WHERE id = ?");
@@ -688,10 +895,45 @@ class EnrollmentHandler extends ApiHandler implements HttpHandler {
         enrollment.put("created_at", rs.getTimestamp("created_at"));
         enrollment.put("updated_at", rs.getTimestamp("updated_at"));
         
+        // Include course details fields if available
+        try {
+            enrollment.put("license_type", rs.getString("license_type"));
+        } catch (SQLException e) {
+            enrollment.put("license_type", "");
+        }
+        try {
+            enrollment.put("driving_course", rs.getString("driving_course"));
+        } catch (SQLException e) {
+            enrollment.put("driving_course", "");
+        }
+        try {
+            enrollment.put("computer_course", rs.getString("computer_course"));
+        } catch (SQLException e) {
+            enrollment.put("computer_course", "");
+        }
+        try {
+            enrollment.put("transmission", rs.getString("transmission"));
+        } catch (SQLException e) {
+            enrollment.put("transmission", "");
+        }
+        try {
+            enrollment.put("preferred_schedule", rs.getString("preferred_schedule"));
+        } catch (SQLException e) {
+            enrollment.put("preferred_schedule", "");
+        }
+        try {
+            enrollment.put("training_location", rs.getString("training_location"));
+        } catch (SQLException e) {
+            enrollment.put("training_location", "");
+        }
+        
         // Include student info if available
         try {
-            enrollment.put("student_first_name", rs.getString("student_first_name"));
-            enrollment.put("student_last_name", rs.getString("student_last_name"));
+            String firstName = rs.getString("student_first_name");
+            String lastName = rs.getString("student_last_name");
+            enrollment.put("student_first_name", firstName);
+            enrollment.put("student_last_name", lastName);
+            enrollment.put("student_name", (firstName != null ? firstName : "") + " " + (lastName != null ? lastName : ""));
             enrollment.put("student_email", rs.getString("student_email"));
         } catch (SQLException e) {
             // Student info not available in this query
@@ -705,6 +947,21 @@ class EnrollmentHandler extends ApiHandler implements HttpHandler {
             enrollment.put("price", rs.getDouble("price"));
         } catch (SQLException e) {
             // Course info not available in this query
+        }
+        
+        // Include class info if available
+        try {
+            enrollment.put("class_name", rs.getString("class_name"));
+            enrollment.put("class_code", rs.getString("class_code"));
+        } catch (SQLException e) {
+            // Class info not available
+        }
+        
+        // Include location info if available
+        try {
+            enrollment.put("location_name", rs.getString("location_name"));
+        } catch (SQLException e) {
+            // Location info not available
         }
         
         return enrollment;

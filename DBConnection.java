@@ -681,6 +681,22 @@ public class DBConnection {
         return courses;
     }
     
+    // Get courses by category
+    public static List<Map<String, Object>> getCoursesByCategory(String category) {
+        List<Map<String, Object>> courses = new ArrayList<>();
+        String sql = "SELECT * FROM courses WHERE is_active = true AND category = ? ORDER BY name";
+        try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
+            stmt.setString(1, category);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                courses.add(mapCourse(rs));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return courses;
+    }
+    
     // Get course ID by name (for application submission)
     public static Integer getCourseIdByName(String courseName) {
         if (courseName == null || courseName.isEmpty()) return null;
@@ -723,21 +739,6 @@ public class DBConnection {
             e.printStackTrace();
         }
         return null;
-    }
-    
-    public static List<Map<String, Object>> getCoursesByCategory(String category) {
-        List<Map<String, Object>> courses = new ArrayList<>();
-        String sql = "SELECT * FROM courses WHERE category = ? AND is_active = true ORDER BY name";
-        try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
-            stmt.setString(1, category);
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                courses.add(mapCourse(rs));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return courses;
     }
     
     public static List<Map<String, Object>> getDrivingCourses() {
@@ -971,6 +972,57 @@ public class DBConnection {
         try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
             stmt.setString(1, status);
             stmt.setInt(2, classId);
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
+    public static boolean updateClass(int classId, int courseId, String name, String code, int locationId, 
+            String startDate, String endDate, String startTime, String endTime, String daysOfWeek,
+            int instructorId, int maxStudents, double classFee, String description, String status) {
+        String sql = "UPDATE classes SET course_id = ?, name = ?, code = ?, location_id = ?, " +
+                     "start_date = ?, end_date = ?, start_time = ?, end_time = ?, days_of_week = ?, " +
+                     "instructor_id = ?, max_students = ?, class_fee = ?, description = ?, status = ?, " +
+                     "updated_at = CURRENT_TIMESTAMP WHERE id = ?";
+        try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
+            stmt.setInt(1, courseId);
+            stmt.setString(2, name);
+            stmt.setString(3, code);
+            stmt.setInt(4, locationId);
+            
+            // Handle dates safely
+            if (startDate != null && !startDate.isEmpty()) {
+                try { stmt.setDate(5, java.sql.Date.valueOf(startDate)); } catch (Exception e) { stmt.setDate(5, null); }
+            } else { stmt.setDate(5, null); }
+            
+            if (endDate != null && !endDate.isEmpty()) {
+                try { stmt.setDate(6, java.sql.Date.valueOf(endDate)); } catch (Exception e) { stmt.setDate(6, null); }
+            } else { stmt.setDate(6, null); }
+            
+            // Handle times safely - convert HH:MM to HH:MM:SS format
+            if (startTime != null && !startTime.isEmpty()) {
+                try { 
+                    String timeStr = startTime.length() == 5 ? startTime + ":00" : startTime;
+                    stmt.setTime(7, java.sql.Time.valueOf(timeStr)); 
+                } catch (Exception e) { stmt.setTime(7, null); }
+            } else { stmt.setTime(7, null); }
+            
+            if (endTime != null && !endTime.isEmpty()) {
+                try { 
+                    String timeStr = endTime.length() == 5 ? endTime + ":00" : endTime;
+                    stmt.setTime(8, java.sql.Time.valueOf(timeStr)); 
+                } catch (Exception e) { stmt.setTime(8, null); }
+            } else { stmt.setTime(8, null); }
+            
+            stmt.setString(9, daysOfWeek);
+            stmt.setInt(10, instructorId);
+            stmt.setInt(11, maxStudents);
+            stmt.setDouble(12, classFee);
+            stmt.setString(13, description);
+            stmt.setString(14, status != null && !status.isEmpty() ? status : "scheduled");
+            stmt.setInt(15, classId);
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();

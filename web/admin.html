@@ -572,9 +572,12 @@
                     
                     <!-- Enrollments Section -->
                     <div id="section-enrollments" class="admin-section" style="display: none;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                            <h2 style="margin: 0;">Enrollment Management</h2>
-                            <button class="btn btn-primary" onclick="openEnrollmentModal()">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; background: linear-gradient(135deg, #1e3a5f 0%, #2d5a87 100%); padding: 20px 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(30, 58, 95, 0.3);">
+                            <div>
+                                <h2 style="margin: 0; color: #fff; font-size: 24px; font-weight: 600;">Enrollment Management</h2>
+                                <p style="margin: 5px 0 0 0; color: rgba(255,255,255,0.7); font-size: 13px;">Manage student enrollments and track progress</p>
+                            </div>
+                            <button class="btn btn-primary" onclick="openEnrollmentModal()" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);">
                                 <i class="fas fa-plus"></i> New Enrollment
                             </button>
                         </div>
@@ -600,14 +603,18 @@
                         </div>
                         
                         <!-- Filters -->
-                        <div style="margin-bottom: 20px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
-                            <select id="enrollment-student-filter" onchange="loadEnrollments()" style="padding: 10px 14px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 14px;">
+                        <div style="margin-bottom: 25px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); padding: 15px 20px; border-radius: 10px; border-left: 4px solid #3d7ab5;">
+                            <span style="color: #1e3a5f; font-weight: 600; margin-right: 10px;"><i class="fas fa-filter"></i> Filter:</span>
+                            <input type="text" id="enrollment-search" onkeyup="loadEnrollments()" placeholder="Search enrollments..." style="padding: 10px 14px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 14px; min-width: 200px;">
+                            <select id="enrollment-student-filter" onchange="loadEnrollments()" style="padding: 10px 14px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 14px; min-width: 180px;">
                                 <option value="">All Students</option>
                             </select>
-                            <select id="enrollment-course-filter" onchange="loadEnrollments()" style="padding: 10px 14px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 14px;">
-                                <option value="">All Courses</option>
+                            <select id="enrollment-category-filter" onchange="loadEnrollments()" style="padding: 10px 14px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 14px; min-width: 150px;">
+                                <option value="">All Categories</option>
+                                <option value="driving">Driving Courses</option>
+                                <option value="computer">Computer Courses</option>
                             </select>
-                            <select id="enrollment-status-filter" onchange="loadEnrollments()" style="padding: 10px 14px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 14px;">
+                            <select id="enrollment-status-filter" onchange="loadEnrollments()" style="padding: 10px 14px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 14px; min-width: 150px;">
                                 <option value="">All Status</option>
                                 <option value="enrolled">Enrolled</option>
                                 <option value="active">Active</option>
@@ -615,7 +622,13 @@
                                 <option value="dropped">Dropped</option>
                                 <option value="suspended">Suspended</option>
                             </select>
-                            <button onclick="loadEnrollments()" class="btn btn-small"><i class="fas fa-sync-alt"></i> Refresh</button>
+                            <button onclick="loadEnrollments()" class="btn btn-small" style="background: #3d7ab5; color: white; border: none;"><i class="fas fa-sync-alt"></i> Refresh</button>
+                            <!-- View Toggle -->
+                            <div style="display: flex; align-items: center; gap: 8px; margin-left: 10px;">
+                                <span style="color: #1e3a5f; font-weight: 600; font-size: 14px;">View:</span>
+                                <button onclick="setEnrollmentView('table')" id="enrollment-view-table" class="btn btn-small" style="background: #3d7ab5; color: white; border: none; padding: 8px 12px; border-radius: 6px;" title="Table View"><i class="fas fa-table"></i></button>
+                                <button onclick="setEnrollmentView('cards')" id="enrollment-view-cards" class="btn btn-small" style="background: #e2e8f0; color: #64748b; border: none; padding: 8px 12px; border-radius: 6px;" title="Cards View"><i class="fas fa-th"></i></button>
+                            </div>
                         </div>
                         
                         <!-- Enrollments Table -->
@@ -1476,7 +1489,7 @@
                             </div>
                             <div>
                                 <label for="department-status"><i class="fas fa-toggle-on"></i> Status</label>
-                                <select id="department-status" name="is_active" style="width: 100%; padding: 10px; border: 2px solid var(--border-color); border-radius: 8px; background: var(--bg-color); color: var(--text-color); font-size: 14px; outline: none; cursor: pointer; transition: border-color 0.3s, box-shadow: 0.3s;">
+                                <select id="department-status" name="is_active" style="width: 100%; padding: 10px; border: 2px solid var(--border-color); border-radius: 8px; background: var(--bg-color); color: var(--text-color); font-size: 14px; outline: none; cursor: pointer; transition: border-color 0.3s, box-shadow 0.3s;">
                                     <option value="true">Active</option>
                                     <option value="false">Inactive</option>
                                 </select>
@@ -1494,13 +1507,13 @@
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                             <div>
                                 <label for="department-location"><i class="fas fa-map"></i> Training Location</label>
-                                <select id="department-location" name="location_id" style="width: 100%; padding: 10px; border: 2px solid var(--border-color); border-radius: 8px; background: var(--bg-color); color: var(--text-color); font-size: 14px; outline: none; cursor: pointer; transition: border-color 0.3s, box-shadow: 0.3s;">
+                                <select id="department-location" name="location_id" style="width: 100%; padding: 10px; border: 2px solid var(--border-color); border-radius: 8px; background: var(--bg-color); color: var(--text-color); font-size: 14px; outline: none; cursor: pointer; transition: border-color 0.3s, box-shadow 0.3s;">
                                     <option value="">-- Select Location --</option>
                                 </select>
                             </div>
                             <div>
                                 <label for="department-head"><i class="fas fa-user"></i> Department Head</label>
-                                <select id="department-head" name="head_id" style="width: 100%; padding: 10px; border: 2px solid var(--border-color); border-radius: 8px; background: var(--bg-color); color: var(--text-color); font-size: 14px; outline: none; cursor: pointer; transition: border-color 0.3s, box-shadow: 0.3s;">
+                                <select id="department-head" name="head_id" style="width: 100%; padding: 10px; border: 2px solid var(--border-color); border-radius: 8px; background: var(--bg-color); color: var(--text-color); font-size: 14px; outline: none; cursor: pointer; transition: border-color 0.3s, box-shadow 0.3s;">
                                     <option value="">-- Select Head --</option>
                                 </select>
                             </div>
@@ -1520,41 +1533,48 @@
     </div>
     
     <!-- Enrollment Modal -->
-    <div id="enrollment-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 id="enrollment-modal-title">New Enrollment</h3>
-                <button class="modal-close" onclick="closeEnrollmentModal()">&times;</button>
+    <div id="enrollment-modal" class="modal" style="z-index: 9999;">
+        <div class="modal-content" style="background: linear-gradient(135deg, #1e3a5f 0%, #2d5a87 50%, #3d7ab5 100%); border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.5); max-width: 800px; width: 95%; position: relative; z-index: 10000; margin-top: 5vh;">
+            <div class="modal-header" style="background: rgba(255,255,255,0.1); border-bottom: 1px solid rgba(255,255,255,0.2); padding: 20px 25px; border-radius: 16px 16px 0 0;">
+                <h3 id="enrollment-modal-title" style="color: #fff; margin: 0; font-size: 22px; font-weight: 600;">New Enrollment</h3>
+                <button class="modal-close" onclick="closeEnrollmentModal()" style="color: #fff; background: rgba(255,255,255,0.2); border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: 20px; transition: all 0.3s;">&times;</button>
             </div>
-            <form id="enrollment-form" onsubmit="handleEnrollmentSubmit(event)">
-                <div class="modal-body">
+            <form id="enrollment-form" onsubmit="handleEnrollmentSubmit(event)" novalidate>
+                <div class="modal-body enrollment-form-wrapper" style="padding: 25px; border-radius: 0; max-height: 70vh; overflow-y: auto; background: #f8fafc;">
                     <input type="hidden" id="enrollment-id" name="enrollment_id">
+                    <input type="hidden" id="enrollment-student-id" name="student_id">
+                    
+                    <div class="enrollment-form-section">
+                        <h4>Student Information</h4>
+                        <p id="enrollment-student-label">Select the student for this enrollment</p>
                     
                     <div class="form-row">
-                        <div class="form-group">
-                            <label for="enrollment-student">Student *</label>
-                            <select id="enrollment-student" name="user_id" required>
+                        <div class="form-group" id="student-select-group">
+                            <label for="enrollment-student" style="color: #1e3a5f; font-weight: 600;">Student *</label>
+                            <select id="enrollment-student" name="user_id" style="border: 2px solid #dee2e6; border-radius: 8px; padding: 12px; width: 100%; background: #fff; color: #495057; font-size: 14px;">
                                 <option value="">Select Student</option>
                             </select>
                         </div>
-                        
-                        <div class="form-group">
-                            <label for="enrollment-course">Course *</label>
-                            <select id="enrollment-course" name="course_id" required onchange="onEnrollmentCourseChange()">
-                                <option value="">Select Course</option>
-                            </select>
+                        <div class="form-group" id="student-name-group" style="display: none;">
+                            <label style="color: #1e3a5f; font-weight: 600;">Student</label>
+                            <div id="enrollment-student-name" style="border: 2px solid #28a745; border-radius: 8px; padding: 12px; background: #e8f5e9; color: #1e3a5f; font-size: 14px; font-weight: 600;"></div>
                         </div>
+                    </div>
+                    
+                    <div class="enrollment-form-section">
+                        <h4>Enrollment Details</h4>
+                        <p>Basic enrollment information</p>
                     </div>
                     
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="enrollment-date">Enrollment Date</label>
-                            <input type="date" id="enrollment-date" name="enrollment_date">
+                            <label for="enrollment-date" style="color: #1e3a5f; font-weight: 600;">Enrollment Date</label>
+                            <input type="date" id="enrollment-date" name="enrollment_date" style="border: 2px solid #dee2e6; border-radius: 8px; padding: 12px; width: 100%; background: #fff; color: #495057; font-size: 14px;">
                         </div>
                         
                         <div class="form-group">
-                            <label for="enrollment-status">Status</label>
-                            <select id="enrollment-status" name="status">
+                            <label for="enrollment-status" style="color: #1e3a5f; font-weight: 600;">Status</label>
+                            <select id="enrollment-status" name="status" style="border: 2px solid #dee2e6; border-radius: 8px; padding: 12px; width: 100%; background: #fff; color: #495057; font-size: 14px;">
                                 <option value="enrolled">Enrolled</option>
                                 <option value="active">Active</option>
                                 <option value="completed">Completed</option>
@@ -1566,45 +1586,137 @@
                     
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="enrollment-start">Start Time</label>
-                            <input type="datetime-local" id="enrollment-start" name="start_time">
+                            <label for="enrollment-start" style="color: #1e3a5f; font-weight: 600;">Start Time</label>
+                            <input type="datetime-local" id="enrollment-start" name="start_time" style="border: 2px solid #dee2e6; border-radius: 8px; padding: 12px; width: 100%; background: #fff; color: #495057; font-size: 14px;">
+                        </div>
+                    </div>
+                    
+                    <div class="enrollment-form-section">
+                        <h4>Payment Information</h4>
+                        <p>Fee and payment details</p>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="enrollment-fee" style="color: #1e3a5f; font-weight: 600;">Fee Amount (KSh)</label>
+                            <input type="number" id="enrollment-fee" name="fee_amount" step="0.01" min="0" placeholder="0.00" style="border: 2px solid #dee2e6; border-radius: 8px; padding: 12px; width: 100%; background: #fff; color: #495057; font-size: 14px;">
                         </div>
                         
                         <div class="form-group">
-                            <label for="enrollment-fee">Fee Amount (KSh)</label>
-                            <input type="number" id="enrollment-fee" name="fee_amount" step="0.01" min="0" placeholder="0.00">
+                            <label for="enrollment-paid" style="color: #1e3a5f; font-weight: 600;">Fee Paid (KSh)</label>
+                            <input type="number" id="enrollment-paid" name="fee_paid" step="0.01" min="0" placeholder="0.00" onchange="calculateEnrollmentBalance()" style="border: 2px solid #dee2e6; border-radius: 8px; padding: 12px; width: 100%; background: #fff; color: #495057; font-size: 14px;">
                         </div>
                     </div>
                     
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="enrollment-paid">Fee Paid (KSh)</label>
-                            <input type="number" id="enrollment-paid" name="fee_paid" step="0.01" min="0" placeholder="0.00" onchange="calculateEnrollmentBalance()">
+                            <label for="enrollment-balance" style="color: #1e3a5f; font-weight: 600;">Fee Balance (KSh)</label>
+                            <input type="number" id="enrollment-balance" name="fee_balance" step="0.01" min="0" placeholder="0.00" readonly style="border: 2px solid #28a745; border-radius: 8px; padding: 12px; width: 100%; background: #e8f5e9; color: #28a745; font-size: 14px; font-weight: 600;">
                         </div>
                         
                         <div class="form-group">
-                            <label for="enrollment-balance">Fee Balance (KSh)</label>
-                            <input type="number" id="enrollment-balance" name="fee_balance" step="0.01" min="0" placeholder="0.00" readonly>
+                            <label for="enrollment-payment" style="color: #1e3a5f; font-weight: 600;">Payment Status</label>
+                            <select id="enrollment-payment" name="payment_status" style="border: 2px solid #dee2e6; border-radius: 8px; padding: 12px; width: 100%; background: #fff; color: #495057; font-size: 14px;">
+                                <option value="unpaid">Unpaid</option>
+                                <option value="partial">Partial</option>
+                                <option value="paid">Paid</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="enrollment-form-section">
+                        <h4>Course Selection</h4>
+                        <p>Choose driving and/or computer courses</p>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="enrollment-location-id" style="color: #1e3a5f; font-weight: 600;">Location</label>
+                            <select id="enrollment-location-id" name="location_id" style="border: 2px solid #dee2e6; border-radius: 8px; padding: 12px; width: 100%; background: #fff; color: #495057; font-size: 14px;">
+                                <option value="">Select Location</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="enrollment-license" style="color: #1e3a5f; font-weight: 600;">License Type</label>
+                            <select id="enrollment-license" name="license_type" style="border: 2px solid #dee2e6; border-radius: 8px; padding: 12px; width: 100%; background: #fff; color: #495057; font-size: 14px;">
+                                <option value="">Select License Type</option>
+                                <option value="Class B">Class B</option>
+                                <option value="Class C">Class C</option>
+                                <option value="Class D">Class D</option>
+                                <option value="Class A">Class A</option>
+                                <option value="Motorcycle">Motorcycle</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="enrollment-driving" style="color: #1e3a5f; font-weight: 600;">Driving Course</label>
+                            <select id="enrollment-driving" name="driving_course" onchange="calculateEnrollmentFee()" style="border: 2px solid #dee2e6; border-radius: 8px; padding: 12px; width: 100%; background: #fff; color: #495057; font-size: 14px;">
+                                <option value="">Select Driving Course</option>
+                                <option value="Defensive Driving">Defensive Driving</option>
+                                <option value="Refresher Course">Refresher Course</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="enrollment-computer" style="color: #1e3a5f; font-weight: 600;">Computer Course</label>
+                            <select id="enrollment-computer" name="computer_course" onchange="calculateEnrollmentFee()" style="border: 2px solid #dee2e6; border-radius: 8px; padding: 12px; width: 100%; background: #fff; color: #495057; font-size: 14px;">
+                                <option value="">Select Computer Course</option>
+                                <option value="Computer Basics">Computer Basics</option>
+                                <option value="Programming">Programming</option>
+                                <option value="Graphic Design">Graphic Design</option>
+                                <option value="SPSS">SPSS</option>
+                                <option value="Secretarial">Secretarial</option>
+                                <option value="Computer Accounting">Computer Accounting</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="enrollment-transmission" style="color: #1e3a5f; font-weight: 600;">Transmission</label>
+                            <select id="enrollment-transmission" name="transmission" style="border: 2px solid #dee2e6; border-radius: 8px; padding: 12px; width: 100%; background: #fff; color: #495057; font-size: 14px;">
+                                <option value="">Select Transmission</option>
+                                <option value="Manual">Manual</option>
+                                <option value="Automatic">Automatic</option>
+                                <option value="Both">Both</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="enrollment-schedule" style="color: #1e3a5f; font-weight: 600;">Preferred Schedule</label>
+                            <select id="enrollment-schedule" name="preferred_schedule" style="border: 2px solid #dee2e6; border-radius: 8px; padding: 12px; width: 100%; background: #fff; color: #495057; font-size: 14px;">
+                                <option value="">Select Schedule</option>
+                                <option value="Morning">Morning</option>
+                                <option value="Afternoon">Afternoon</option>
+                                <option value="Evening">Evening</option>
+                                <option value="Weekend">Weekend</option>
+                            </select>
                         </div>
                     </div>
                     
                     <div class="form-group">
-                        <label for="enrollment-payment">Payment Status</label>
-                        <select id="enrollment-payment" name="payment_status">
-                            <option value="unpaid">Unpaid</option>
-                            <option value="partial">Partial</option>
-                            <option value="paid">Paid</option>
-                        </select>
+                        <label for="enrollment-completion" style="color: #1e3a5f; font-weight: 600;">Completion Date</label>
+                        <input type="date" id="enrollment-completion" name="completion_date" style="border: 2px solid #dee2e6; border-radius: 8px; padding: 12px; width: 100%; background: #fff; color: #495057; font-size: 14px;">
                     </div>
                     
                     <div class="form-group">
-                        <label for="enrollment-notes">Notes</label>
-                        <textarea id="enrollment-notes" name="notes" rows="3" placeholder="Additional notes..."></textarea>
+                        <label for="enrollment-cert" style="color: #1e3a5f; font-weight: 600;">Certificate Number</label>
+                        <input type="text" id="enrollment-cert" name="certificate_number" placeholder="Certificate Number" style="border: 2px solid #dee2e6; border-radius: 8px; padding: 12px; width: 100%; background: #fff; color: #495057; font-size: 14px;">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="enrollment-notes" style="color: #1e3a5f; font-weight: 600;">Notes</label>
+                        <textarea id="enrollment-notes" name="notes" rows="3" placeholder="Additional notes..." style="border: 2px solid #dee2e6; border-radius: 8px; padding: 12px; width: 100%; background: #fff; color: #495057; font-size: 14px; resize: vertical;"></textarea>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline" onclick="closeEnrollmentModal()">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Save Enrollment</button>
+                <div class="modal-footer" style="background: rgba(255,255,255,0.1); padding: 15px 25px; border-radius: 0 0 16px 16px; display: flex; justify-content: flex-end; gap: 10px;">
+                    <button type="button" class="btn btn-outline" onclick="closeEnrollmentModal()" style="color: #fff; border: 2px solid rgba(255,255,255,0.5); background: transparent; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s;">Cancel</button>
+                    <button type="submit" class="btn btn-primary" style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); border: none; color: #fff; padding: 10px 25px; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s; box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);">Save Enrollment</button>
                 </div>
             </form>
         </div>
@@ -2536,6 +2648,29 @@
         });
         
         // ========== Enrollment Functions ==========
+        let enrollmentViewMode = 'table'; // 'table' or 'cards'
+        
+        function setEnrollmentView(view) {
+            enrollmentViewMode = view;
+            const tableBtn = document.getElementById('enrollment-view-table');
+            const cardsBtn = document.getElementById('enrollment-view-cards');
+            
+            if (view === 'table') {
+                tableBtn.style.background = '#3d7ab5';
+                tableBtn.style.color = 'white';
+                cardsBtn.style.background = '#e2e8f0';
+                cardsBtn.style.color = '#64748b';
+            } else {
+                cardsBtn.style.background = '#3d7ab5';
+                cardsBtn.style.color = 'white';
+                tableBtn.style.background = '#e2e8f0';
+                tableBtn.style.color = '#64748b';
+            }
+            
+            // Re-render enrollments with new view
+            loadEnrollments();
+        }
+        
         async function loadEnrollments() {
             const container = document.getElementById('all-enrollments');
             if (!container) return;
@@ -2546,14 +2681,14 @@
             await populateEnrollmentFilters();
             
             // Get filter values
+            const searchFilter = document.getElementById('enrollment-search')?.value || '';
             const studentFilter = document.getElementById('enrollment-student-filter')?.value || '';
-            const courseFilter = document.getElementById('enrollment-course-filter')?.value || '';
+            const categoryFilter = document.getElementById('enrollment-category-filter')?.value || '';
             const statusFilter = document.getElementById('enrollment-status-filter')?.value || '';
             
             try {
                 let url = '/api/enrollments?';
                 if (studentFilter) url += 'student_id=' + studentFilter + '&';
-                if (courseFilter) url += 'course_id=' + courseFilter + '&';
                 if (statusFilter) url += 'status=' + statusFilter + '&';
                 
                 const response = await fetch(url, {
@@ -2570,8 +2705,50 @@
                 const data = await response.json();
                 
                 if (data.success && data.enrollments) {
-                    renderEnrollments(data.enrollments);
-                    updateEnrollmentStats(data.enrollments);
+                    // Filter by category and course on client side
+                    let filteredEnrollments = data.enrollments;
+                    
+                    // Filter by search term
+                    if (searchFilter) {
+                        const search = searchFilter.toLowerCase();
+                        filteredEnrollments = filteredEnrollments.filter(enrollment => {
+                            const studentName = (enrollment.student_first_name || '') + ' ' + (enrollment.student_last_name || '');
+                            const studentEmail = enrollment.student_email || '';
+                            const drivingCourse = enrollment.driving_course || '';
+                            const computerCourse = enrollment.computer_course || '';
+                            const enrollmentNumber = enrollment.enrollment_number || '';
+                            const location = enrollment.training_location || '';
+                            const status = enrollment.status || '';
+                            
+                            return studentName.toLowerCase().includes(search) ||
+                                   studentEmail.toLowerCase().includes(search) ||
+                                   drivingCourse.toLowerCase().includes(search) ||
+                                   computerCourse.toLowerCase().includes(search) ||
+                                   enrollmentNumber.toLowerCase().includes(search) ||
+                                   location.toLowerCase().includes(search) ||
+                                   status.toLowerCase().includes(search);
+                        });
+                    }
+                    
+                    // Filter by category (driving/computer courses from backend)
+                    if (categoryFilter) {
+                        filteredEnrollments = filteredEnrollments.filter(enrollment => {
+                            const drivingCourse = (enrollment.driving_course || '').trim().toLowerCase();
+                            const computerCourse = (enrollment.computer_course || '').trim().toLowerCase();
+                            
+                            if (categoryFilter === 'driving') {
+                                // Check if driving_course matches any driving course from backend
+                                return drivingCourse !== '';
+                            } else if (categoryFilter === 'computer') {
+                                // Check if computer_course matches any computer course from backend
+                                return computerCourse !== '';
+                            }
+                            return true;
+                        });
+                    }
+                    
+                    renderEnrollments(filteredEnrollments);
+                    updateEnrollmentStats(filteredEnrollments);
                 } else {
                     container.innerHTML = '<p class="text-center" style="padding: 40px;">Failed to load enrollments.</p>';
                 }
@@ -2583,12 +2760,11 @@
         
         async function populateEnrollmentFilters() {
             const studentSelect = document.getElementById('enrollment-student-filter');
-            const courseSelect = document.getElementById('enrollment-course-filter');
             
-            // Populate student filter
+            // Populate student filter - fetch all users and filter for User or Applicant roles
             if (studentSelect && studentSelect.options.length <= 1) {
                 try {
-                    const response = await fetch('/api/users?role=user', {
+                    const response = await fetch('/api/users', {
                         headers: { 'Authorization': 'Bearer ' + auth.getToken() }
                     });
                     
@@ -2602,7 +2778,13 @@
                     const data = await response.json();
                     
                     if (data.success && data.users) {
-                        data.users.forEach(user => {
+                        // Filter users with role = 'user' or 'applicant'
+                        const students = data.users.filter(user => {
+                            const role = (user.role || '').toLowerCase();
+                            return role === 'user' || role === 'applicant';
+                        });
+                        
+                        students.forEach(user => {
                             const option = document.createElement('option');
                             option.value = user.id;
                             option.textContent = user.full_name || user.email || `${user.first_name} ${user.last_name}`;
@@ -2611,27 +2793,6 @@
                     }
                 } catch (error) {
                     console.error('Error loading students for filter:', error);
-                }
-            }
-            
-            // Populate course filter
-            if (courseSelect && courseSelect.options.length <= 1) {
-                try {
-                    const response = await fetch('/api/courses', {
-                        headers: { 'Authorization': 'Bearer ' + auth.getToken() }
-                    });
-                    const data = await response.json();
-                    
-                    if (data.success && data.courses) {
-                        data.courses.forEach(course => {
-                            const option = document.createElement('option');
-                            option.value = course.id;
-                            option.textContent = course.name;
-                            courseSelect.appendChild(option);
-                        });
-                    }
-                } catch (error) {
-                    console.error('Error loading courses for filter:', error);
                 }
             }
         }
@@ -2645,11 +2806,81 @@
                 return;
             }
             
-            let html = '<table class="admin-table"><thead><tr>';
-            html += '<th>ID</th><th>Student</th><th>Course</th><th>Status</th><th> enrolled_date</th><th>Actions</th>';
-            html += '</tr></thead><tbody>';
-            
-            enrollments.forEach(enrollment => {
+            if (enrollmentViewMode === 'table') {
+                // Render as table
+                let html = '<div style="overflow-x: auto;">';
+                html += '<table style="width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">';
+                html += '<thead style="background: #1e3a5f; color: white;">';
+                html += '<tr>';
+                html += '<th style="padding: 14px; text-align: left; font-weight: 600;">#</th>';
+                html += '<th style="padding: 14px; text-align: left; font-weight: 600;">Student</th>';
+                html += '<th style="padding: 14px; text-align: left; font-weight: 600;">Course</th>';
+                html += '<th style="padding: 14px; text-align: left; font-weight: 600;">Category</th>';
+                html += '<th style="padding: 14px; text-align: left; font-weight: 600;">Status</th>';
+                html += '<th style="padding: 14px; text-align: left; font-weight: 600;">Payment</th>';
+                html += '<th style="padding: 14px; text-align: left; font-weight: 600;">Fee</th>';
+                html += '<th style="padding: 14px; text-align: left; font-weight: 600;">Balance</th>';
+                html += '<th style="padding: 14px; text-align: left; font-weight: 600;">Date</th>';
+                html += '<th style="padding: 14px; text-align: left; font-weight: 600;">Actions</th>';
+                html += '</tr></thead><tbody>';
+                
+                enrollments.forEach(enrollment => {
+                    let studentName = 'N/A';
+                    if (enrollment.student_first_name || enrollment.student_last_name) {
+                        studentName = (enrollment.student_first_name || '') + ' ' + (enrollment.student_last_name || '');
+                    } else if (enrollment.student_name) {
+                        studentName = enrollment.student_name;
+                    } else if (enrollment.student_email) {
+                        studentName = enrollment.student_email;
+                    }
+                    
+                    const balance = (enrollment.fee_amount || 0) - (enrollment.fee_paid || 0);
+                    const drivingCourse = enrollment.driving_course || '';
+                    const computerCourse = enrollment.computer_course || '';
+                    // Show both courses if both exist, otherwise show whichever exists
+                    const coursesDisplay = (drivingCourse && computerCourse) ? 
+                        drivingCourse + ', ' + computerCourse : 
+                        (drivingCourse || computerCourse || 'N/A');
+                    // Show both categories if both exist
+                    const categoriesDisplay = (drivingCourse && computerCourse) ? 
+                        'Driving, Computer' : 
+                        (drivingCourse ? 'Driving' : (computerCourse ? 'Computer' : '-'));
+                    const courseCategory = drivingCourse ? 'Driving' : (computerCourse ? 'Computer' : '');
+                    
+                    let statusColor = '#6c757d';
+                    if (enrollment.status === 'active' || enrollment.status === 'approved') statusColor = '#28a745';
+                    else if (enrollment.status === 'completed') statusColor = '#17a2b8';
+                    else if (enrollment.status === 'pending') statusColor = '#ffc107';
+                    else if (enrollment.status === 'dropped' || enrollment.status === 'rejected') statusColor = '#dc3545';
+                    else if (enrollment.status === 'suspended') statusColor = '#fd7e14';
+                    
+                    let paymentColor = '#dc3545';
+                    if (enrollment.payment_status === 'paid') paymentColor = '#28a745';
+                    else if (enrollment.payment_status === 'partial') paymentColor = '#ffc107';
+                    
+                    html += '<tr style="border-bottom: 1px solid #e9ecef;">';
+                    html += '<td style="padding: 12px; color: #1e3a5f; font-weight: 600;">' + (enrollment.enrollment_number || enrollment.id) + '</td>';
+                    html += '<td style="padding: 12px;">' + studentName + '</td>';
+                    html += '<td style="padding: 12px;">' + coursesDisplay + '</td>';
+                    html += '<td style="padding: 12px;">' + categoriesDisplay + '</td>';
+                    html += '<td style="padding: 12px;"><span style="background: ' + statusColor + '; color: white; padding: 3px 10px; border-radius: 12px; font-size: 12px;">' + (enrollment.status || 'pending') + '</span></td>';
+                    html += '<td style="padding: 12px;"><span style="background: ' + paymentColor + '; color: white; padding: 3px 10px; border-radius: 12px; font-size: 12px;">' + (enrollment.payment_status || 'unpaid') + '</span></td>';
+                    html += '<td style="padding: 12px;">KSh ' + (enrollment.fee_amount || 0) + '</td>';
+                    html += '<td style="padding: 12px; color: ' + (balance > 0 ? '#dc3545' : '#28a745') + ';">KSh ' + balance + '</td>';
+                    html += '<td style="padding: 12px;">' + (enrollment.enrollment_date || enrollment.enrolled_date || enrollment.created_at || 'N/A') + '</td>';
+                    html += '<td style="padding: 12px;">';
+                    html += '<button class="btn btn-primary btn-small" onclick="editEnrollment(' + enrollment.id + ')" style="margin-right: 5px; padding: 6px 10px; font-size: 12px;"><i class="fas fa-edit"></i></button>';
+                    html += '<button class="btn btn-danger btn-small" onclick="deleteEnrollment(' + enrollment.id + ')" style="padding: 6px 10px; font-size: 12px;"><i class="fas fa-trash"></i></button>';
+                    html += '</td></tr>';
+                });
+                
+                html += '</tbody></table></div>';
+                container.innerHTML = html;
+            } else {
+                // Render as cards
+                let html = '<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 20px; padding: 10px;">';
+                
+                enrollments.forEach(enrollment => {
                 // Build student name from first_name and last_name
                 let studentName = 'N/A';
                 if (enrollment.student_first_name || enrollment.student_last_name) {
@@ -2660,21 +2891,86 @@
                     studentName = enrollment.student_email;
                 }
                 
-                html += '<tr>';
-                html += '<td>' + (enrollment.id || '') + '</td>';
-                html += '<td>' + studentName + '</td>';
-                html += '<td>' + (enrollment.course_name || enrollment.course || 'N/A') + '</td>';
-                html += '<td><span class="status-badge status-' + (enrollment.status || 'pending') + '">' + (enrollment.status || 'pending') + '</span></td>';
-                html += '<td>' + (enrollment.enrolled_date || enrollment.created_at || '') + '</td>';
-                html += '<td>';
-                html += '<button class="btn btn-small" onclick="editEnrollment(' + enrollment.id + ')"><i class="fas fa-edit"></i></button>';
-                html += ' <button class="btn btn-small btn-danger" onclick="deleteEnrollment(' + enrollment.id + ')"><i class="fas fa-trash"></i></button>';
-                html += '</td>';
-                html += '</tr>';
+                const balance = (enrollment.fee_amount || 0) - (enrollment.fee_paid || 0);
+                
+                // Display driving_course and computer_course separately
+                const drivingCourse = enrollment.driving_course || '';
+                const computerCourse = enrollment.computer_course || '';
+                // Show both courses if both exist, otherwise show whichever exists
+                const coursesDisplay = (drivingCourse && computerCourse) ? 
+                    drivingCourse + ', ' + computerCourse : 
+                    (drivingCourse || computerCourse || 'N/A');
+                // Show both categories if both exist
+                const categoriesDisplay = (drivingCourse && computerCourse) ? 
+                    'Driving, Computer' : 
+                    (drivingCourse ? 'Driving' : (computerCourse ? 'Computer' : '-'));
+                const courseCategory = drivingCourse ? 'Driving' : (computerCourse ? 'Computer' : '');
+                
+                // Status badge color
+                let statusColor = '#6c757d';
+                if (enrollment.status === 'active' || enrollment.status === 'approved') statusColor = '#28a745';
+                else if (enrollment.status === 'completed') statusColor = '#17a2b8';
+                else if (enrollment.status === 'pending') statusColor = '#ffc107';
+                else if (enrollment.status === 'dropped' || enrollment.status === 'rejected') statusColor = '#dc3545';
+                else if (enrollment.status === 'suspended') statusColor = '#fd7e14';
+                
+                // Payment badge color
+                let paymentColor = '#dc3545';
+                if (enrollment.payment_status === 'paid') paymentColor = '#28a745';
+                else if (enrollment.payment_status === 'partial') paymentColor = '#ffc107';
+                
+                html += '<div style="background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%); border-radius: 12px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-left: 4px solid ' + statusColor + ';">';
+                html += '<div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px;">';
+                html += '<div>';
+                html += '<h4 style="margin: 0; color: #1e3a5f; font-size: 16px; font-weight: 600;">#' + (enrollment.enrollment_number || enrollment.id) + '</h4>';
+                html += '<p style="margin: 5px 0 0 0; color: #495057; font-size: 14px; font-weight: 500;">' + studentName + '</p>';
+                html += '</div>';
+                html += '<span style="background: ' + statusColor + '; color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;">' + (enrollment.status || 'pending') + '</span>';
+                html += '</div>';
+                
+                html += '<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; font-size: 13px;">';
+                html += '<div><span style="color: #6c757d;">Course:</span> <span style="color: #1e3a5f; font-weight: 500;">' + coursesDisplay + '</span></div>';
+                html += '<div><span style="color: #6c757d;">Type:</span> <span style="color: #1e3a5f;">' + categoriesDisplay + '</span></div>';
+                html += '<div><span style="color: #6c757d;">Transmission:</span> <span style="color: #1e3a5f;">' + (enrollment.transmission || '-') + '</span></div>';
+                html += '<div><span style="color: #6c757d;">Schedule:</span> <span style="color: #1e3a5f;">' + (enrollment.preferred_schedule || '-') + '</span></div>';
+                html += '<div><span style="color: #6c757d;">Location:</span> <span style="color: #1e3a5f;">' + (enrollment.training_location || '-') + '</span></div>';
+                html += '</div>';
+                
+                html += '<div style="background: #f8f9fa; border-radius: 8px; padding: 12px; margin-bottom: 15px;">';
+                html += '<div style="display: flex; justify-content: space-between; margin-bottom: 8px;">';
+                html += '<span style="color: #6c757d; font-size: 12px;">Fee: <strong style="color: #1e3a5f;">KSh ' + (enrollment.fee_amount || 0) + '</strong></span>';
+                html += '<span style="color: #6c757d; font-size: 12px;">Paid: <strong style="color: #28a745;">KSh ' + (enrollment.fee_paid || 0) + '</strong></span>';
+                html += '<span style="color: #6c757d; font-size: 12px;">Balance: <strong style="color: ' + (balance > 0 ? '#dc3545' : '#28a745') + ';">KSh ' + balance + '</strong></span>';
+                html += '</div>';
+                html += '<span style="background: ' + paymentColor + '; color: white; padding: 2px 10px; border-radius: 10px; font-size: 11px; font-weight: 600;">' + (enrollment.payment_status || 'unpaid') + '</span>';
+                html += '</div>';
+                
+                html += '<div style="display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: #6c757d; margin-bottom: 15px;">';
+                html += '<span>Date: ' + (enrollment.enrollment_date || enrollment.enrolled_date || enrollment.created_at || 'N/A') + '</span>';
+                if (enrollment.completion_date) {
+                    html += '<span>Completed: ' + enrollment.completion_date + '</span>';
+                }
+                html += '</div>';
+                
+                html += '<div style="display: flex; gap: 10px; align-items: center;">';
+                html += '<button class="btn btn-primary btn-small" onclick="editEnrollment(' + enrollment.id + ')" style="flex: 1; padding: 8px; font-size: 13px;"><i class="fas fa-edit"></i> Edit</button>';
+                // Add status dropdown like applications section
+                html += '<select onchange="updateEnrollmentStatus(' + enrollment.id + ', this.value)" style="padding: 6px 10px; border: 1px solid #dee2e6; border-radius: 6px; font-size: 12px; background: white;">';
+                html += '<option value="" disabled ' + (enrollment.status ? '' : 'selected') + '>Status</option>';
+                html += '<option value="enrolled" ' + (enrollment.status === 'enrolled' ? 'selected' : '') + '>Enrolled</option>';
+                html += '<option value="active" ' + (enrollment.status === 'active' ? 'selected' : '') + '>Active</option>';
+                html += '<option value="completed" ' + (enrollment.status === 'completed' ? 'selected' : '') + '>Completed</option>';
+                html += '<option value="dropped" ' + (enrollment.status === 'dropped' ? 'selected' : '') + '>Dropped</option>';
+                html += '<option value="suspended" ' + (enrollment.status === 'suspended' ? 'selected' : '') + '>Suspended</option>';
+                html += '</select>';
+                html += '<button class="btn btn-danger btn-small" onclick="deleteEnrollment(' + enrollment.id + ')" style="padding: 8px; font-size: 13px;"><i class="fas fa-trash"></i></button>';
+                html += '</div>';
+                html += '</div>';
             });
             
-            html += '</tbody></table>';
+            html += '</div>';
             container.innerHTML = html;
+            }
         }
         
         function updateEnrollmentStats(enrollments) {
@@ -3049,6 +3345,7 @@
         function openEnrollmentModal(enrollmentId = null) {
             // Reset form
             document.getElementById('enrollment-id').value = enrollmentId || '';
+            document.getElementById('enrollment-student-id').value = '';
             document.getElementById('enrollment-modal-title').textContent = enrollmentId ? 'Edit Enrollment' : 'New Enrollment';
             document.getElementById('enrollment-date').value = new Date().toISOString().split('T')[0];
             document.getElementById('enrollment-status').value = 'enrolled';
@@ -3060,32 +3357,100 @@
             document.getElementById('enrollment-paid').value = '';
             document.getElementById('enrollment-balance').value = '';
             document.getElementById('enrollment-payment').value = 'unpaid';
+            document.getElementById('enrollment-license').value = '';
+            loadDrivingCoursesForEnrollment();
+            loadComputerCoursesForEnrollment();
+            document.getElementById('enrollment-driving').value = '';
+            document.getElementById('enrollment-computer').value = '';
+            document.getElementById('enrollment-transmission').value = '';
+            document.getElementById('enrollment-schedule').value = '';
+            document.getElementById('enrollment-location-id').value = '';
+            document.getElementById('enrollment-completion').value = '';
+            
+            // Auto-generate certificate number for new enrollments
+            if (!enrollmentId) {
+                const today = new Date();
+                const year = today.getFullYear();
+                const month = String(today.getMonth() + 1).padStart(2, '0');
+                const day = String(today.getDate()).padStart(2, '0');
+                const random = String(Math.floor(1000 + Math.random() * 9000));
+                const certNumber = `CERT-${year}${month}${day}-${random}`;
+                document.getElementById('enrollment-cert').value = certNumber;
+                // Show student dropdown for new enrollments
+                document.getElementById('student-select-group').style.display = 'block';
+                document.getElementById('student-name-group').style.display = 'none';
+                // Reset student label for new enrollment
+                const studentLabel = document.getElementById('enrollment-student-label');
+                if (studentLabel) {
+                    studentLabel.textContent = 'Select the student for this enrollment';
+                    studentLabel.style.fontWeight = 'normal';
+                    studentLabel.style.color = '';
+                }
+            } else {
+                document.getElementById('enrollment-cert').value = '';
+                // Show student name for existing enrollments
+                document.getElementById('student-select-group').style.display = 'none';
+                document.getElementById('student-name-group').style.display = 'block';
+            }
             
             // Reset dropdowns
             const studentSelect = document.getElementById('enrollment-student');
-            const courseSelect = document.getElementById('enrollment-course');
+            const locationSelect = document.getElementById('enrollment-location-id');
             if (studentSelect) studentSelect.innerHTML = '<option value="">Loading students...</option>';
-            if (courseSelect) courseSelect.innerHTML = '<option value="">Loading courses...</option>';
+            if (locationSelect) locationSelect.innerHTML = '<option value="">Loading locations...</option>';
             
-            // Load students and courses for dropdowns
+            // Load students, driving courses, computer courses and locations for dropdowns
             loadStudentsForEnrollment();
-            loadCoursesForEnrollment();
+            loadDrivingCoursesForEnrollment();
+            loadComputerCoursesForEnrollment();
+            loadLocationsForEnrollmentModal();
             
             // If editing, load the enrollment data
             if (enrollmentId) {
                 loadEnrollmentForEdit(enrollmentId);
             }
             
-            document.getElementById('enrollment-modal').classList.add('show');
+            showEnrollmentModal();
         }
         
         function closeEnrollmentModal() {
             const modal = document.getElementById('enrollment-modal');
-            if (modal) modal.classList.remove('show');
+            if (modal) {
+                modal.classList.remove('show');
+                modal.style.zIndex = '';
+                modal.style.backgroundColor = '';
+            }
+            document.body.style.overflow = '';
+            document.documentElement.style.overflow = '';
+            // Show footer when modal is closed
+            const footer = document.querySelector('.footer');
+            if (footer) footer.style.display = '';
+        }
+        
+        function showEnrollmentModal() {
+            const modal = document.getElementById('enrollment-modal');
+            if (modal) {
+                modal.style.zIndex = '9999';
+                modal.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+                modal.classList.add('show');
+            }
+            document.body.style.overflow = 'hidden';
+            document.documentElement.style.overflow = 'hidden';
+            // Hide footer when modal is open
+            const footer = document.querySelector('.footer');
+            if (footer) footer.style.display = 'none';
         }
         
         async function loadEnrollmentForEdit(enrollmentId) {
             try {
+                // First load courses, locations, and students before loading enrollment
+                await Promise.all([
+                    loadDrivingCoursesForEnrollment(),
+                    loadComputerCoursesForEnrollment(),
+                    loadLocationsForEnrollmentModal(),
+                    loadStudentsForEnrollment()
+                ]);
+                
                 const response = await fetch('/api/enrollments/' + enrollmentId, {
                     headers: { 'Authorization': 'Bearer ' + auth.getToken() }
                 });
@@ -3101,8 +3466,46 @@
                 
                 if (data.success && data.enrollment) {
                     const enrollment = data.enrollment;
-                    document.getElementById('enrollment-student').value = enrollment.user_id || '';
-                    document.getElementById('enrollment-course').value = enrollment.course_id || '';
+                    
+                    // Set student after students are loaded
+                    setTimeout(() => {
+                        const studentSelect = document.getElementById('enrollment-student');
+                        const studentId = enrollment.user_id || '';
+                        
+                        // Set hidden student_id field for form submission
+                        const studentIdInput = document.getElementById('enrollment-student-id');
+                        if (studentIdInput) {
+                            studentIdInput.value = studentId;
+                        }
+                        
+                        // Update the label and text field to show student name when editing
+                        const studentLabel = document.getElementById('enrollment-student-label');
+                        const studentNameDiv = document.getElementById('enrollment-student-name');
+                        if (studentLabel && enrollment.student_name) {
+                            studentLabel.textContent = enrollment.student_name;
+                            studentLabel.style.fontWeight = '600';
+                            studentLabel.style.color = '#1e3a5f';
+                        }
+                        if (studentNameDiv && enrollment.student_name) {
+                            studentNameDiv.textContent = enrollment.student_name;
+                        }
+                        
+                        // Always add the student option when editing to ensure display
+                        if (studentId && enrollment.student_name) {
+                            const option = document.createElement('option');
+                            option.value = studentId;
+                            option.textContent = enrollment.student_name || 'Student #' + studentId;
+                            // Add at the beginning after the first option
+                            if (studentSelect.options.length > 1) {
+                                studentSelect.insertBefore(option, studentSelect.options[1]);
+                            } else {
+                                studentSelect.appendChild(option);
+                            }
+                        }
+                        
+                        studentSelect.value = studentId;
+                    }, 100);
+                    
                     document.getElementById('enrollment-date').value = enrollment.enrollment_date || '';
                     document.getElementById('enrollment-status').value = enrollment.status || 'enrolled';
                     document.getElementById('enrollment-notes').value = enrollment.notes || '';
@@ -3115,6 +3518,34 @@
                     document.getElementById('enrollment-paid').value = enrollment.fee_paid || '';
                     document.getElementById('enrollment-balance').value = enrollment.fee_balance || '';
                     document.getElementById('enrollment-payment').value = enrollment.payment_status || 'unpaid';
+                    document.getElementById('enrollment-license').value = enrollment.license_type || '';
+                    
+                    // Set driving and computer courses after courses are loaded
+                    setTimeout(() => {
+                        document.getElementById('enrollment-driving').value = enrollment.driving_course || '';
+                        document.getElementById('enrollment-computer').value = enrollment.computer_course || '';
+                    }, 100);
+                    
+                    document.getElementById('enrollment-transmission').value = enrollment.transmission || '';
+                    document.getElementById('enrollment-schedule').value = enrollment.preferred_schedule || '';
+                    // Set location dropdown by training_location name (now stored as value)
+                    setTimeout(() => {
+                        document.getElementById('enrollment-location-id').value = enrollment.training_location || '';
+                    }, 100);
+                    
+                    // Handle completion date - convert to YYYY-MM-DD format for input type="date"
+                    if (enrollment.completion_date) {
+                        let completionDate = enrollment.completion_date;
+                        if (completionDate.includes('T')) {
+                            completionDate = completionDate.split('T')[0];
+                        }
+                        document.getElementById('enrollment-completion').value = completionDate;
+                    } else {
+                        document.getElementById('enrollment-completion').value = '';
+                    }
+                    
+                    // Set certificate number
+                    document.getElementById('enrollment-cert').value = enrollment.certificate_number || '';
                 }
             } catch (error) {
                 console.error('Error loading enrollment:', error);
@@ -3143,7 +3574,8 @@
             if (!select) return;
             
             try {
-                const response = await fetch('/api/users?role=user', {
+                // Fetch all users and filter for User or Applicant roles on client side
+                const response = await fetch('/api/users', {
                     headers: { 'Authorization': 'Bearer ' + auth.getToken() }
                 });
                 
@@ -3157,8 +3589,17 @@
                 const data = await response.json();
                 
                 if (data.success && data.users) {
+                    // Filter users with role = 'user' or 'applicant'
+                    const students = data.users.filter(user => {
+                        const role = (user.role || '').toLowerCase();
+                        return role === 'user' || role === 'applicant';
+                    });
+                    
+                    // Store all users for display in edit mode (in case student is already enrolled)
+                    window._allStudentsForEnrollment = data.users;
+                    
                     select.innerHTML = '<option value="">Select Student</option>';
-                    data.users.forEach(user => {
+                    students.forEach(user => {
                         const option = document.createElement('option');
                         option.value = user.id;
                         option.textContent = user.full_name || user.email || `${user.first_name} ${user.last_name}`;
@@ -3189,8 +3630,13 @@
                 const data = await response.json();
                 
                 if (data.success && data.courses) {
+                    // Filter courses by Driving and Computer categories
+                    const filteredCourses = data.courses.filter(course => 
+                        course.category === 'Driving' || course.category === 'Computer'
+                    );
+                    
                     select.innerHTML = '<option value="">Select Course</option>';
-                    data.courses.forEach(course => {
+                    filteredCourses.forEach(course => {
                         const option = document.createElement('option');
                         option.value = course.id;
                         // Store price in data attribute for auto-calculation
@@ -3205,35 +3651,147 @@
             }
         }
         
-        // Auto-calculate fees when course is selected in Enrollment modal
-        function onEnrollmentCourseChange() {
-            const courseSelect = document.getElementById('enrollment-course');
-            const feeInput = document.getElementById('enrollment-fee');
-            const selectedOption = courseSelect.options[courseSelect.selectedIndex];
+        // Load driving courses for enrollment modal
+        async function loadDrivingCoursesForEnrollment() {
+            const select = document.getElementById('enrollment-driving');
+            if (!select) return;
             
-            if (selectedOption && selectedOption.value) {
-                const coursePrice = selectedOption.getAttribute('data-price');
-                if (coursePrice && parseFloat(coursePrice) > 0) {
-                    feeInput.value = coursePrice;
-                    // Also update balance
-                    calculateEnrollmentBalance();
+            try {
+                const response = await fetch('/api/courses?category=Driving', {
+                    headers: { 'Authorization': 'Bearer ' + auth.getToken() }
+                });
+                
+                if (response.status === 401) {
+                    auth.logout();
+                    window.location.href = 'login.html';
+                    return;
                 }
+                
+                const data = await response.json();
+                
+                if (data.success && data.courses) {
+                    select.innerHTML = '<option value="">Select Driving Course</option>';
+                    data.courses.forEach(course => {
+                        const option = document.createElement('option');
+                        option.value = course.name;
+                        const priceStr = course.price ? ` - KSh ${parseFloat(course.price).toLocaleString()}` : '';
+                        option.textContent = course.name + priceStr;
+                        option.setAttribute('data-price', course.price || 0);
+                        select.appendChild(option);
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading driving courses:', error);
             }
+        }
+        
+        // Load computer courses for enrollment modal
+        async function loadComputerCoursesForEnrollment() {
+            const select = document.getElementById('enrollment-computer');
+            if (!select) return;
+            
+            try {
+                const response = await fetch('/api/courses?category=Computer', {
+                    headers: { 'Authorization': 'Bearer ' + auth.getToken() }
+                });
+                
+                if (response.status === 401) {
+                    auth.logout();
+                    window.location.href = 'login.html';
+                    return;
+                }
+                
+                const data = await response.json();
+                
+                if (data.success && data.courses) {
+                    select.innerHTML = '<option value="">Select Computer Course</option>';
+                    data.courses.forEach(course => {
+                        const option = document.createElement('option');
+                        option.value = course.name;
+                        const priceStr = course.price ? ` - KSh ${parseFloat(course.price).toLocaleString()}` : '';
+                        option.textContent = course.name + priceStr;
+                        option.setAttribute('data-price', course.price || 0);
+                        select.appendChild(option);
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading computer courses:', error);
+            }
+        }
+        
+        // Load locations for enrollment modal
+        async function loadLocationsForEnrollmentModal() {
+            const select = document.getElementById('enrollment-location-id');
+            if (!select) return;
+            
+            try {
+                const response = await fetch('/api/locations', {
+                    headers: { 'Authorization': 'Bearer ' + auth.getToken() }
+                });
+                const data = await response.json();
+                
+                if (data.success && data.locations) {
+                    select.innerHTML = '<option value="">Select Location</option>';
+                    data.locations.forEach(loc => {
+                        const option = document.createElement('option');
+                        option.value = loc.name || loc; // Use location name as value
+                        option.textContent = loc.name || loc;
+                        select.appendChild(option);
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading locations:', error);
+            }
+        }
+        
+        // Auto-calculate fees when course is selected in Enrollment modal
+        // Calculate total fee from driving and computer courses
+        function calculateEnrollmentFee() {
+            const drivingSelect = document.getElementById('enrollment-driving');
+            const computerSelect = document.getElementById('enrollment-computer');
+            const feeInput = document.getElementById('enrollment-fee');
+            
+            let totalFee = 0;
+            
+            // Get driving course price
+            if (drivingSelect && drivingSelect.selectedOptions[0]) {
+                const drivingPrice = parseFloat(drivingSelect.selectedOptions[0].getAttribute('data-price')) || 0;
+                totalFee += drivingPrice;
+            }
+            
+            // Get computer course price
+            if (computerSelect && computerSelect.selectedOptions[0]) {
+                const computerPrice = parseFloat(computerSelect.selectedOptions[0].getAttribute('data-price')) || 0;
+                totalFee += computerPrice;
+            }
+            
+            // Update fee input
+            if (feeInput) {
+                feeInput.value = totalFee > 0 ? totalFee : '';
+                // Also update balance
+                calculateEnrollmentBalance();
+            }
+        }
+        
+        function onEnrollmentCourseChange() {
+            calculateEnrollmentFee();
         }
         
         async function handleEnrollmentSubmit(e) {
             e.preventDefault();
             
-            // Client-side validation
-            const studentId = document.getElementById('enrollment-student').value;
-            const courseId = document.getElementById('enrollment-course').value;
+            // Get enrollment ID to determine if new or edit
+            const enrollmentId = document.getElementById('enrollment-id').value;
             
-            if (!studentId) {
+            // Client-side validation - only require student for new enrollments
+            const studentSelect = document.getElementById('enrollment-student');
+            const studentId = studentSelect ? studentSelect.value : '';
+            
+            // Debug: log student selection
+            console.log('Student select value:', studentSelect.value);
+            
+            if (!enrollmentId && !studentId) {
                 showToast('Please select a student', 'error');
-                return;
-            }
-            if (!courseId) {
-                showToast('Please select a course', 'error');
                 return;
             }
             
@@ -3243,11 +3801,18 @@
             const feeBalance = feeAmount - feePaid;
             
             const form = e.target;
-            const enrollmentId = document.getElementById('enrollment-id').value;
-            // Backend expects student_id and course_id
+            // Debug: log form data
+            console.log('Form submission:', {
+                enrollmentId,
+                studentId,
+                enrollment_date: form.enrollment_date.value,
+                status: form.status.value
+            });
+            // Backend expects student_id and course_id - use location dropdown value for training_location
+            const locationSelect = document.getElementById('enrollment-location-id');
+            const locationId = locationSelect ? locationSelect.value : '';
             const formData = {
-                student_id: form.user_id.value,
-                course_id: form.course_id.value,
+                student_id: studentId,
                 enrollment_date: form.enrollment_date.value,
                 status: form.status.value,
                 start_time: form.start_time.value,
@@ -3255,7 +3820,18 @@
                 fee_paid: feePaid,
                 fee_balance: feeBalance,
                 payment_status: form.payment_status.value,
-                notes: form.notes.value
+                notes: form.notes.value,
+                driving_course: form.driving_course.value,
+                computer_course: form.computer_course.value,
+                license_type: form.license_type.value,
+                transmission: form.transmission.value,
+                preferred_schedule: form.preferred_schedule.value,
+                training_location: locationSelect ? locationSelect.options[locationSelect.selectedIndex].text : '',
+                location_id: locationId,
+                progress_percentage: '', // Optional field
+                end_time: '', // Optional field
+                completion_date: form.completion_date.value,
+                certificate_number: form.certificate_number.value
             };
             
             const submitBtn = form.querySelector('button[type="submit"]');
@@ -3289,10 +3865,11 @@
                 }
                 
                 const data = await response.json();
+                console.log('API Response:', data);
                 
                 if (data.success) {
                     showToast('Enrollment saved successfully!');
-                    document.getElementById('enrollment-modal').classList.remove('show');
+                    closeEnrollmentModal();
                     loadEnrollments();
                 } else {
                     showToast('Error: ' + (data.error || 'Failed to save enrollment'), 'error');
@@ -3308,6 +3885,125 @@
         async function editEnrollment(enrollmentId) {
             openEnrollmentModal(enrollmentId);
         }
+        
+        async function updateEnrollmentStatus(id, newStatus) {
+            if (!newStatus || newStatus === '') return;
+            
+            try {
+                // Use form data instead of JSON since backend expects form data
+                const formData = new URLSearchParams();
+                formData.append('status', newStatus);
+                
+                const response = await fetch(`/api/enrollments/${id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Authorization': 'Bearer ' + auth.getToken()
+                    },
+                    body: formData.toString()
+                });
+                const data = await response.json();
+                
+                if (data.success) {
+                    showToast('Status updated successfully', 'success');
+                    loadEnrollments();
+                } else {
+                    showToast(data.error || 'Failed to update status', 'error');
+                    loadEnrollments();
+                }
+            } catch (error) {
+                showToast('Error: ' + error.message, 'error');
+                loadEnrollments();
+            }
+        }
+        
+        // Toast notification function
+        function showToast(message, type = 'info') {
+            // Remove existing toasts
+            const existingToasts = document.querySelectorAll('.toast-notification');
+            existingToasts.forEach(toast => toast.remove());
+            
+            const toast = document.createElement('div');
+            toast.className = 'toast-notification';
+            
+            let icon = '';
+            let borderColor = '';
+            let textColor = '';
+            
+            if (type === 'success') {
+                icon = '<i class="fas fa-check-circle" style="margin-right: 10px; color: #10b981;"></i>';
+                borderColor = '#10b981';
+                textColor = '#065f46';
+            } else if (type === 'error') {
+                icon = '<i class="fas fa-exclamation-circle" style="margin-right: 10px; color: #ef4444;"></i>';
+                borderColor = '#ef4444';
+                textColor = '#991b1b';
+            } else if (type === 'warning') {
+                icon = '<i class="fas fa-exclamation-triangle" style="margin-right: 10px; color: #f59e0b;"></i>';
+                borderColor = '#f59e0b';
+                textColor = '#92400e';
+            } else {
+                icon = '<i class="fas fa-info-circle" style="margin-right: 10px; color: #3b82f6;"></i>';
+                borderColor = '#3b82f6';
+                textColor = '#1e40af';
+            }
+            
+            toast.style.cssText = `
+                position: fixed;
+                top: 70px;
+                right: 20px;
+                padding: 14px 20px;
+                border-radius: 8px;
+                background: white;
+                border-left: 4px solid ${borderColor};
+                color: ${textColor};
+                font-weight: 500;
+                z-index: 10000;
+                animation: toastSlideIn 0.3s ease-out;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+                max-width: 380px;
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                font-size: 14px;
+                line-height: 1.5;
+                display: flex;
+                align-items: center;
+            `;
+            
+            toast.innerHTML = icon + message;
+            document.body.appendChild(toast);
+            
+            // Auto-remove after 3 seconds
+            setTimeout(() => {
+                toast.style.animation = 'toastSlideOut 0.3s ease-out forwards';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+        
+        // Add toast CSS animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes toastSlideIn {
+                from {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+            @keyframes toastSlideOut {
+                from {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+                to {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
         
         async function deleteEnrollment(enrollmentId) {
             if (!confirm('Are you sure you want to delete this enrollment?')) return;
@@ -3415,11 +4111,13 @@
             html += '</tr></thead><tbody>';
             
             records.forEach(record => {
+                const status = record.status || 'present';
+                const displayStatus = status.charAt(0).toUpperCase() + status.slice(1);
                 html += '<tr>';
                 html += '<td>' + (record.date || '') + '</td>';
                 html += '<td>' + (record.student_name || record.student || 'N/A') + '</td>';
                 html += '<td>' + (record.course_name || record.course || 'N/A') + '</td>';
-                html += '<td><span class="status-badge status-' + (record.status || 'present') + '">' + (record.status || 'present') + '</span></td>';
+                html += '<td><span class="status-badge status-' + status + '">' + displayStatus + '</span></td>';
                 html += '<td>' + (record.notes || '') + '</td>';
                 html += '</tr>';
             });

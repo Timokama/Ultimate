@@ -150,6 +150,14 @@ class AttendanceHandler extends ApiHandler implements HttpHandler {
         String timeOutStr = params.get("time_out");
         String status = params.get("status");
         String notes = params.get("notes");
+        String location = params.get("location");
+        
+        // Course details fields
+        String licenseType = params.get("license_type");
+        String drivingCourse = params.get("driving_course");
+        String computerCourse = params.get("computer_course");
+        String transmission = params.get("transmission");
+        String preferredSchedule = params.get("preferred_schedule");
 
         // Validate required fields
         if (studentIdStr == null || studentIdStr.isEmpty()) {
@@ -227,10 +235,10 @@ class AttendanceHandler extends ApiHandler implements HttpHandler {
         int attendanceId;
         if (courseId > 0 && classId <= 0) {
             // For course-based attendance only (no class), store negative course_id to distinguish from class_id
-            attendanceId = createAttendance(studentId, -courseId, dateStr, timeInStr, timeOutStr, status, notes, recordedBy);
+            attendanceId = createAttendance(studentId, -courseId, dateStr, timeInStr, timeOutStr, status, notes, recordedBy, location, licenseType, drivingCourse, computerCourse, transmission, preferredSchedule);
         } else {
             // Use class_id for class-based attendance
-            attendanceId = createAttendance(studentId, classId, dateStr, timeInStr, timeOutStr, status, notes, recordedBy);
+            attendanceId = createAttendance(studentId, classId, dateStr, timeInStr, timeOutStr, status, notes, recordedBy, location, licenseType, drivingCourse, computerCourse, transmission, preferredSchedule);
         }
         if (attendanceId > 0) {
             String json = "{\"success\": true, \"message\": \"Attendance record created successfully\", \"id\": " + attendanceId + "}";
@@ -405,6 +413,12 @@ class AttendanceHandler extends ApiHandler implements HttpHandler {
         String timeInStr = params.get("time_in");
         String timeOutStr = params.get("time_out");
         String notes = params.get("notes");
+        String location = params.get("location");
+        String licenseType = params.get("license_type");
+        String drivingCourse = params.get("driving_course");
+        String computerCourse = params.get("computer_course");
+        String transmission = params.get("transmission");
+        String preferredSchedule = params.get("preferred_schedule");
 
         // Validate status if provided
         if (status != null && !status.isEmpty()) {
@@ -415,7 +429,7 @@ class AttendanceHandler extends ApiHandler implements HttpHandler {
         }
 
         // Update attendance
-        boolean updated = updateAttendance(attendanceId, status, timeInStr, timeOutStr, notes);
+        boolean updated = updateAttendance(attendanceId, status, timeInStr, timeOutStr, notes, location, licenseType, drivingCourse, computerCourse, transmission, preferredSchedule);
         if (updated) {
             String json = "{\"success\": true, \"message\": \"Attendance record updated successfully\"}";
             sendJsonResponse(exchange, 200, json);
@@ -680,21 +694,29 @@ class AttendanceHandler extends ApiHandler implements HttpHandler {
      * Create attendance record
      */
     private int createAttendance(int studentId, int classId, String dateStr, String timeInStr, String timeOutStr, 
-                                  String status, String notes, int recordedBy) {
-        String sql = "INSERT INTO attendance (student_id, class_id, date, time_in, time_out, status, notes, created_at) " +
-                     "VALUES (?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP) RETURNING id";
+                                  String status, String notes, int recordedBy, String location,
+                                  String licenseType, String drivingCourse, String computerCourse,
+                                  String transmission, String preferredSchedule) {
+        // Convert time format from HH:mm (HTML input) to HH:mm:ss for SQL Time
+        String formattedTimeIn = formatTimeForSQL(timeInStr);
+        String formattedTimeOut = formatTimeForSQL(timeOutStr);
+        
+        // Try with new columns first
+        String sql = "INSERT INTO attendance (student_id, class_id, date, time_in, time_out, status, notes, location, " +
+                     "license_type, driving_course, computer_course, transmission, preferred_schedule, created_at) " +
+                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP) RETURNING id";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, studentId);
             stmt.setInt(2, classId);
             stmt.setDate(3, java.sql.Date.valueOf(dateStr));
-            if (timeInStr != null && !timeInStr.isEmpty()) {
-                stmt.setTime(4, java.sql.Time.valueOf(timeInStr));
+            if (formattedTimeIn != null && !formattedTimeIn.isEmpty()) {
+                stmt.setTime(4, java.sql.Time.valueOf(formattedTimeIn));
             } else {
                 stmt.setTime(4, null);
             }
-            if (timeOutStr != null && !timeOutStr.isEmpty()) {
-                stmt.setTime(5, java.sql.Time.valueOf(timeOutStr));
+            if (formattedTimeOut != null && !formattedTimeOut.isEmpty()) {
+                stmt.setTime(5, java.sql.Time.valueOf(formattedTimeOut));
             } else {
                 stmt.setTime(5, null);
             }
@@ -704,14 +726,72 @@ class AttendanceHandler extends ApiHandler implements HttpHandler {
             } else {
                 stmt.setString(7, null);
             }
+            stmt.setString(8, location);
+            stmt.setString(9, licenseType);
+            stmt.setString(10, drivingCourse);
+            stmt.setString(11, computerCourse);
+            stmt.setString(12, transmission);
+            stmt.setString(13, preferredSchedule);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 return rs.getInt("id");
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            // If new columns don't exist, try with old schema
+            System.err.println("New schema failed, trying legacy schema: " + e.getMessage());
+            try {
+                String legacySql = "INSERT INTO attendance (student_id, class_id, date, time_in, time_out, status, notes, created_at) " +
+                             "VALUES (?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP) RETURNING id";
+                try (Connection conn = DBConnection.getConnection();
+                     PreparedStatement stmt = conn.prepareStatement(legacySql)) {
+                    stmt.setInt(1, studentId);
+                    stmt.setInt(2, classId);
+                    stmt.setDate(3, java.sql.Date.valueOf(dateStr));
+                    if (formattedTimeIn != null && !formattedTimeIn.isEmpty()) {
+                        stmt.setTime(4, java.sql.Time.valueOf(formattedTimeIn));
+                    } else {
+                        stmt.setTime(4, null);
+                    }
+                    if (formattedTimeOut != null && !formattedTimeOut.isEmpty()) {
+                        stmt.setTime(5, java.sql.Time.valueOf(formattedTimeOut));
+                    } else {
+                        stmt.setTime(5, null);
+                    }
+                    stmt.setString(6, status);
+                    if (notes != null) {
+                        stmt.setString(7, notes);
+                    } else {
+                        stmt.setString(7, null);
+                    }
+                    ResultSet rs = stmt.executeQuery();
+                    if (rs.next()) {
+                        return rs.getInt("id");
+                    }
+                }
+            } catch (SQLException e2) {
+                e2.printStackTrace();
+            }
         }
         return 0;
+    }
+    
+    /**
+     * Format time string for SQL Time parsing.
+     * Converts HH:mm (HTML input) to HH:mm:ss format.
+     */
+    private String formatTimeForSQL(String timeStr) {
+        if (timeStr == null || timeStr.isEmpty()) {
+            return null;
+        }
+        // If already in HH:mm:ss format, return as-is
+        if (timeStr.length() == 8) {
+            return timeStr;
+        }
+        // Convert HH:mm to HH:mm:ss
+        if (timeStr.length() == 5) {
+            return timeStr + ":00";
+        }
+        return timeStr;
     }
 
     /**
@@ -796,20 +876,66 @@ class AttendanceHandler extends ApiHandler implements HttpHandler {
     /**
      * Update attendance record
      */
-    private boolean updateAttendance(int attendanceId, String status, String timeInStr, String timeOutStr, String notes) {
-        StringBuilder sql = new StringBuilder("UPDATE attendance SET updated_at = CURRENT_TIMESTAMP");
+    private boolean updateAttendance(int attendanceId, String status, String timeInStr, String timeOutStr, String notes, 
+                                  String location, String licenseType, String drivingCourse, String computerCourse,
+                                  String transmission, String preferredSchedule) {
+        StringBuilder sql = new StringBuilder("UPDATE attendance SET ");
+        
+        // Build comma-separated list of fields to update
+        boolean hasUpdates = false;
         
         if (status != null && !status.isEmpty()) {
-            sql.append(", status = '").append(status).append("'");
+            sql.append("status = '").append(escapeJson(status)).append("'");
+            hasUpdates = true;
         }
         if (timeInStr != null) {
-            sql.append(", time_in = '").append(timeInStr).append("'");
+            if (hasUpdates) sql.append(", ");
+            sql.append("time_in = '").append(escapeJson(timeInStr)).append("'");
+            hasUpdates = true;
         }
         if (timeOutStr != null) {
-            sql.append(", time_out = '").append(timeOutStr).append("'");
+            if (hasUpdates) sql.append(", ");
+            sql.append("time_out = '").append(escapeJson(timeOutStr)).append("'");
+            hasUpdates = true;
         }
         if (notes != null) {
-            sql.append(", notes = '").append(escapeJson(notes)).append("'");
+            if (hasUpdates) sql.append(", ");
+            sql.append("notes = '").append(escapeJson(notes)).append("'");
+            hasUpdates = true;
+        }
+        if (location != null) {
+            if (hasUpdates) sql.append(", ");
+            sql.append("location = '").append(escapeJson(location)).append("'");
+            hasUpdates = true;
+        }
+        if (licenseType != null) {
+            if (hasUpdates) sql.append(", ");
+            sql.append("license_type = '").append(escapeJson(licenseType)).append("'");
+            hasUpdates = true;
+        }
+        if (drivingCourse != null) {
+            if (hasUpdates) sql.append(", ");
+            sql.append("driving_course = '").append(escapeJson(drivingCourse)).append("'");
+            hasUpdates = true;
+        }
+        if (computerCourse != null) {
+            if (hasUpdates) sql.append(", ");
+            sql.append("computer_course = '").append(escapeJson(computerCourse)).append("'");
+            hasUpdates = true;
+        }
+        if (transmission != null) {
+            if (hasUpdates) sql.append(", ");
+            sql.append("transmission = '").append(escapeJson(transmission)).append("'");
+            hasUpdates = true;
+        }
+        if (preferredSchedule != null) {
+            if (hasUpdates) sql.append(", ");
+            sql.append("preferred_schedule = '").append(escapeJson(preferredSchedule)).append("'");
+            hasUpdates = true;
+        }
+        
+        if (!hasUpdates) {
+            return false; // Nothing to update
         }
         
         sql.append(" WHERE id = ?");
@@ -819,8 +945,47 @@ class AttendanceHandler extends ApiHandler implements HttpHandler {
             stmt.setInt(1, attendanceId);
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
+            // If new columns don't exist, try with legacy schema
+            System.err.println("New schema update failed, trying legacy: " + e.getMessage());
+            try {
+                StringBuilder legacySql = new StringBuilder("UPDATE attendance SET ");
+                boolean hasLegacyUpdates = false;
+                
+                if (status != null && !status.isEmpty()) {
+                    legacySql.append("status = '").append(escapeJson(status)).append("'");
+                    hasLegacyUpdates = true;
+                }
+                if (timeInStr != null) {
+                    if (hasLegacyUpdates) legacySql.append(", ");
+                    legacySql.append("time_in = '").append(escapeJson(timeInStr)).append("'");
+                    hasLegacyUpdates = true;
+                }
+                if (timeOutStr != null) {
+                    if (hasLegacyUpdates) legacySql.append(", ");
+                    legacySql.append("time_out = '").append(escapeJson(timeOutStr)).append("'");
+                    hasLegacyUpdates = true;
+                }
+                if (notes != null) {
+                    if (hasLegacyUpdates) legacySql.append(", ");
+                    legacySql.append("notes = '").append(escapeJson(notes)).append("'");
+                    hasLegacyUpdates = true;
+                }
+                
+                if (!hasLegacyUpdates) {
+                    return false;
+                }
+                
+                legacySql.append(" WHERE id = ?");
+                
+                try (Connection conn2 = DBConnection.getConnection();
+                     PreparedStatement stmt2 = conn2.prepareStatement(legacySql.toString())) {
+                    stmt2.setInt(1, attendanceId);
+                    return stmt2.executeUpdate() > 0;
+                }
+            } catch (SQLException e2) {
+                e2.printStackTrace();
+                return false;
+            }
         }
     }
 
@@ -1026,6 +1191,38 @@ class AttendanceHandler extends ApiHandler implements HttpHandler {
         }
         try {
             map.put("course_name", rs.getString("course_name"));
+        } catch (SQLException e) {
+            // Field not in result set
+        }
+        
+        // Add new course details fields
+        try {
+            map.put("location", rs.getString("location"));
+        } catch (SQLException e) {
+            // Field not in result set
+        }
+        try {
+            map.put("license_type", rs.getString("license_type"));
+        } catch (SQLException e) {
+            // Field not in result set
+        }
+        try {
+            map.put("driving_course", rs.getString("driving_course"));
+        } catch (SQLException e) {
+            // Field not in result set
+        }
+        try {
+            map.put("computer_course", rs.getString("computer_course"));
+        } catch (SQLException e) {
+            // Field not in result set
+        }
+        try {
+            map.put("transmission", rs.getString("transmission"));
+        } catch (SQLException e) {
+            // Field not in result set
+        }
+        try {
+            map.put("preferred_schedule", rs.getString("preferred_schedule"));
         } catch (SQLException e) {
             // Field not in result set
         }

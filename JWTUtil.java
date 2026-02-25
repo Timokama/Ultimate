@@ -21,13 +21,20 @@ public class JWTUtil {
      * Generate a JWT token for a user
      */
     public static String generateToken(int userId, String email, String role) {
-        return generateToken(userId, email, role, null);
+        return generateToken(userId, email, role, null, null);
     }
     
     /**
      * Generate a JWT token for a user with phone
      */
     public static String generateToken(int userId, String email, String role, String phone) {
+        return generateToken(userId, email, role, phone, null);
+    }
+    
+    /**
+     * Generate a JWT token for a user with phone and location_id
+     */
+    public static String generateToken(int userId, String email, String role, String phone, String locationId) {
         Date now = new Date();
         Date expirationDate = new Date(now.getTime() + EXPIRATION_TIME);
         
@@ -43,6 +50,9 @@ public class JWTUtil {
         payload.put("role", role);
         if (phone != null) {
             payload.put("phone", phone);
+        }
+        if (locationId != null) {
+            payload.put("location_id", locationId);
         }
         payload.put("iat", now.getTime());
         payload.put("exp", expirationDate.getTime());

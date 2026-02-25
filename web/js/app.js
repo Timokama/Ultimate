@@ -327,199 +327,83 @@ const staff = {
 
 // UI Functions
 function showAlert(message, type = 'info') {
-    const alertDiv = document.createElement('div');
-    alertDiv.className = `alert alert-${type}`;
-    alertDiv.textContent = message;
-    
-    // Find a suitable container
-    const container = document.querySelector('.form-container, .dashboard-content, .auth-container');
-    if (container) {
-        container.insertBefore(alertDiv, container.firstChild);
-    } else {
-        document.body.insertBefore(alertDiv, document.body.firstChild);
-    }
-    
-    // Auto-remove after 5 seconds
-    setTimeout(() => alertDiv.remove(), 5000);
+    // Use toast-style popup instead of inline alert
+    showToast(message, type);
 }
 
-// Toast notification with improved styling and animations
+// Toast notification - simple banner popup at top right with white background
 function showToast(message, type = 'info') {
-    // Create toast container if not exists
-    let container = document.querySelector('.toast-container');
-    if (!container) {
-        container = document.createElement('div');
-        container.className = 'toast-container';
-        container.innerHTML = `
-            <style>
-                @keyframes slideIn {
-                    from { transform: translateX(100%); opacity: 0; }
-                    to { transform: translateX(0); opacity: 1; }
-                }
-                @keyframes slideOut {
-                    from { transform: translateX(0); opacity: 1; }
-                    to { transform: translateX(100%); opacity: 0; }
-                }
-                @keyframes fadeIn {
-                    from { opacity: 0; transform: translateY(-10px); }
-                    to { opacity: 1; transform: translateY(0); }
-                }
-                @keyframes progressShrink {
-                    from { width: 100%; }
-                    to { width: 0%; }
-                }
-                .toast-container {
-                    position: fixed;
-                    top: 20px;
-                    right: 20px;
-                    z-index: 99999;
-                    display: flex;
-                    flex-direction: column;
-                    gap: 12px;
-                    max-width: 400px;
-                    width: 100%;
-                }
-                .toast {
-                    background: white;
-                    border-radius: 12px;
-                    padding: 16px 20px;
-                    display: flex;
-                    align-items: flex-start;
-                    gap: 12px;
-                    box-shadow: 0 10px 40px rgba(0,0,0,0.12), 0 2px 10px rgba(0,0,0,0.08);
-                    animation: slideIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-                    border-left: 4px solid;
-                    position: relative;
-                    overflow: hidden;
-                }
-                .toast.removing {
-                    animation: slideOut 0.3s ease forwards;
-                }
-                .toast-icon {
-                    width: 24px;
-                    height: 24px;
-                    border-radius: 50%;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    flex-shrink: 0;
-                    font-size: 14px;
-                }
-                .toast-content {
-                    flex: 1;
-                    min-width: 0;
-                }
-                .toast-title {
-                    font-weight: 600;
-                    font-size: 14px;
-                    margin-bottom: 4px;
-                    text-transform: capitalize;
-                }
-                .toast-message {
-                    font-size: 13px;
-                    color: #64748b;
-                    line-height: 1.5;
-                    word-wrap: break-word;
-                }
-                .toast-close {
-                    background: none;
-                    border: none;
-                    color: #94a3b8;
-                    font-size: 18px;
-                    cursor: pointer;
-                    padding: 4px;
-                    line-height: 1;
-                    border-radius: 6px;
-                    transition: all 0.2s;
-                    flex-shrink: 0;
-                }
-                .toast-close:hover {
-                    background: #f1f5f9;
-                    color: #475569;
-                }
-                .toast-progress {
-                    position: absolute;
-                    bottom: 0;
-                    left: 0;
-                    height: 3px;
-                    background: currentColor;
-                    opacity: 0.3;
-                    animation: progressShrink 5s linear forwards;
-                }
-                .toast-success { border-left-color: #10b981; }
-                .toast-success .toast-icon { background: #d1fae5; color: #059669; }
-                .toast-success .toast-title { color: #059669; }
-                .toast-error { border-left-color: #ef4444; }
-                .toast-error .toast-icon { background: #fee2e2; color: #dc2626; }
-                .toast-error .toast-title { color: #dc2626; }
-                .toast-warning { border-left-color: #f59e0b; }
-                .toast-warning .toast-icon { background: #fef3c7; color: #d97706; }
-                .toast-warning .toast-title { color: #d97706; }
-                .toast-info { border-left-color: #3b82f6; }
-                .toast-info .toast-icon { background: #dbeafe; color: #2563eb; }
-                .toast-info .toast-title { color: #2563eb; }
-            </style>
-        `;
-        document.body.appendChild(container);
-    }
+    // Remove any existing toasts first
+    const existingToasts = document.querySelectorAll('.toast-popup');
+    existingToasts.forEach(t => t.remove());
     
-    // Toast types configuration
-    const toastConfig = {
-        success: { icon: 'fa-check', title: 'Success' },
-        error: { icon: 'fa-times', title: 'Error' },
-        warning: { icon: 'fa-exclamation', title: 'Warning' },
-        info: { icon: 'fa-info-circle', title: 'Info' }
+    // Color based on type (for border/icon color)
+    const colors = {
+        success: '#10b981',
+        error: '#ef4444',
+        warning: '#f59e0b',
+        info: '#3b82f6'
     };
-    
-    const config = toastConfig[type] || toastConfig.info;
+    const color = colors[type] || colors.info;
     
     // Create toast element
     const toast = document.createElement('div');
-    toast.className = `toast toast-${type}`;
-    toast.innerHTML = `
-        <div class="toast-icon">
-            <i class="fas ${config.icon}"></i>
-        </div>
-        <div class="toast-content">
-            <div class="toast-title">${config.title}</div>
-            <div class="toast-message">${escapeHtml(message)}</div>
-        </div>
-        <button class="toast-close" onclick="removeToast(this)">&times;</button>
-        <div class="toast-progress"></div>
+    toast.className = 'toast-popup';
+    toast.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 99999;
+        padding: 16px 24px;
+        border-radius: 8px;
+        background: #ffffff;
+        color: #333333;
+        font-weight: 500;
+        font-size: 14px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        animation: toastSlideInRight 0.3s ease;
+        max-width: 350px;
+        text-align: left;
+        border-left: 4px solid ${color};
     `;
     
-    container.appendChild(toast);
-    
-    // Remove toast function
-    window.removeToast = function(btn) {
-        const toast = btn.closest('.toast');
-        toast.classList.add('removing');
-        setTimeout(() => toast.remove(), 300);
+    // Add icon based on type
+    const icons = {
+        success: '✓',
+        error: '✕',
+        warning: '⚠',
+        info: 'ℹ'
     };
+    const icon = icons[type] || icons.info;
     
-    // Auto remove after 5 seconds
-    const timeoutId = setTimeout(() => {
-        if (toast.parentElement) {
-            toast.classList.add('removing');
-            setTimeout(() => toast.remove(), 300);
-        }
-    }, 5000);
+    toast.innerHTML = `
+        <span style="color: ${color}; font-weight: bold; margin-right: 8px;">${icon}</span>
+        <span>${message}</span>
+    `;
+    document.body.appendChild(toast);
     
-    // Pause progress bar on hover
-    toast.addEventListener('mouseenter', () => {
-        clearTimeout(timeoutId);
-        toast.querySelector('.toast-progress').style.animationPlayState = 'paused';
-    });
-    
-    toast.addEventListener('mouseleave', () => {
-        toast.querySelector('.toast-progress').style.animationPlayState = 'running';
-        setTimeout(() => {
-            if (toast.parentElement) {
-                toast.classList.add('removing');
-                setTimeout(() => toast.remove(), 300);
+    // Add animation keyframes if not already added
+    if (!document.getElementById('toast-popup-style')) {
+        const style = document.createElement('style');
+        style.id = 'toast-popup-style';
+        style.textContent = `
+            @keyframes toastSlideInRight {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
             }
-        }, 2000);
-    });
+            @keyframes toastSlideOutRight {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+    
+    // Auto-remove after 3 seconds
+    setTimeout(() => {
+        toast.style.animation = 'toastSlideOutRight 0.3s ease forwards';
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
 }
 
 function showLoading(element) {

@@ -2001,11 +2001,12 @@
             html += '</tr></thead><tbody>';
             
             records.forEach(record => {
-                const statusClass = record.status === 'Present' ? '#10b981' : record.status === 'Absent' ? '#ef4444' : '#f59e0b';
+                const statusClass = record.status === 'present' ? '#10b981' : record.status === 'absent' ? '#ef4444' : '#f59e0b';
+                const displayStatus = record.status ? record.status.charAt(0).toUpperCase() + record.status.slice(1) : 'Unknown';
                 html += '<tr style="border-bottom: 1px solid #e2e8f0;">';
                 html += '<td style="padding: 12px;">' + (record.date || '-') + '</td>';
                 html += '<td style="padding: 12px;">' + (record.course_name || '-') + '</td>';
-                html += '<td style="padding: 12px;"><span style="background: ' + statusClass + '; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px;">' + (record.status || '-') + '</span></td>';
+                html += '<td style="padding: 12px;"><span style="background: ' + statusClass + '; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px;">' + displayStatus + '</span></td>';
                 html += '<td style="padding: 12px;">' + (record.time || '-') + '</td>';
                 html += '<td style="padding: 12px;">' + (record.notes || '-') + '</td>';
                 html += '</tr>';
@@ -2018,8 +2019,8 @@
         // Update attendance statistics
         function updateAttendanceStats(records) {
             const total = records ? records.length : 0;
-            const present = records ? records.filter(r => r.status === 'Present').length : 0;
-            const absent = records ? records.filter(r => r.status === 'Absent').length : 0;
+            const present = records ? records.filter(r => r.status === 'present').length : 0;
+            const absent = records ? records.filter(r => r.status === 'absent').length : 0;
             
             document.getElementById('total-attendance').textContent = total;
             document.getElementById('present-attendance').textContent = present;

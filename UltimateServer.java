@@ -3,6 +3,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 
 /**
@@ -358,6 +359,16 @@ public class UltimateServer {
                         completion_date DATE,
                         certificate_number VARCHAR(50),
                         notes TEXT,
+                        license_type VARCHAR(50) DEFAULT 'Class B',
+                        course_id INTEGER REFERENCES courses(id),
+                        driving_course VARCHAR(100),
+                        computer_course VARCHAR(100),
+                        location_id INTEGER, -- Can be NULL if location doesn't exist in locations table
+                        transmission VARCHAR(50),
+                        preferred_schedule VARCHAR(20),
+                        preferred_start DATE,
+                        emergency_contact_name VARCHAR(255),
+                        emergency_contact_phone VARCHAR(50),
                         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                         CONSTRAINT chk_enrollment_status CHECK (status IN ('enrolled', 'active', 'completed', 'dropped', 'suspended')),
@@ -366,6 +377,25 @@ public class UltimateServer {
                     )
                 """);
                 System.out.println("Created enrollments table.");
+            }
+            
+            // Migration: Add missing columns to enrollments table if they don't exist
+            try {
+                stmt.executeUpdate("ALTER TABLE enrollments ADD COLUMN IF NOT EXISTS license_type VARCHAR(50) DEFAULT 'Class B'");
+                stmt.executeUpdate("ALTER TABLE enrollments ADD COLUMN IF NOT EXISTS driving_course VARCHAR(100)");
+                stmt.executeUpdate("ALTER TABLE enrollments ADD COLUMN IF NOT EXISTS computer_course VARCHAR(100)");
+                stmt.executeUpdate("ALTER TABLE enrollments ADD COLUMN IF NOT EXISTS transmission VARCHAR(50)");
+                stmt.executeUpdate("ALTER TABLE enrollments ADD COLUMN IF NOT EXISTS preferred_schedule VARCHAR(20)");
+                stmt.executeUpdate("ALTER TABLE enrollments ADD COLUMN IF NOT EXISTS training_location VARCHAR(255)");
+                stmt.executeUpdate("ALTER TABLE enrollments ADD COLUMN IF NOT EXISTS progress_percentage INTEGER DEFAULT 0");
+                stmt.executeUpdate("ALTER TABLE enrollments ADD COLUMN IF NOT EXISTS end_time TIME");
+                stmt.executeUpdate("ALTER TABLE enrollments ADD COLUMN IF NOT EXISTS location_id INTEGER");
+                stmt.executeUpdate("ALTER TABLE enrollments ADD COLUMN IF NOT EXISTS completion_date DATE");
+                stmt.executeUpdate("ALTER TABLE enrollments ADD COLUMN IF NOT EXISTS certificate_number VARCHAR(100)");
+                System.out.println("Added missing columns to enrollments table.");
+            } catch (SQLException e) {
+                // Columns might already exist, ignore error
+                System.out.println(" enrollments columns migration: " + e.getMessage());
             }
             
             // Create applications table if not exists
@@ -428,6 +458,20 @@ public class UltimateServer {
                     )
                 """);
                 System.out.println("Created attendance table.");
+            }
+            
+            // Migration: Add missing columns to attendance table if they don't exist
+            try {
+                stmt.executeUpdate("ALTER TABLE attendance ADD COLUMN IF NOT EXISTS location VARCHAR(255)");
+                stmt.executeUpdate("ALTER TABLE attendance ADD COLUMN IF NOT EXISTS license_type VARCHAR(50)");
+                stmt.executeUpdate("ALTER TABLE attendance ADD COLUMN IF NOT EXISTS driving_course VARCHAR(100)");
+                stmt.executeUpdate("ALTER TABLE attendance ADD COLUMN IF NOT EXISTS computer_course VARCHAR(100)");
+                stmt.executeUpdate("ALTER TABLE attendance ADD COLUMN IF NOT EXISTS transmission VARCHAR(50)");
+                stmt.executeUpdate("ALTER TABLE attendance ADD COLUMN IF NOT EXISTS preferred_schedule VARCHAR(20)");
+                System.out.println("Added missing columns to attendance table.");
+            } catch (SQLException e) {
+                // Columns might already exist, ignore error
+                System.out.println(" attendance columns migration: " + e.getMessage());
             }
             
             // Create contact_messages table if not exists

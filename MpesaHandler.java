@@ -178,7 +178,7 @@ class MpesaHandler extends ApiHandler implements HttpHandler {
             phoneNumber,
             amount,
             "STK Push",
-            applicationIdStr != null ? Integer.parseInt(applicationIdStr) : null,
+            applicationIdStr != null && !applicationIdStr.isEmpty() ? Integer.parseInt(applicationIdStr) : null,
             "pending"
         );
 
@@ -346,8 +346,8 @@ class MpesaHandler extends ApiHandler implements HttpHandler {
         String limitStr = queryParams.get("limit");
         String offsetStr = queryParams.get("offset");
 
-        int limit = limitStr != null ? Integer.parseInt(limitStr) : 100;
-        int offset = offsetStr != null ? Integer.parseInt(offsetStr) : 0;
+        int limit = (limitStr != null && !limitStr.isEmpty()) ? Integer.parseInt(limitStr) : 100;
+        int offset = (offsetStr != null && !offsetStr.isEmpty()) ? Integer.parseInt(offsetStr) : 0;
 
         List<Map<String, Object>> transactions = DBConnection.getMpesaTransactions(status, phone, startDate, endDate, limit, offset);
         int totalCount = DBConnection.countMpesaTransactions(status, phone, startDate, endDate);
@@ -677,8 +677,8 @@ class MpesaHandler extends ApiHandler implements HttpHandler {
                 phone = "254" + phone.substring(1);
             }
             
-            double amount = Double.parseDouble(amountStr);
-            int applicationId = applicationIdStr != null ? Integer.parseInt(applicationIdStr) : 0;
+            double amount = (amountStr != null && !amountStr.isEmpty()) ? Double.parseDouble(amountStr) : 0;
+            int applicationId = (applicationIdStr != null && !applicationIdStr.isEmpty()) ? Integer.parseInt(applicationIdStr) : 0;
             
             // Paybill details
             String paybill = "4108993";
