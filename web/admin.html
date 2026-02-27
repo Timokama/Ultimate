@@ -698,6 +698,9 @@
                     <div id="section-applications" class="admin-section" style="display: none;">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                             <h2 style="margin: 0;">All Applications</h2>
+                            <button class="btn btn-primary" onclick="openNewApplicationModal()">
+                                <i class="fas fa-plus"></i> Add New Application
+                            </button>
                         </div>
                         <div id="all-applications">
                             <div class="course-card" style="text-align: center; padding: 60px 20px;">
@@ -1723,80 +1726,80 @@
     </div>
     
     <!-- Attendance Modal -->
-    <div id="attendance-modal" class="modal">
-        <div class="modal-content" style="max-width: 800px;">
-            <div class="modal-header">
-                <h3 id="attendance-modal-title"><i class="fas fa-clipboard-check"></i> Record Attendance</h3>
-                <button class="modal-close" onclick="closeAttendanceModal()">&times;</button>
+    <div id="attendance-modal" class="modal" style="z-index: 9999;">
+        <div class="modal-content" style="background: linear-gradient(135deg, #1e3a5f 0%, #2d5a87 50%, #3d7ab5 100%); border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.5); max-width: 800px; width: 95%; position: relative; z-index: 10000; margin-top: 5vh;">
+            <div class="modal-header" style="background: rgba(255,255,255,0.1); border-bottom: 1px solid rgba(255,255,255,0.2); padding: 20px 25px; border-radius: 16px 16px 0 0;">
+                <h3 id="attendance-modal-title" style="color: #fff; margin: 0; font-size: 22px; font-weight: 600;"><i class="fas fa-clipboard-check"></i> Record Attendance</h3>
+                <button class="modal-close" onclick="closeAttendanceModal()" style="color: #fff; background: rgba(255,255,255,0.2); border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: 20px; transition: all 0.3s;">&times;</button>
             </div>
-            <form id="attendance-form" onsubmit="handleAttendanceSubmit(event)">
+            <form id="attendance-form" onsubmit="handleAttendanceSubmit(event)" style="padding: 25px; border-radius: 0; max-height: 70vh; overflow-y: auto; background: #f8fafc;">
                 <input type="hidden" id="attendance-id" name="attendance_id">
-                <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
-                    <!-- Date & Type Section -->
-                    <div style="background: var(--bg-secondary); padding: 15px; border-radius: 8px; margin-bottom: 15px;">
-                        <h4 style="margin: 0 0 15px 0; color: var(--primary-color); font-size: 14px;"><i class="fas fa-calendar-alt"></i> Date & Type</h4>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                            <div>
-                                <label for="attendance-date"><i class="fas fa-calendar"></i> Date *</label>
-                                <input type="date" id="attendance-date" name="date" required style="width: 100%; padding: 10px; border: none; border-bottom: 2px solid var(--primary-color); background: transparent; color: var(--text-color); font-size: 14px; outline: none; transition: border-color 0.3s;">
-                            </div>
-                            <div>
-                                <label for="attendance-type"><i class="fas fa-users"></i> Type *</label>
-                                <select id="attendance-type" name="type" required onchange="loadPeopleForAttendance()" style="width: 100%; padding: 10px; border: 2px solid var(--border-color); border-radius: 8px; background: var(--bg-color); color: var(--text-color); font-size: 14px; outline: none; cursor: pointer; transition: border-color 0.3s, box-shadow 0.3s;">
-                                    <option value="student">Student</option>
-                                    <option value="staff">Staff</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Person & Class Section -->
-                    <div style="background: var(--bg-secondary); padding: 15px; border-radius: 8px; margin-bottom: 15px;">
-                        <h4 style="margin: 0 0 15px 0; color: var(--primary-color); font-size: 14px;"><i class="fas fa-user"></i> Person & Class</h4>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                            <div>
-                                <label for="attendance-person"><i class="fas fa-user"></i> Student/Staff Name *</label>
-                                <select id="attendance-person" name="user_id" required style="width: 100%; padding: 10px; border: 2px solid var(--border-color); border-radius: 8px; background: var(--bg-color); color: var(--text-color); font-size: 14px; outline: none; cursor: pointer; transition: border-color 0.3s, box-shadow 0.3s;">
-                                    <option value="">Select Person</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label for="attendance-class"><i class="fas fa-chalkboard-teacher"></i> Class *</label>
-                                <select id="attendance-class" name="class_id" required onchange="loadCoursesForAttendance()" style="width: 100%; padding: 10px; border: 2px solid var(--border-color); border-radius: 8px; background: var(--bg-color); color: var(--text-color); font-size: 14px; outline: none; cursor: pointer; transition: border-color 0.3s, box-shadow 0.3s;">
-                                    <option value="">Select Class</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label for="attendance-course"><i class="fas fa-graduation-cap"></i> Course (for students)</label>
-                                <select id="attendance-course" name="course_id" style="width: 100%; padding: 10px; border: 2px solid var(--border-color); border-radius: 8px; background: var(--bg-color); color: var(--text-color); font-size: 14px; outline: none; cursor: pointer; transition: border-color 0.3s, box-shadow 0.3s;">
-                                    <option value="">Select Course (optional)</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label for="attendance-status"><i class="fas fa-check-circle"></i> Status *</label>
-                                <select id="attendance-status" name="status" required style="width: 100%; padding: 10px; border: 2px solid var(--border-color); border-radius: 8px; background: var(--bg-color); color: var(--text-color); font-size: 14px; outline: none; cursor: pointer; transition: border-color 0.3s, box-shadow 0.3s;">
-                                    <option value="present">Present</option>
-                                    <option value="absent">Absent</option>
-                                    <option value="late">Late</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Notes Section -->
-                    <div style="background: var(--bg-secondary); padding: 15px; border-radius: 8px;">
-                        <h4 style="margin: 0 0 15px 0; color: var(--primary-color); font-size: 14px;"><i class="fas fa-sticky-note"></i> Additional Notes</h4>
+                <!-- Date & Type Section -->
+                <div style="background: #fff; padding: 15px; border-radius: 8px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                    <h4 style="margin: 0 0 15px 0; color: #1e3a5f; font-size: 14px; font-weight: 600;"><i class="fas fa-calendar-alt"></i> Date & Type</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                         <div>
-                            <label for="attendance-notes"><i class="fas fa-pencil-alt"></i> Notes</label>
-                            <textarea id="attendance-notes" name="notes" rows="3" placeholder="Additional notes..." style="width: 100%; padding: 10px; border: none; border-bottom: 2px solid var(--primary-color); background: transparent; color: var(--text-color); font-size: 14px; outline: none; transition: border-color 0.3s; resize: vertical;"></textarea>
+                            <label for="attendance-date" style="color: #1e3a5f; font-weight: 600;"><i class="fas fa-calendar"></i> Date *</label>
+                            <input type="date" id="attendance-date" name="date" required style="width: 100%; padding: 12px; border: 2px solid #dee2e6; border-radius: 8px; background: #fff; color: #495057; font-size: 14px; outline: none; transition: border-color 0.3s;">
+                        </div>
+                        <div>
+                            <label for="attendance-type" style="color: #1e3a5f; font-weight: 600;"><i class="fas fa-users"></i> Type *</label>
+                            <select id="attendance-type" name="type" required onchange="loadPeopleForAttendance()" style="width: 100%; padding: 12px; border: 2px solid #dee2e6; border-radius: 8px; background: #fff; color: #495057; font-size: 14px; outline: none; cursor: pointer; transition: border-color 0.3s;">
+                                <option value="student">Student</option>
+                                <option value="staff">Staff</option>
+                            </select>
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" onclick="closeAttendanceModal()">
+                
+                <!-- Person & Class Section -->
+                <div style="background: #fff; padding: 15px; border-radius: 8px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                    <h4 style="margin: 0 0 15px 0; color: #1e3a5f; font-size: 14px; font-weight: 600;"><i class="fas fa-user"></i> Person & Class</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div>
+                            <label for="attendance-person" style="color: #1e3a5f; font-weight: 600;"><i class="fas fa-user"></i> Student/Staff Name *</label>
+                            <select id="attendance-person" name="user_id" required style="width: 100%; padding: 12px; border: 2px solid #dee2e6; border-radius: 8px; background: #fff; color: #495057; font-size: 14px; outline: none; cursor: pointer; transition: border-color 0.3s;">
+                                <option value="">Select Person</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="attendance-class" style="color: #1e3a5f; font-weight: 600;"><i class="fas fa-chalkboard-teacher"></i> Class *</label>
+                            <select id="attendance-class" name="class_id" required onchange="loadCoursesForAttendance()" style="width: 100%; padding: 12px; border: 2px solid #dee2e6; border-radius: 8px; background: #fff; color: #495057; font-size: 14px; outline: none; cursor: pointer; transition: border-color 0.3s;">
+                                <option value="">Select Class</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="attendance-course" style="color: #1e3a5f; font-weight: 600;"><i class="fas fa-graduation-cap"></i> Course (for students)</label>
+                            <select id="attendance-course" name="course_id" style="width: 100%; padding: 12px; border: 2px solid #dee2e6; border-radius: 8px; background: #fff; color: #495057; font-size: 14px; outline: none; cursor: pointer; transition: border-color 0.3s;">
+                                <option value="">Select Course (optional)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="attendance-status" style="color: #1e3a5f; font-weight: 600;"><i class="fas fa-check-circle"></i> Status *</label>
+                            <select id="attendance-status" name="status" required style="width: 100%; padding: 12px; border: 2px solid #dee2e6; border-radius: 8px; background: #fff; color: #495057; font-size: 14px; outline: none; cursor: pointer; transition: border-color 0.3s;">
+                                <option value="present">Present</option>
+                                <option value="absent">Absent</option>
+                                <option value="late">Late</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Notes Section -->
+                <div style="background: #fff; padding: 15px; border-radius: 8px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                    <h4 style="margin: 0 0 15px 0; color: #1e3a5f; font-size: 14px; font-weight: 600;"><i class="fas fa-sticky-note"></i> Additional Notes</h4>
+                    <div>
+                        <label for="attendance-notes" style="color: #1e3a5f; font-weight: 600;"><i class="fas fa-pencil-alt"></i> Notes</label>
+                        <textarea id="attendance-notes" name="notes" rows="3" placeholder="Additional notes..." style="width: 100%; padding: 12px; border: 2px solid #dee2e6; border-radius: 8px; background: #fff; color: #495057; font-size: 14px; outline: none; transition: border-color 0.3s; resize: vertical;"></textarea>
+                    </div>
+                </div>
+                
+                <!-- Buttons -->
+                <div style="padding: 20px 25px; border-top: 1px solid rgba(255,255,255,0.2); display: flex; gap: 12px; justify-content: flex-end;">
+                    <button type="button" onclick="closeAttendanceModal()" style="padding: 12px 24px; border-radius: 8px; font-weight: 600; border: 2px solid #6c757d; background: #fff; color: #6c757d; cursor: pointer;">
                         <i class="fas fa-times"></i> Cancel
                     </button>
-                    <button type="submit" class="btn btn-primary">
+                    <button type="submit" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); color: #fff; cursor: pointer;">
                         <i class="fas fa-save"></i> Save Attendance
                     </button>
                 </div>
@@ -2787,7 +2790,7 @@
                         students.forEach(user => {
                             const option = document.createElement('option');
                             option.value = user.id;
-                            option.textContent = user.full_name || user.email || `${user.first_name} ${user.last_name}`;
+                            option.textContent = `#${user.id} - ${user.full_name || user.email || `${user.first_name} ${user.last_name}`}`;
                             studentSelect.appendChild(option);
                         });
                     }
@@ -3528,9 +3531,9 @@
                     
                     document.getElementById('enrollment-transmission').value = enrollment.transmission || '';
                     document.getElementById('enrollment-schedule').value = enrollment.preferred_schedule || '';
-                    // Set location dropdown by training_location name (now stored as value)
+                    // Set location dropdown by location_id
                     setTimeout(() => {
-                        document.getElementById('enrollment-location-id').value = enrollment.training_location || '';
+                        document.getElementById('enrollment-location-id').value = enrollment.location_id || '';
                     }, 100);
                     
                     // Handle completion date - convert to YYYY-MM-DD format for input type="date"
@@ -3602,7 +3605,7 @@
                     students.forEach(user => {
                         const option = document.createElement('option');
                         option.value = user.id;
-                        option.textContent = user.full_name || user.email || `${user.first_name} ${user.last_name}`;
+                        option.textContent = `#${user.id} - ${user.full_name || user.email || `${user.first_name} ${user.last_name}`}`;
                         select.appendChild(option);
                     });
                 }
@@ -3734,8 +3737,9 @@
                     select.innerHTML = '<option value="">Select Location</option>';
                     data.locations.forEach(loc => {
                         const option = document.createElement('option');
-                        option.value = loc.name || loc; // Use location name as value
+                        option.value = loc.id || loc.name || loc; // Use location ID as value
                         option.textContent = loc.name || loc;
+                        option.setAttribute('data-name', loc.name); // Store name for reference
                         select.appendChild(option);
                     });
                 }
@@ -3826,7 +3830,7 @@
                 license_type: form.license_type.value,
                 transmission: form.transmission.value,
                 preferred_schedule: form.preferred_schedule.value,
-                training_location: locationSelect ? locationSelect.options[locationSelect.selectedIndex].text : '',
+                training_location: locationSelect && locationSelect.selectedOptions[0] ? locationSelect.selectedOptions[0].getAttribute('data-name') || locationSelect.options[locationSelect.selectedIndex].text : '',
                 location_id: locationId,
                 progress_percentage: '', // Optional field
                 end_time: '', // Optional field
@@ -4178,31 +4182,72 @@
         }
         
         function openAttendanceModal() {
-            // Reset form
-            document.getElementById('attendance-id').value = '';
-            document.getElementById('attendance-modal-title').innerHTML = '<i class="fas fa-clipboard-check"></i> Record Attendance';
-            document.getElementById('attendance-form').reset();
-            
-            // Also reset dropdowns explicitly
-            document.getElementById('attendance-date').value = new Date().toISOString().split('T')[0];
-            document.getElementById('attendance-type').value = 'student';
-            document.getElementById('attendance-status').value = 'present';
-            document.getElementById('attendance-notes').value = '';
-            document.getElementById('attendance-person').innerHTML = '<option value="">Select Person</option>';
-            document.getElementById('attendance-course').innerHTML = '<option value="">Select Course (optional)</option>';
-            document.getElementById('attendance-class').innerHTML = '<option value="">Select Class</option>';
-            
-            // Load students, courses and classes
-            loadPeopleForAttendance();
-            loadCoursesForAttendance();
-            loadClassesForAttendance();
-            
-            document.getElementById('attendance-modal').classList.add('show');
+            try {
+                // Reset form
+                const idInput = document.getElementById('attendance-id');
+                const titleEl = document.getElementById('attendance-modal-title');
+                const form = document.getElementById('attendance-form');
+                const modal = document.getElementById('attendance-modal');
+                
+                if (!modal) {
+                    console.error('Attendance modal not found');
+                    return;
+                }
+                
+                if (idInput) idInput.value = '';
+                if (titleEl) titleEl.innerHTML = '<i class="fas fa-clipboard-check"></i> Record Attendance';
+                if (form) form.reset();
+                
+                // Also reset dropdowns explicitly
+                const dateEl = document.getElementById('attendance-date');
+                const typeEl = document.getElementById('attendance-type');
+                const statusEl = document.getElementById('attendance-status');
+                const notesEl = document.getElementById('attendance-notes');
+                const personEl = document.getElementById('attendance-person');
+                const courseEl = document.getElementById('attendance-course');
+                const classEl = document.getElementById('attendance-class');
+                
+                if (dateEl) dateEl.value = new Date().toISOString().split('T')[0];
+                if (typeEl) typeEl.value = 'student';
+                if (statusEl) statusEl.value = 'present';
+                if (notesEl) notesEl.value = '';
+                if (personEl) personEl.innerHTML = '<option value="">Select Person</option>';
+                if (courseEl) courseEl.innerHTML = '<option value="">Select Course (optional)</option>';
+                if (classEl) classEl.innerHTML = '<option value="">Select Class</option>';
+                
+                // Load students, courses and classes
+                loadPeopleForAttendance();
+                loadCoursesForAttendance();
+                loadClassesForAttendance();
+                
+                // Show modal with inline styles to ensure visibility
+                modal.style.display = 'flex';
+                modal.style.position = 'fixed';
+                modal.style.top = '0';
+                modal.style.left = '0';
+                modal.style.width = '100%';
+                modal.style.height = '100%';
+                modal.style.background = 'rgba(0, 0, 0, 0.5)';
+                modal.style.zIndex = '99999';
+                modal.style.alignItems = 'center';
+                modal.style.justifyContent = 'center';
+                modal.classList.add('show');
+                console.log('Attendance modal opened - inline styles applied');
+            } catch (error) {
+                console.error('Error opening attendance modal:', error);
+            }
         }
         
         function closeAttendanceModal() {
-            const modal = document.getElementById('attendance-modal');
-            if (modal) modal.classList.remove('show');
+            try {
+                const modal = document.getElementById('attendance-modal');
+                if (modal) {
+                    modal.style.display = 'none';
+                    modal.classList.remove('show');
+                }
+            } catch (error) {
+                console.error('Error closing attendance modal:', error);
+            }
         }
         
         async function loadPeopleForAttendance() {
@@ -4416,7 +4461,7 @@
                 
                 if (data.success) {
                     showToast('Attendance saved successfully!');
-                    document.getElementById('attendance-modal').classList.remove('show');
+                    closeAttendanceModal();
                     loadAttendance();
                 } else {
                     showToast('Error: ' + (data.error || 'Failed to save attendance'), 'error');
@@ -6886,6 +6931,89 @@
             document.getElementById('application-form').reset();
         }
         
+        // Open modal for adding a new application
+        function openNewApplicationModal() {
+            // Reset form and clear the application ID
+            document.getElementById('application-form').reset();
+            document.getElementById('application-id').value = '';
+            document.getElementById('application-modal-title').textContent = 'Add New Application';
+            
+            // Reset to first tab
+            switchAppTab('personal');
+            
+            // Load required data for the form
+            loadLocationsForApplicationModal();
+            loadCoursesForApplicationModal();
+            
+            // Show the modal
+            document.getElementById('application-modal').classList.add('show');
+        }
+        
+        // Load locations for application modal
+        async function loadLocationsForApplicationModal() {
+            const locationSelect = document.getElementById('app-location');
+            if (!locationSelect) return;
+            
+            // Check if already loaded
+            if (locationSelect.options.length > 1) return;
+            
+            try {
+                const response = await fetch('/api/locations', {
+                    headers: { 'Authorization': 'Bearer ' + auth.getToken() }
+                });
+                const data = await response.json();
+                
+                if (data.success && data.locations) {
+                    data.locations.forEach(loc => {
+                        const option = document.createElement('option');
+                        option.value = loc.id;
+                        option.textContent = loc.name;
+                        locationSelect.appendChild(option);
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading locations:', error);
+            }
+        }
+        
+        // Load courses for application modal
+        async function loadCoursesForApplicationModal() {
+            const courseSelect = document.getElementById('app-driving-course');
+            if (!courseSelect) return;
+            
+            // Check if already loaded
+            if (courseSelect.options.length > 1) return;
+            
+            try {
+                const response = await fetch('/api/courses', {
+                    headers: { 'Authorization': 'Bearer ' + auth.getToken() }
+                });
+                const data = await response.json();
+                
+                if (data.success && data.courses) {
+                    data.courses.forEach(course => {
+                        const option = document.createElement('option');
+                        option.value = course.name;
+                        option.textContent = course.name;
+                        courseSelect.appendChild(option);
+                    });
+                    
+                    // Also populate computer course if element exists
+                    const computerSelect = document.getElementById('app-computer-course');
+                    if (computerSelect) {
+                        data.courses.forEach(course => {
+                            const option = document.createElement('option');
+                            option.value = course.name;
+                            option.textContent = course.name;
+                            computerSelect.appendChild(option);
+                        });
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading courses:', error);
+            }
+        }
+        
         // View M-Pesa Messages for currently open application
         function viewCurrentMpesaMessages() {
             const phone = document.getElementById('app-phone').value;
@@ -7004,6 +7132,7 @@
             
             const form = e.target;
             const appId = document.getElementById('application-id').value;
+            const isNewApplication = !appId || appId === '';
             
             const formData = {
                 first_name: form.first_name.value,
@@ -7046,24 +7175,38 @@
             submitBtn.disabled = true;
             
             try {
-                const response = await fetch(`/api/applications/${appId}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                        'Authorization': 'Bearer ' + auth.getToken()
-                    },
-                    body: new URLSearchParams(formData)
-                });
+                let response;
+                if (isNewApplication) {
+                    // Create new application
+                    response = await fetch('/api/applications', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                            'Authorization': 'Bearer ' + auth.getToken()
+                        },
+                        body: new URLSearchParams(formData)
+                    });
+                } else {
+                    // Update existing application
+                    response = await fetch(`/api/applications/${appId}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                            'Authorization': 'Bearer ' + auth.getToken()
+                        },
+                        body: new URLSearchParams(formData)
+                    });
+                }
                 
                 const data = await response.json();
                 
                 if (data.success) {
-                    showToast('Application updated successfully!');
+                    showToast(isNewApplication ? 'Application created successfully!' : 'Application updated successfully!');
                     closeApplicationModal();
                     await loadAllApplications();
                     await loadOverview();
                 } else {
-                    showToast('Error: ' + (data.error || 'Failed to update application'));
+                    showToast('Error: ' + (data.error || 'Failed to save application'));
                 }
             } catch (error) {
                 showToast('Error: ' + error.message);

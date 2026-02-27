@@ -1729,8 +1729,14 @@ h4 { font-size: 1.25rem; }
     }
     
     .modal.show {
-        display: block;
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
         opacity: 1;
+    }
+    
+    .modal.show .modal-content {
+        display: block !important;
     }
     
     .modal-content {

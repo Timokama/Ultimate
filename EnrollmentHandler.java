@@ -243,8 +243,8 @@ class EnrollmentHandler extends ApiHandler implements HttpHandler {
 
         String role = JWTUtil.getRole(token);
         // Allow admin, staff, student, applicant, and user to view enrollments
-        if (!"admin".equals(role) && !"staff".equals(role) && !"student".equals(role) && !"applicant".equals(role) && !"user".equals(role)) {
-            sendErrorResponse(exchange, 403, "Admin, staff, student, applicant or user access required");
+        if (!"admin".equals(role) && !"staff".equals(role) && !"student".equals(role) && !"applicant".equals(role) && !"user".equals(role) && !"instructor".equals(role)) {
+            sendErrorResponse(exchange, 403, "Admin, staff, instructor, student, applicant or user access required");
             return;
         }
         
@@ -261,8 +261,10 @@ class EnrollmentHandler extends ApiHandler implements HttpHandler {
         String statusFilter = queryParams.get("status");
         String dateFilter = queryParams.get("date");
         String locationFilter = queryParams.get("location");
+        String searchFilter = queryParams.get("search");
+        String categoryFilter = queryParams.get("category");
 
-        List<Map<String, Object>> enrollments = getEnrollments(studentIdFilter, courseIdFilter, statusFilter, dateFilter, locationFilter);
+        List<Map<String, Object>> enrollments = getEnrollments(studentIdFilter, courseIdFilter, statusFilter, dateFilter, locationFilter, searchFilter, categoryFilter);
         String json = "{\"success\": true, \"enrollments\": " + listMapToJson(enrollments) + ", \"count\": " + enrollments.size() + "}";
         sendJsonResponse(exchange, 200, json);
     }
@@ -608,7 +610,7 @@ class EnrollmentHandler extends ApiHandler implements HttpHandler {
     /**
      * Get enrollments with optional filtering
      */
-    private List<Map<String, Object>> getEnrollments(String studentIdFilter, String courseIdFilter, String statusFilter, String dateFilter, String locationFilter) {
+    private List<Map<String, Object>> getEnrollments(String studentIdFilter, String courseIdFilter, String statusFilter, String dateFilter, String locationFilter, String searchFilter, String categoryFilter) {
         List<Map<String, Object>> enrollments = new ArrayList<>();
         
         StringBuilder sql = new StringBuilder();
@@ -653,6 +655,35 @@ class EnrollmentHandler extends ApiHandler implements HttpHandler {
                 // If not a number, try to match by training_location name
                 sql.append("AND e.training_location = ? ");
                 params.add(locationFilter);
+            }
+        }
+        // Search filter - search by student name, email, enrollment number, course, license, status (case-insensitive)
+        if (searchFilter != null && !searchFilter.isEmpty()) {
+            sql.append("AND (LOWER(u.first_name) LIKE LOWER(?) OR LOWER(u.last_name) LIKE LOWER(?) OR LOWER(u.email) LIKE LOWER(?) OR " +
+                       "CAST(e.id AS TEXT) LIKE LOWER(?) OR LOWER(e.enrollment_number) LIKE LOWER(?) OR " +
+                       "LOWER(e.driving_course) LIKE LOWER(?) OR LOWER(e.computer_course) LIKE LOWER(?) OR " +
+                       "LOWER(e.license_type) LIKE LOWER(?) OR LOWER(e.status) LIKE LOWER(?) OR " +
+                       "CAST(e.fee_amount AS TEXT) LIKE LOWER(?) OR CAST(e.fee_paid AS TEXT) LIKE LOWER(?)) ");
+            String searchPattern = "%" + searchFilter + "%";
+            // Add 11 parameters
+            params.add(searchPattern);
+            params.add(searchPattern);
+            params.add(searchPattern);
+            params.add(searchPattern);
+            params.add(searchPattern);
+            params.add(searchPattern);
+            params.add(searchPattern);
+            params.add(searchPattern);
+            params.add(searchPattern);
+            params.add(searchPattern);
+            params.add(searchPattern);
+        }
+        // Category filter - filter by driving or computer courses
+        if (categoryFilter != null && !categoryFilter.isEmpty()) {
+            if ("driving".equals(categoryFilter)) {
+                sql.append("AND (e.driving_course IS NOT NULL AND e.driving_course != '') ");
+            } else if ("computer".equals(categoryFilter)) {
+                sql.append("AND (e.computer_course IS NOT NULL AND e.computer_course != '') ");
             }
         }
         sql.append("ORDER BY e.created_at DESC");
@@ -925,6 +956,11 @@ class EnrollmentHandler extends ApiHandler implements HttpHandler {
             enrollment.put("training_location", rs.getString("training_location"));
         } catch (SQLException e) {
             enrollment.put("training_location", "");
+        }
+        try {
+            enrollment.put("location_id", rs.getInt("location_id"));
+        } catch (SQLException e) {
+            enrollment.put("location_id", 0);
         }
         
         // Include student info if available

@@ -369,6 +369,82 @@ public class DBConnection {
         return getUsersByRole("staff");
     }
     
+    public static List<Map<String, Object>> getUsersByRoles(String[] roles) {
+        List<Map<String, Object>> users = new ArrayList<>();
+        if (roles == null || roles.length == 0) return users;
+        
+        StringBuilder sql = new StringBuilder("SELECT * FROM users WHERE role IN (");
+        for (int i = 0; i < roles.length; i++) {
+            sql.append(i > 0 ? ",?" : "?");
+        }
+        sql.append(") ORDER BY created_at DESC");
+        
+        try (PreparedStatement stmt = getConnection().prepareStatement(sql.toString())) {
+            for (int i = 0; i < roles.length; i++) {
+                stmt.setString(i + 1, roles[i]);
+            }
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                users.add(mapUser(rs));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return users;
+    }
+    
+    public static List<Map<String, Object>> getStudentsByLocation(String location) {
+        List<Map<String, Object>> users = new ArrayList<>();
+        // Get users with role user or applicant whose location_id matches (exclude role=student)
+        String sql = "SELECT * FROM users WHERE role IN (?, ?) AND (location_id::text = ? OR training_location = ?) ORDER BY created_at DESC";
+        try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
+            stmt.setString(1, "user");
+            stmt.setString(2, "applicant");
+            stmt.setString(3, location);
+            stmt.setString(4, location);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                users.add(mapUser(rs));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return users;
+    }
+    
+    // Get students with their active enrollments/applications for attendance dropdown
+    public static List<Map<String, Object>> getStudentsWithEnrollmentsForAttendance(String location) {
+        List<Map<String, Object>> students = new ArrayList<>();
+        // Get all users except admin
+        String sql = "SELECT u.id as user_id, u.first_name, u.last_name, u.full_name, u.email, u.role, " +
+                    "cr.name as course_name, cr.category as course_category, cr.id as course_id " +
+                    "FROM users u " +
+                    "LEFT JOIN enrollments e ON u.id = e.student_id AND e.status = 'active' " +
+                    "LEFT JOIN classes c ON e.class_id = c.id " +
+                    "LEFT JOIN courses cr ON c.course_id = cr.id " +
+                    "WHERE u.role != 'admin' " +
+                    "ORDER BY u.full_name";
+        try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Map<String, Object> student = new HashMap<>();
+                student.put("user_id", rs.getInt("user_id"));
+                student.put("first_name", rs.getString("first_name"));
+                student.put("last_name", rs.getString("last_name"));
+                student.put("full_name", rs.getString("full_name"));
+                student.put("email", rs.getString("email"));
+                student.put("role", rs.getString("role"));
+                student.put("course_name", rs.getString("course_name"));
+                student.put("course_category", rs.getString("course_category"));
+                student.put("course_id", rs.getObject("course_id"));
+                students.add(student);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return students;
+    }
+    
     private static Map<String, Object> mapUser(ResultSet rs) throws SQLException {
         Map<String, Object> user = new HashMap<>();
         user.put("id", rs.getInt("id"));
@@ -687,6 +763,34 @@ public class DBConnection {
         String sql = "SELECT * FROM courses WHERE is_active = true AND category = ? ORDER BY name";
         try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
             stmt.setString(1, category);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                courses.add(mapCourse(rs));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return courses;
+    }
+    
+    // Get courses by multiple categories
+    public static List<Map<String, Object>> getCoursesByCategories(String[] categories) {
+        List<Map<String, Object>> courses = new ArrayList<>();
+        if (categories == null || categories.length == 0) {
+            return courses;
+        }
+        
+        // Build IN clause
+        StringBuilder placeholders = new StringBuilder();
+        for (int i = 0; i < categories.length; i++) {
+            placeholders.append(i > 0 ? ",?" : "?");
+        }
+        
+        String sql = "SELECT * FROM courses WHERE is_active = true AND category IN (" + placeholders.toString() + ") ORDER BY name, category";
+        try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
+            for (int i = 0; i < categories.length; i++) {
+                stmt.setString(i + 1, categories[i].trim());
+            }
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 courses.add(mapCourse(rs));

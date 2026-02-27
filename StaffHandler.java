@@ -211,6 +211,12 @@ class StaffHandler extends ApiHandler implements HttpHandler {
                 return;
             }
             
+            // Route: GET /api/staff/students-with-enrollments - Get students with their enrollments for attendance
+            if (path.equals("/api/staff/students-with-enrollments") && "GET".equals(method)) {
+                handleGetStudentsWithEnrollments(exchange);
+                return;
+            }
+            
             // Route: GET /api/staff/applications - Get applications (alias for /all-applications)
             if (path.equals("/api/staff/applications") && "GET".equals(method)) {
                 handleGetAllApplications(exchange);
@@ -932,16 +938,87 @@ class StaffHandler extends ApiHandler implements HttpHandler {
     }
     
     /**
-     * Get all students
+     * Get all students filtered by location and role
      */
     private void handleGetAllStudents(HttpExchange exchange) throws IOException {
         try {
-            List<Map<String, Object>> students = DBConnection.getStudents();
+            String token = getTokenFromHeader(exchange);
+            String role = JWTUtil.getRole(token);
+            
+            // Parse query parameters for location filter
+            String query = exchange.getRequestURI().getQuery();
+            String requestedLocation = null;
+            if (query != null && query.contains("location=")) {
+                String[] params = query.split("&");
+                for (String param : params) {
+                    if (param.startsWith("location=")) {
+                        requestedLocation = java.net.URLDecoder.decode(param.split("=")[1], "UTF-8");
+                        break;
+                    }
+                }
+            }
+            
+            List<Map<String, Object>> students;
+            
+            // For admin, return all users/applicants (exclude student role)
+            if ("admin".equals(role)) {
+                if (requestedLocation != null && !requestedLocation.isEmpty()) {
+                    // Filter by location
+                    students = DBConnection.getStudentsByLocation(requestedLocation);
+                } else {
+                    // Get all users with role user or applicant (exclude student)
+                    students = DBConnection.getUsersByRoles(new String[]{"user", "applicant"});
+                }
+            } else {
+                // For staff/instructor, only return users/applicants (not students) from their assigned location
+                // Get staff's location from token or database
+                String staffLocation = null;
+                Object locationIdObj = JWTUtil.validateToken(token).get("location_id");
+                if (locationIdObj != null) {
+                    staffLocation = locationIdObj.toString();
+                }
+                
+                // If no location in token, get from database
+                if (staffLocation == null || staffLocation.isEmpty()) {
+                    int userId = JWTUtil.getUserId(token);
+                    staffLocation = DBConnection.getUserLocation(userId);
+                }
+                
+                // Use requested location if provided, otherwise use staff's location
+                String filterLocation = (requestedLocation != null && !requestedLocation.isEmpty()) ? requestedLocation : staffLocation;
+                
+                if (filterLocation != null && !filterLocation.isEmpty()) {
+                    students = DBConnection.getStudentsByLocation(filterLocation);
+                } else {
+                    // No location - return only user/applicant roles
+                    students = DBConnection.getUsersByRoles(new String[]{"user", "applicant"});
+                }
+            }
+            
             String json = "{\"success\": true, \"students\": " + listToJsonMaps(students) + ", " +
                          "\"count\": " + students.size() + "}";
             sendJsonResponse(exchange, 200, json);
         } catch (Exception e) {
             sendErrorResponse(exchange, 500, "Failed to get students: " + e.getMessage());
+        }
+    }
+    
+    /**
+     * Get students with their enrollments for attendance dropdown
+     */
+    private void handleGetStudentsWithEnrollments(HttpExchange exchange) throws IOException {
+        try {
+            String token = getTokenFromHeader(exchange);
+            String role = JWTUtil.getRole(token);
+            
+            // Get all users except admin
+            List<Map<String, Object>> students = DBConnection.getStudentsWithEnrollmentsForAttendance(null);
+            
+            String json = "{\"success\": true, \"students\": " + listToJsonMaps(students) + ", " +
+                         "\"count\": " + students.size() + "}";
+            sendJsonResponse(exchange, 200, json);
+        } catch (Exception e) {
+            sendErrorResponse(exchange, 500, "Failed to get students with enrollments: " + e.getMessage());
         }
     }
     

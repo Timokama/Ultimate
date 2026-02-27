@@ -28,10 +28,157 @@
             font-size: 0.65rem;
             font-weight: 500;
             color: rgba(255,255,255,0.9);
+        }
+        /* Modal Responsive Styles */
+        @media (max-width: 768px) {
+            .modal-content {
+                width: 95% !important;
+                max-width: 95% !important;
+                margin: 10px !important;
+                border-radius: 12px !important;
+            }
+            .modal-content .modal-body {
+                padding: 15px !important;
+                max-height: 75vh !important;
+                overflow-y: auto !important;
+            }
+            .modal-content .form-row {
+                grid-template-columns: 1fr !important;
+            }
+            .modal-content .attendance-form-section {
+                padding: 12px !important;
+                margin-bottom: 12px !important;
+            }
+            .modal-content h4 {
+                font-size: 14px !important;
+            }
+            .modal-content select,
+            .modal-content input,
+            .modal-content textarea {
+                padding: 8px !important;
+                font-size: 13px !important;
+            }
+            .modal-content .modal-header {
+                padding: 12px 15px !important;
+            }
+            .modal-content .modal-header h3 {
+                font-size: 16px !important;
+            }
+        }
+        @media (max-width: 480px) {
+            .modal-content {
+                width: 100% !important;
+                max-width: 100% !important;
+                margin: 0 !important;
+                border-radius: 0 !important;
+                height: 100% !important;
+                max-height: 100% !important;
+                position: fixed !important;
+                top: 0 !important;
+                left: 0 !important;
+                right: 0 !important;
+                bottom: 0 !important;
+            }
+            .modal-content .modal-body {
+                max-height: calc(100vh - 60px) !important;
+                overflow-y: auto !important;
+            }
+        }
+        /* Modal display */
+        .modal {
+            display: none;
+        }
+        .modal.show {
+            display: flex !important;
+        }
             text-transform: uppercase;
             letter-spacing: 1px;
         }
         
+        /* Responsive Modal Styles for Desktop and Mobile */
+        @media (min-width: 769px) {
+            .modal {
+                align-items: center;
+                justify-content: center;
+            }
+            .modal-content {
+                max-width: 800px;
+                width: 95%;
+                margin: 5vh auto;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .modal {
+                align-items: flex-start;
+                justify-content: center;
+                padding: 10px;
+                overflow-y: auto;
+            }
+            .modal-content {
+                width: 95% !important;
+                max-width: 95%;
+                margin: 10px auto;
+                max-height: 90vh;
+            }
+            .modal-body {
+                padding: 15px !important;
+                max-height: calc(90vh - 120px) !important;
+                overflow-y: auto;
+            }
+            .form-row {
+                grid-template-columns: 1fr !important;
+            }
+            .modal-header {
+                padding: 12px 15px !important;
+            }
+            .modal-header h3 {
+                font-size: 16px !important;
+            }
+            .modal-close {
+                width: 28px !important;
+                height: 28px !important;
+                font-size: 18px !important;
+            }
+            .modal-footer {
+                flex-direction: column;
+                gap: 8px !important;
+            }
+            .modal-footer button {
+                width: 100%;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .modal-content {
+                width: 100% !important;
+                max-width: 100%;
+                margin: 5px auto;
+                border-radius: 8px !important;
+            }
+            .modal-header {
+                padding: 10px 12px !important;
+            }
+            .modal-body {
+                padding: 12px !important;
+            }
+            .attendance-form-section,
+            .enrollment-form-section {
+                padding: 12px !important;
+            }
+        }
+        
+        /* Desktop specific modal fixes */
+        @media (min-width: 992px) {
+            .modal-content {
+                max-width: 800px;
+            }
+            .modal-body {
+                max-height: 70vh;
+                overflow-y: auto;
+            }
+        }
+
         /* Modal Styles */
         .modal {
             display: none;
@@ -685,8 +832,14 @@
                     
                     <!-- Attendance Section -->
                     <div id="section-attendance" class="admin-section" style="display: none;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                            <h2 style="margin: 0;">Attendance Management</h2>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; background: linear-gradient(135deg, #1e3a5f 0%, #2d5a87 100%); padding: 20px 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(30, 58, 95, 0.3);">
+                            <div>
+                                <h2 style="margin: 0; color: #fff; font-size: 24px; font-weight: 600;">Attendance Management</h2>
+                                <p style="margin: 5px 0 0 0; color: rgba(255,255,255,0.7); font-size: 13px;">Track student attendance and participation</p>
+                            </div>
+                            <button class="btn btn-primary" onclick="openAttendanceModal()" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);">
+                                <i class="fas fa-plus"></i> Add Attendance
+                            </button>
                         </div>
                         <div class="form-bar" style="background: var(--white); padding: 20px; border-radius: 10px; margin-bottom: 20px; box-shadow: var(--shadow-sm);">
                             <div class="form-row" style="display: flex; gap: 15px; flex-wrap: wrap;">
@@ -707,9 +860,6 @@
                                 </div>
                             </div>
                             <div class="action-buttons" style="margin-top: 15px;">
-                                <button class="btn btn-primary" onclick="openAttendanceModal()">
-                                    <i class="fas fa-plus"></i> Add Attendance
-                                </button>
                                 <button class="btn btn-outline" onclick="loadAttendance()">
                                     <i class="fas fa-sync-alt"></i> Refresh
                                 </button>
@@ -754,9 +904,6 @@
                         <div style="margin-bottom: 25px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); padding: 15px 20px; border-radius: 10px; border-left: 4px solid #3d7ab5;">
                             <span style="color: #1e3a5f; font-weight: 600; margin-right: 10px;"><i class="fas fa-filter"></i> Filter:</span>
                             <input type="text" id="enrollment-search" onkeyup="loadEnrollments()" placeholder="Search enrollments..." style="padding: 10px 14px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 14px; min-width: 200px;">
-                            <select id="enrollment-student-filter" onchange="loadEnrollments()" style="padding: 10px 14px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 14px; min-width: 180px;">
-                                <option value="">All Students</option>
-                            </select>
                             <select id="enrollment-category-filter" onchange="loadEnrollments()" style="padding: 10px 14px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 14px; min-width: 150px;">
                                 <option value="">All Categories</option>
                                 <option value="driving">Driving Courses</option>
@@ -1194,63 +1341,128 @@
     </div>
 
     <!-- Attendance Modal -->
-    <div id="attendance-modal" class="modal">
-        <div class="modal-content" style="max-width: 600px;">
-            <div class="modal-header">
-                <h3><i class="fas fa-clipboard-check"></i> <span id="attendance-modal-title">Add Attendance</span></h3>
-                <button class="modal-close" onclick="closeAttendanceModal()">&times;</button>
+    <div id="attendance-modal" class="modal" style="z-index: 999999;">
+        <div class="modal-content attendance-modal-content" style="background: linear-gradient(135deg, #1e3a5f 0%, #2d5a87 50%, #3d7ab5 100%); border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.5); max-width: 800px; width: 95%; position: relative; z-index: 1000000; margin-top: 5vh;">
+            <div class="modal-header" style="background: rgba(255,255,255,0.1); border-bottom: 1px solid rgba(255,255,255,0.2); padding: 20px 25px; border-radius: 16px 16px 0 0;">
+                <h3 id="attendance-modal-title" style="color: #fff; margin: 0; font-size: 22px; font-weight: 600;"><i class="fas fa-clipboard-check"></i> Add Attendance</h3>
+                <button class="modal-close" id="attendance-close-btn" onclick="closeAttendanceModal(); return false;" style="color: #fff; background: rgba(255,255,255,0.2); border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: 20px; transition: all 0.3s; z-index: 999999; position: relative;">&times;</button>
             </div>
-            <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
-                <input type="hidden" id="attendance-id">
-                <div style="background: var(--bg-secondary); padding: 15px; border-radius: 8px; margin-bottom: 15px;">
-                    <h4 style="margin: 0 0 15px 0; color: var(--primary-color); font-size: 14px;"><i class="fas fa-info-circle"></i> Attendance Details</h4>
-                    <div style="display: grid; gap: 15px;">
-                        <div>
-                            <label for="attendance-modal-date">Date *</label>
-                            <input type="date" id="attendance-modal-date" style="width: 100%; padding: 10px; border: none; border-bottom: 2px solid var(--primary-color); background: transparent; color: var(--text-color); font-size: 14px; outline: none;">
+            <form id="attendance-form" onsubmit="saveAttendance(); return false;" novalidate>
+                <div class="modal-body" style="padding: 25px; border-radius: 0; max-height: 70vh; overflow-y: auto; background: #f8fafc;">
+                    <input type="hidden" id="attendance-id">
+                    
+                    <div class="attendance-form-section" style="background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+                        <h4 style="color: #1e3a5f; font-size: 16px; font-weight: 700; margin: 0 0 15px 0; padding-bottom: 10px; border-bottom: 2px solid #e9ecef;"><i class="fas fa-user"></i> Attendance Information</h4>
+                        <p style="color: #6c757d; font-size: 13px; margin: 0 0 15px 0;">Select the applicant for this attendance record</p>
+                        
+                        <div class="form-row" style="display: grid; grid-template-columns: 1fr; gap: 15px;">
+                            <div class="form-group">
+                                <label for="attendance-modal-student" style="color: #1e3a5f; font-weight: 600;">Applicant *</label>
+                                <select id="attendance-modal-student" required style="border: 2px solid #dee2e6; border-radius: 8px; padding: 12px; width: 100%; background: #fff; color: #495057; font-size: 14px;">
+                                    <option value="">--- Select Applicant ---</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="attendance-modal-class" style="color: #1e3a5f; font-weight: 600;">Class</label>
+                                <select id="attendance-modal-class" style="border: 2px solid #dee2e6; border-radius: 8px; padding: 12px; width: 100%; background: #fff; color: #495057; font-size: 14px;">
+                                    <option value="">--- Select ---</option>
+                                </select>
+                            </div>
                         </div>
-                        <div>
-                            <label for="attendance-modal-student">Student *</label>
-                            <select id="attendance-modal-student" required style="width: 100%; padding: 10px; border: 2px solid var(--border-color); border-radius: 8px; background: var(--bg-color); color: var(--text-color); font-size: 14px; outline: none;">
-                                <option value="">Select Student</option>
-                            </select>
+                    </div>
+                    
+                    <div class="attendance-form-section" style="background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+                        <h4 style="color: #1e3a5f; font-size: 16px; font-weight: 700; margin: 0 0 15px 0; padding-bottom: 10px; border-bottom: 2px solid #e9ecef;"><i class="fas fa-car"></i> Course Selection</h4>
+                        <p style="color: #6c757d; font-size: 13px; margin: 0 0 15px 0;">Choose driving and/or computer courses</p>
+                        
+                        <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                            <div class="form-group">
+                                <label for="attendance-modal-license" style="color: #1e3a5f; font-weight: 600;">License Type</label>
+                                <select id="attendance-modal-license" style="border: 2px solid #dee2e6; border-radius: 8px; padding: 12px; width: 100%; background: #fff; color: #495057; font-size: 14px;">
+                                    <option value="">--- Select ---</option>
+                                    <option value="Class B">Class B</option>
+                                    <option value="Class C">Class C</option>
+                                    <option value="Class D">Class D</option>
+                                    <option value="Class A">Class A</option>
+                                    <option value="Motorcycle">Motorcycle</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="attendance-modal-driving" style="color: #1e3a5f; font-weight: 600;">Driving Course</label>
+                                <select id="attendance-modal-driving" style="border: 2px solid #dee2e6; border-radius: 8px; padding: 12px; width: 100%; background: #fff; color: #495057; font-size: 14px;">
+                                    <option value="">--- Select ---</option>
+                                    <option value="Defensive Driving">Defensive Driving</option>
+                                    <option value="Refresher Course">Refresher Course</option>
+                                </select>
+                            </div>
                         </div>
-                        <div>
-                            <label for="attendance-modal-course">Course</label>
-                            <select id="attendance-modal-course" style="width: 100%; padding: 10px; border: 2px solid var(--border-color); border-radius: 8px; background: var(--bg-color); color: var(--text-color); font-size: 14px; outline: none;">
-                                <option value="">Select Course</option>
-                            </select>
+                        <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px;">
+                            <div class="form-group">
+                                <label for="attendance-modal-computer" style="color: #1e3a5f; font-weight: 600;">Computer Course</label>
+                                <select id="attendance-modal-computer" style="border: 2px solid #dee2e6; border-radius: 8px; padding: 12px; width: 100%; background: #fff; color: #495057; font-size: 14px;">
+                                    <option value="">--- Select ---</option>
+                                    <option value="Computer Basics">Computer Basics</option>
+                                    <option value="Programming">Programming</option>
+                                    <option value="Graphic Design">Graphic Design</option>
+                                    <option value="SPSS">SPSS</option>
+                                    <option value="Secretarial">Secretarial</option>
+                                    <option value="Computer Accounting">Computer Accounting</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="attendance-modal-transmission" style="color: #1e3a5f; font-weight: 600;">Transmission</label>
+                                <select id="attendance-modal-transmission" style="border: 2px solid #dee2e6; border-radius: 8px; padding: 12px; width: 100%; background: #fff; color: #495057; font-size: 14px;">
+                                    <option value="">--- Select ---</option>
+                                    <option value="Manual">Manual</option>
+                                    <option value="Automatic">Automatic</option>
+                                    <option value="Both">Both</option>
+                                </select>
+                            </div>
                         </div>
-                        <div>
-                            <label for="attendance-modal-status">Status *</label>
-                            <select id="attendance-modal-status" required style="width: 100%; padding: 10px; border: 2px solid var(--border-color); border-radius: 8px; background: var(--bg-color); color: var(--text-color); font-size: 14px; outline: none;">
-                                <option value="Present">Present</option>
-                                <option value="Absent">Absent</option>
-                                <option value="Late">Late</option>
-                            </select>
+                    </div>
+                    
+                    <div class="attendance-form-section" style="background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+                        <h4 style="color: #1e3a5f; font-size: 16px; font-weight: 700; margin: 0 0 15px 0; padding-bottom: 10px; border-bottom: 2px solid #e9ecef;"><i class="fas fa-calendar-alt"></i> Attendance Details</h4>
+                        <p style="color: #6c757d; font-size: 13px; margin: 0 0 15px 0;">Record attendance information</p>
+                        
+                        <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                            <div class="form-group">
+                                <label for="attendance-modal-date" style="color: #1e3a5f; font-weight: 600;">Date *</label>
+                                <input type="date" id="attendance-modal-date" required style="border: 2px solid #dee2e6; border-radius: 8px; padding: 12px; width: 100%; background: #fff; color: #495057; font-size: 14px;">
+                            </div>
+                            <div class="form-group">
+                                <label for="attendance-modal-status" style="color: #1e3a5f; font-weight: 600;">Status *</label>
+                                <select id="attendance-modal-status" required style="border: 2px solid #dee2e6; border-radius: 8px; padding: 12px; width: 100%; background: #fff; color: #495057; font-size: 14px;">
+                                    <option value="present">Present</option>
+                                    <option value="absent">Absent</option>
+                                    <option value="late">Late</option>
+                                </select>
+                            </div>
                         </div>
-                        <div>
-                            <label for="attendance-modal-notes">Notes</label>
-                            <textarea id="attendance-modal-notes" rows="3" placeholder="Additional notes..." style="width: 100%; padding: 10px; border: none; border-bottom: 2px solid var(--primary-color); background: transparent; color: var(--text-color); font-size: 14px; outline: none; resize: vertical;"></textarea>
+                        <div class="form-group" style="margin-top: 15px;">
+                            <label for="attendance-modal-notes" style="color: #1e3a5f; font-weight: 600;">Notes</label>
+                            <textarea id="attendance-modal-notes" rows="3" placeholder="Additional notes..." style="border: 2px solid #dee2e6; border-radius: 8px; padding: 12px; width: 100%; background: #fff; color: #495057; font-size: 14px; resize: vertical;"></textarea>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-outline" onclick="closeAttendanceModal()">Cancel</button>
-                <button class="btn btn-primary" onclick="saveAttendance()">
-                    <i class="fas fa-save"></i> Save Attendance
-                </button>
-            </div>
+                <div class="modal-footer" style="padding: 20px 25px; border-top: 1px solid rgba(255,255,255,0.2); display: flex; gap: 12px; justify-content: flex-end;">
+                    <button type="button" id="attendance-cancel-btn" onclick="closeAttendanceModal(); return false;" style="padding: 12px 24px; border-radius: 8px; font-weight: 600; border: 2px solid #6c757d; background: #fff; color: #6c757d; cursor: pointer; z-index: 999999; position: relative;">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                    <button type="submit" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); color: #fff; cursor: pointer;">
+                        <i class="fas fa-save"></i> Save Attendance
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
     
     <!-- Enrollment Modal -->
-    <div id="enrollment-modal" class="modal" style="z-index: 9999;">
-        <div class="modal-content" style="background: linear-gradient(135deg, #1e3a5f 0%, #2d5a87 50%, #3d7ab5 100%); border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.5); max-width: 800px; width: 95%; position: relative; z-index: 10000; margin-top: 5vh;">
+    <div id="enrollment-modal" class="modal" style="z-index: 999999;">
+        <div class="modal-content enrollment-modal-content" style="background: linear-gradient(135deg, #1e3a5f 0%, #2d5a87 50%, #3d7ab5 100%); border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.5); max-width: 800px; width: 95%; position: relative; z-index: 1000000; margin-top: 5vh;">
             <div class="modal-header" style="background: rgba(255,255,255,0.1); border-bottom: 1px solid rgba(255,255,255,0.2); padding: 20px 25px; border-radius: 16px 16px 0 0;">
                 <h3 id="enrollment-modal-title" style="color: #fff; margin: 0; font-size: 22px; font-weight: 600;"><i class="fas fa-user-plus"></i> Add Enrollment</h3>
-                <button class="modal-close" onclick="closeEnrollmentModal()" style="color: #fff; background: rgba(255,255,255,0.2); border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: 20px; transition: all 0.3s;">&times;</button>
+                <button class="modal-close" id="enrollment-close-btn" onclick="closeEnrollmentModal(); return false;" style="color: #fff; background: rgba(255,255,255,0.2); border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: 20px; transition: all 0.3s; z-index: 999999; position: relative;">&times;</button>
             </div>
             <form id="enrollment-form" onsubmit="handleEnrollmentSubmit(event)" novalidate>
                 <div class="modal-body enrollment-form-wrapper" style="padding: 25px; border-radius: 0; max-height: 70vh; overflow-y: auto; background: #f8fafc;">
@@ -1418,7 +1630,7 @@
                     </div>
                 </div>
                 <div class="modal-footer" style="background: rgba(255,255,255,0.1); padding: 15px 25px; border-radius: 0 0 16px 16px; display: flex; justify-content: flex-end; gap: 10px;">
-                    <button type="button" class="btn btn-outline" onclick="closeEnrollmentModal()" style="color: #fff; border: 2px solid rgba(255,255,255,0.5); background: transparent; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s;">Cancel</button>
+                    <button type="button" class="btn btn-outline" id="enrollment-cancel-btn" onclick="closeEnrollmentModal(); return false;" style="color: #fff; border: 2px solid rgba(255,255,255,0.5); background: transparent; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s; z-index: 999999; position: relative;">Cancel</button>
                     <button type="submit" class="btn btn-primary" style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); border: none; color: #fff; padding: 10px 25px; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s; box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);"><i class="fas fa-save"></i> Save Enrollment</button>
                 </div>
             </form>
@@ -2898,30 +3110,109 @@
         }
         
         function openAttendanceModal(id = null) {
+            const modal = document.getElementById('attendance-modal');
+            const modalContent = modal.querySelector('.modal-content');
+            
             document.getElementById('attendance-modal-title').textContent = id ? 'Edit Attendance' : 'Add Attendance';
             document.getElementById('attendance-id').value = id || '';
             document.getElementById('attendance-modal-date').value = document.getElementById('attendance-date').value || new Date().toISOString().split('T')[0];
-            document.getElementById('attendance-modal-status').value = 'Present';
+            document.getElementById('attendance-modal-status').value = 'present';
             document.getElementById('attendance-modal-notes').value = '';
+            
+            // Reset form fields
+            document.getElementById('attendance-modal-student').value = '';
+            document.getElementById('attendance-modal-class').value = '';
+            document.getElementById('attendance-modal-license').value = '';
+            document.getElementById('attendance-modal-driving').value = '';
+            document.getElementById('attendance-modal-computer').value = '';
+            document.getElementById('attendance-modal-transmission').value = '';
             
             // Load students for dropdown
             loadStudentsForAttendanceDropdown();
-            loadCoursesForAttendanceDropdown();
+            loadClassesForAttendanceDropdown();
             
-            document.getElementById('attendance-modal').classList.add('show');
+            // Show modal - add show class and set display to flex
+            modal.classList.add('show');
+            modal.style.setProperty('display', 'flex', 'important');
+            modal.style.visibility = 'visible';
+            modal.style.position = 'fixed';
+            modal.style.top = '0';
+            modal.style.left = '0';
+            modal.style.width = '100%';
+            modal.style.height = '100%';
+            modal.style.background = 'rgba(0, 0, 0, 0.5)';
+            modal.style.zIndex = '999999';
+            modal.style.alignItems = 'center';
+            modal.style.justifyContent = 'center';
+            
+            // Ensure modal content is visible
+            if (modalContent) {
+                modalContent.classList.add('show');
+                modalContent.style.setProperty('display', 'block', 'important');
+                modalContent.style.visibility = 'visible';
+                modalContent.style.zIndex = '1000000';
+            }
         }
         
         function closeAttendanceModal() {
-            document.getElementById('attendance-modal').classList.remove('show');
+            var modal = document.getElementById('attendance-modal');
+            var modalContent = modal.querySelector('.modal-content');
+            
+            // Remove show class and hide
+            modal.classList.remove('show');
+            modal.style.display = 'none';
+            modal.style.visibility = 'hidden';
+            
+            // Also hide content
+            if (modalContent) {
+                modalContent.style.display = 'none';
+            }
+            
+            // Reset form when closing
+            var form = document.getElementById('attendance-form');
+            if (form) {
+                form.reset();
+            }
         }
+        
+        // Close modal when clicking outside
+        document.addEventListener('DOMContentLoaded', function() {
+            var attendanceModal = document.getElementById('attendance-modal');
+            var attendanceCloseBtn = document.getElementById('attendance-close-btn');
+            var attendanceCancelBtn = document.getElementById('attendance-cancel-btn');
+            
+            if (attendanceCloseBtn) {
+                attendanceCloseBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    closeAttendanceModal();
+                });
+            }
+            
+            if (attendanceCancelBtn) {
+                attendanceCancelBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    closeAttendanceModal();
+                });
+            }
+            
+            if (attendanceModal) {
+                attendanceModal.addEventListener('click', function(e) {
+                    if (e.target === attendanceModal) {
+                        closeAttendanceModal();
+                    }
+                });
+            }
+        });
         
         async function loadStudentsForAttendanceDropdown() {
             const select = document.getElementById('attendance-modal-student');
             if (!select) return;
             
             try {
-                const location = staffLocation || '';
-                const response = await fetch(`/api/staff/students?location=${encodeURIComponent(location)}`, {
+                // Fetch all users except admin (no location filter)
+                const response = await fetch('/api/staff/students-with-enrollments', {
                     headers: { 'Authorization': 'Bearer ' + auth.getToken() }
                 });
                 
@@ -2935,11 +3226,15 @@
                 const data = await response.json();
                 
                 if (data.success && data.students) {
-                    select.innerHTML = '<option value="">Select Student</option>';
+                    select.innerHTML = '<option value="">--- Select Applicant ---</option>';
                     data.students.forEach(student => {
                         const option = document.createElement('option');
-                        option.value = student.id;
-                        option.textContent = `${student.first_name} ${student.last_name}`;
+                        option.value = student.user_id;
+                        // Display: Full Name only
+                        option.textContent = student.full_name;
+                        option.dataset.userId = student.user_id;
+                        option.dataset.courseId = student.course_id || '';
+                        option.dataset.courseCategory = student.course_category || '';
                         select.appendChild(option);
                     });
                 }
@@ -2953,15 +3248,19 @@
             if (!select) return;
             
             try {
-                const response = await fetch('/api/courses');
+                // Fetch courses filtered by driving_course and computer_course categories
+                const response = await fetch('/api/courses?categories=driving_course,computer_course');
                 const data = await response.json();
                 
                 if (data.success && data.courses) {
-                    select.innerHTML = '<option value="">Select Course</option>';
+                    select.innerHTML = '<option value="">--- Select ---</option>';
                     data.courses.forEach(course => {
                         const option = document.createElement('option');
                         option.value = course.id;
-                        option.textContent = course.name;
+                        // Display: Course Name - Category
+                        const category = course.category || '';
+                        option.textContent = category ? `${course.name} (${category})` : course.name;
+                        option.dataset.category = category;
                         select.appendChild(option);
                     });
                 }
@@ -2970,10 +3269,53 @@
             }
         }
         
-        async function saveAttendance() {
+        async function loadClassesForAttendanceDropdown() {
+            const select = document.getElementById('attendance-modal-class');
+            if (!select) return;
+            
+            try {
+                // Fetch ALL classes from the database
+                const response = await fetch('/api/classes', {
+                    headers: { 'Authorization': 'Bearer ' + auth.getToken() }
+                });
+                
+                const data = await response.json();
+                
+                if (data.success && data.classes) {
+                    select.innerHTML = '<option value="">--- Select Class ---</option>';
+                    data.classes.forEach(cls => {
+                        const option = document.createElement('option');
+                        option.value = cls.id;
+                        // Display: Class Name - Course Name - Location
+                        const courseName = cls.course_name || '';
+                        const locationName = cls.location_name || '';
+                        const schedule = cls.days_of_week ? `${cls.days_of_week} ${cls.start_time || ''}-${cls.end_time || ''}` : '';
+                        let displayText = cls.name;
+                        if (courseName) displayText += ` - ${courseName}`;
+                        if (locationName) displayText += ` (${locationName})`;
+                        if (schedule) displayText += ` - ${schedule}`;
+                        option.textContent = displayText;
+                        option.dataset.courseId = cls.course_id || '';
+                        select.appendChild(option);
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading classes:', error);
+            }
+        }
+        
+        async function saveAttendance(event) {
+            if (event) {
+                event.preventDefault();
+            }
+            
             const id = document.getElementById('attendance-id').value;
             const studentId = document.getElementById('attendance-modal-student').value;
-            const courseId = document.getElementById('attendance-modal-course').value;
+            const classId = document.getElementById('attendance-modal-class').value;
+            const licenseType = document.getElementById('attendance-modal-license').value;
+            const drivingCourse = document.getElementById('attendance-modal-driving').value;
+            const computerCourse = document.getElementById('attendance-modal-computer').value;
+            const transmission = document.getElementById('attendance-modal-transmission').value;
             const date = document.getElementById('attendance-modal-date').value;
             const status = document.getElementById('attendance-modal-status').value;
             const notes = document.getElementById('attendance-modal-notes').value;
@@ -2985,7 +3327,11 @@
             
             const formData = {
                 student_id: studentId,
-                course_id: courseId,
+                class_id: classId,
+                license_type: licenseType,
+                driving_course: drivingCourse,
+                computer_course: computerCourse,
+                transmission: transmission,
                 date: date,
                 status: status,
                 notes: notes,
@@ -2996,13 +3342,26 @@
                 const method = id ? 'PUT' : 'POST';
                 const url = id ? `/api/attendance/${id}` : '/api/attendance';
                 
+                // Convert to URLSearchParams for form-encoded data
+                const params = new URLSearchParams();
+                params.append('student_id', studentId);
+                if (classId) params.append('class_id', classId);
+                if (licenseType) params.append('license_type', licenseType);
+                if (drivingCourse) params.append('driving_course', drivingCourse);
+                if (computerCourse) params.append('computer_course', computerCourse);
+                if (transmission) params.append('transmission', transmission);
+                params.append('date', date);
+                params.append('status', status);
+                if (notes) params.append('notes', notes);
+                if (staffLocation) params.append('location', staffLocation);
+                
                 const response = await fetch(url, {
                     method: method,
                     headers: {
-                        'Content-Type': 'application/json',
+                        'Content-Type': 'application/x-www-form-urlencoded',
                         'Authorization': 'Bearer ' + auth.getToken()
                     },
-                    body: JSON.stringify(formData)
+                    body: params.toString()
                 });
                 
                 const data = await response.json();
@@ -3020,6 +3379,7 @@
         }
         
         async function editAttendance(id) {
+            console.log('editAttendance called with id:', id);
             try {
                 const response = await fetch(`/api/attendance/${id}`, {
                     headers: { 'Authorization': 'Bearer ' + auth.getToken() }
@@ -3031,8 +3391,12 @@
                     openAttendanceModal(record.id);
                     document.getElementById('attendance-modal-date').value = record.date;
                     document.getElementById('attendance-modal-student').value = record.student_id || '';
-                    document.getElementById('attendance-modal-course').value = record.course_id || '';
-                    document.getElementById('attendance-modal-status').value = record.status || 'Present';
+                    document.getElementById('attendance-modal-class').value = record.class_id || '';
+                    document.getElementById('attendance-modal-license').value = record.license_type || '';
+                    document.getElementById('attendance-modal-driving').value = record.driving_course || '';
+                    document.getElementById('attendance-modal-computer').value = record.computer_course || '';
+                    document.getElementById('attendance-modal-transmission').value = record.transmission || '';
+                    document.getElementById('attendance-modal-status').value = record.status || 'present';
                     document.getElementById('attendance-modal-notes').value = record.notes || '';
                 }
             } catch (error) {
@@ -3112,10 +3476,8 @@
         // ==================== ENROLLMENT SECTION ====================
         
         async function loadStudentsForEnrollment() {
-            // Load for filter dropdown
-            const select = document.getElementById('enrollment-student');
-            // Load for filter dropdown (new admin-style)
-            const filterSelect = document.getElementById('enrollment-student-filter');
+            // Load for modal dropdown (enrollment form)
+            const select = document.getElementById('enrollment-modal-student');
             
             try {
                 const location = staffLocation || '';
@@ -3138,17 +3500,8 @@
                         data.students.forEach(student => {
                             const option = document.createElement('option');
                             option.value = student.id;
-                            option.textContent = `${student.first_name} ${student.last_name}`;
+                            option.textContent = `#${student.id} - ${student.first_name} ${student.last_name}`;
                             select.appendChild(option);
-                        });
-                    }
-                    if (filterSelect) {
-                        filterSelect.innerHTML = '<option value="">All Students</option>';
-                        data.students.forEach(student => {
-                            const option = document.createElement('option');
-                            option.value = student.id;
-                            option.textContent = `${student.first_name} ${student.last_name}`;
-                            filterSelect.appendChild(option);
                         });
                     }
                 }
@@ -3194,10 +3547,6 @@
             if (!container) return;
             
             // Get filter values from new admin-style filters
-            const studentFilter = document.getElementById('enrollment-student-filter');
-            const studentId = studentFilter ? studentFilter.value : '';
-            const courseFilter = document.getElementById('enrollment-course-filter');
-            const courseId = courseFilter ? courseFilter.value : '';
             const statusFilter = document.getElementById('enrollment-status-filter');
             const status = statusFilter ? statusFilter.value : '';
             const categoryFilter = document.getElementById('enrollment-category-filter');
@@ -3208,8 +3557,6 @@
             
             try {
                 let url = `/api/enrollments?location=${encodeURIComponent(location)}`;
-                if (studentId) url += `&student_id=${encodeURIComponent(studentId)}`;
-                if (courseId) url += `&course_id=${encodeURIComponent(courseId)}`;
                 if (status) url += `&status=${encodeURIComponent(status)}`;
                 if (search) url += `&search=${encodeURIComponent(search)}`;
                 if (category) url += `&category=${encodeURIComponent(category)}`;
@@ -3336,6 +3683,9 @@
         }
         
         function openEnrollmentModal(id = null) {
+            const modal = document.getElementById('enrollment-modal');
+            const modalContent = modal.querySelector('.modal-content');
+            
             document.getElementById('enrollment-modal-title').innerHTML = id ? '<i class="fas fa-edit"></i> Edit Enrollment' : '<i class="fas fa-user-plus"></i> Add Enrollment';
             document.getElementById('enrollment-id').value = id || '';
             document.getElementById('enrollment-student-id').value = '';
@@ -3376,12 +3726,76 @@
                 locationSelect.value = staffLocation;
             }
             
-            document.getElementById('enrollment-modal').classList.add('show');
+            // Show modal - add show class and set display to flex
+            modal.classList.add('show');
+            modal.style.setProperty('display', 'flex', 'important');
+            modal.style.visibility = 'visible';
+            modal.style.position = 'fixed';
+            modal.style.top = '0';
+            modal.style.left = '0';
+            modal.style.width = '100%';
+            modal.style.height = '100%';
+            modal.style.background = 'rgba(0, 0, 0, 0.5)';
+            modal.style.zIndex = '999999';
+            modal.style.alignItems = 'center';
+            modal.style.justifyContent = 'center';
+            
+            // Ensure modal content is visible
+            if (modalContent) {
+                modalContent.classList.add('show');
+                modalContent.style.setProperty('display', 'block', 'important');
+                modalContent.style.visibility = 'visible';
+                modalContent.style.zIndex = '1000000';
+            }
         }
         
         function closeEnrollmentModal() {
-            document.getElementById('enrollment-modal').classList.remove('show');
+            const modal = document.getElementById('enrollment-modal');
+            const modalContent = modal.querySelector('.modal-content');
+            
+            // Remove show class and hide
+            modal.classList.remove('show');
+            modal.style.display = 'none';
+            modal.style.visibility = 'hidden';
+            
+            // Also hide content
+            if (modalContent) {
+                modalContent.classList.remove('show');
+                modalContent.style.display = 'none';
+            }
         }
+        
+        // Add event listeners for enrollment modal close buttons
+        document.addEventListener('DOMContentLoaded', function() {
+            const enrollmentCloseBtn = document.getElementById('enrollment-close-btn');
+            const enrollmentCancelBtn = document.getElementById('enrollment-cancel-btn');
+            const enrollmentModal = document.getElementById('enrollment-modal');
+            
+            if (enrollmentCloseBtn) {
+                enrollmentCloseBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    closeEnrollmentModal();
+                });
+            }
+            
+            if (enrollmentCancelBtn) {
+                enrollmentCancelBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    closeEnrollmentModal();
+                });
+            }
+            
+            // Close modal when clicking outside (on the backdrop)
+            if (enrollmentModal) {
+                enrollmentModal.addEventListener('click', function(e) {
+                    if (e.target === enrollmentModal) {
+                        closeEnrollmentModal();
+                    }
+                });
+            }
+        });
         
         async function loadStudentsForEnrollmentModal() {
             const select = document.getElementById('enrollment-modal-student');
@@ -3590,6 +4004,7 @@
                         option.value = loc.id || loc.location_id || loc.name;
                         option.textContent = loc.name || loc;
                         option.setAttribute('data-location-id', loc.id || loc.location_id);
+                        option.setAttribute('data-name', loc.name || loc); // Store name for reference
                         select.appendChild(option);
                     });
                     
@@ -3657,6 +4072,7 @@
                 enrollment_date: enrollmentDate,
                 status: status,
                 location_id: locationId || staffLocation,
+                training_location: locationSelect && locationSelect.selectedOptions[0] ? locationSelect.selectedOptions[0].textContent || locationSelect.selectedOptions[0].getAttribute('data-name') : '',
                 license_type: licenseType,
                 driving_course: drivingCourse,
                 computer_course: computerCourse,
@@ -3678,10 +4094,10 @@
                 const response = await fetch(url, {
                     method: method,
                     headers: {
-                        'Content-Type': 'application/json',
+                        'Content-Type': 'application/x-www-form-urlencoded',
                         'Authorization': 'Bearer ' + auth.getToken()
                     },
-                    body: JSON.stringify(formData)
+                    body: new URLSearchParams(formData)
                 });
                 
                 const data = await response.json();
@@ -3699,6 +4115,9 @@
         }
         
         async function editEnrollment(id) {
+            // Show the modal first
+            openEnrollmentModal(id);
+            
             // Show student name group for edit mode
             const studentSelectGroup = document.getElementById('student-select-group');
             const studentNameGroup = document.getElementById('student-name-group');

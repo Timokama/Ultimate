@@ -1232,6 +1232,7 @@ class CourseHandler extends ApiHandler {
         // Check for category parameter
         String query = exchange.getRequestURI().getQuery();
         String category = null;
+        String categories = null; // For multiple categories (comma-separated)
         
         if (query != null && query.contains("category=")) {
             String[] params = query.split("&");
@@ -1244,8 +1245,24 @@ class CourseHandler extends ApiHandler {
             }
         }
         
+        // Check for categories parameter (comma-separated)
+        if (query != null && query.contains("categories=")) {
+            String[] params = query.split("&");
+            for (String param : params) {
+                if (param.startsWith("categories=")) {
+                    categories = param.substring("categories=".length());
+                    categories = java.net.URLDecoder.decode(categories, "UTF-8");
+                    break;
+                }
+            }
+        }
+        
         List<Map<String, Object>> courses;
-        if (category != null && !category.isEmpty()) {
+        if (categories != null && !categories.isEmpty()) {
+            // Split comma-separated categories
+            String[] categoryList = categories.split(",");
+            courses = DBConnection.getCoursesByCategories(categoryList);
+        } else if (category != null && !category.isEmpty()) {
             courses = DBConnection.getCoursesByCategory(category);
         } else {
             courses = DBConnection.getAllCourses();

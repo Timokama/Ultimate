@@ -164,9 +164,16 @@ class AttendanceHandler extends ApiHandler implements HttpHandler {
             sendErrorResponse(exchange, 400, "Student ID is required");
             return;
         }
-        // Accept either course_id or class_id
-        if ((courseIdStr == null || courseIdStr.isEmpty()) && (classIdStr == null || classIdStr.isEmpty())) {
-            sendErrorResponse(exchange, 400, "Course ID or Class ID is required");
+        // Accept either course_id, class_id, or any course detail fields
+        boolean hasCourseId = courseIdStr != null && !courseIdStr.isEmpty();
+        boolean hasClassId = classIdStr != null && !classIdStr.isEmpty();
+        boolean hasCourseDetails = (licenseType != null && !licenseType.isEmpty()) ||
+                                    (drivingCourse != null && !drivingCourse.isEmpty()) ||
+                                    (computerCourse != null && !computerCourse.isEmpty()) ||
+                                    (transmission != null && !transmission.isEmpty());
+        
+        if (!hasCourseId && !hasClassId && !hasCourseDetails) {
+            sendErrorResponse(exchange, 400, "Course ID, Class ID, or Course details (License Type, Driving Course, Computer Course, Transmission) is required");
             return;
         }
         
