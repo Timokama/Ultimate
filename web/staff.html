@@ -898,6 +898,18 @@
                                 <h3 id="staff-enrollment-completed">0</h3>
                                 <p>Completed</p>
                             </div>
+                            <div class="stat-card" style="background: linear-gradient(135deg, #3b82f6, #2563eb);">
+                                <h3 id="staff-enrollment-fees">0</h3>
+                                <p>Total Fees</p>
+                            </div>
+                            <div class="stat-card" style="background: linear-gradient(135deg, #22c55e, #16a34a);">
+                                <h3 id="staff-enrollment-paid">0</h3>
+                                <p>Total Paid</p>
+                            </div>
+                            <div class="stat-card" style="background: linear-gradient(135deg, #ef4444, #dc2626);">
+                                <h3 id="staff-enrollment-balance">0</h3>
+                                <p>Total Balance</p>
+                            </div>
                         </div>
                         
                         <!-- Filters -->
@@ -3577,6 +3589,39 @@
                 container.innerHTML = '';
                 
                 if (data.success && data.enrollments) {
+                    // Calculate enrollment stats
+                    const totalEnrollments = data.enrollments.length;
+                    const pendingEnrollments = data.enrollments.filter(e => e.status === 'enrolled' || e.status === 'pending').length;
+                    const activeEnrollments = data.enrollments.filter(e => e.status === 'active').length;
+                    const completedEnrollments = data.enrollments.filter(e => e.status === 'completed').length;
+                    
+                    // Calculate fee stats
+                    let totalFees = 0;
+                    let totalPaid = 0;
+                    let totalBalance = 0;
+                    data.enrollments.forEach(enrollment => {
+                        totalFees += parseFloat(enrollment.fee_amount) || 0;
+                        totalPaid += parseFloat(enrollment.fee_paid) || 0;
+                        totalBalance += (parseFloat(enrollment.fee_amount) || 0) - (parseFloat(enrollment.fee_paid) || 0);
+                    });
+                    
+                    // Update stat cards
+                    const totalEl = document.getElementById('staff-enrollment-total');
+                    const pendingEl = document.getElementById('staff-enrollment-pending');
+                    const activeEl = document.getElementById('staff-enrollment-active');
+                    const completedEl = document.getElementById('staff-enrollment-completed');
+                    const feesEl = document.getElementById('staff-enrollment-fees');
+                    const paidEl = document.getElementById('staff-enrollment-paid');
+                    const balanceEl = document.getElementById('staff-enrollment-balance');
+                    
+                    if (totalEl) totalEl.textContent = totalEnrollments;
+                    if (pendingEl) pendingEl.textContent = pendingEnrollments;
+                    if (activeEl) activeEl.textContent = activeEnrollments;
+                    if (completedEl) completedEl.textContent = completedEnrollments;
+                    if (feesEl) feesEl.textContent = 'KSh ' + totalFees.toLocaleString();
+                    if (paidEl) paidEl.textContent = 'KSh ' + totalPaid.toLocaleString();
+                    if (balanceEl) balanceEl.textContent = 'KSh ' + totalBalance.toLocaleString();
+                    
                     if (enrollmentsViewMode === 'cards') {
                         // Display as cards (similar to applications section)
                         let cardsHtml = '<div style="display: grid; gap: 20px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 350px), 1fr));">';
