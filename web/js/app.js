@@ -274,6 +274,11 @@ const contacts = {
 
 // Staff Module for Staff Dashboard
 const staff = {
+    async getApplicants() {
+        const location = localStorage.getItem('staffLocation') || '';
+        return api.get('/api/staff/applicants' + (location ? `?location=${encodeURIComponent(location)}` : ''));
+    },
+    
     async getLocationStudents(location) {
         return api.get(API_ENDPOINTS.STAFF.LOCATION_STUDENTS + `?location=${encodeURIComponent(location)}`);
     },

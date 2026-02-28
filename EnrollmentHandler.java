@@ -118,7 +118,7 @@ class EnrollmentHandler extends ApiHandler implements HttpHandler {
         }
 
         String role = JWTUtil.getRole(token);
-        if (!"admin".equals(role) && !"staff".equals(role)) {
+        if (!"admin".equals(role) && !"staff".equals(role) && !"instructor".equals(role)) {
             sendErrorResponse(exchange, 403, "Admin or staff access required");
             return;
         }

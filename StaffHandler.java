@@ -44,7 +44,7 @@ class StaffHandler extends ApiHandler implements HttpHandler {
             }
 
             String role = JWTUtil.getRole(token);
-            if (!"staff".equals(role) && !"admin".equals(role)) {
+            if (!"staff".equals(role) && !"admin".equals(role) && !"instructor".equals(role)) {
                 sendErrorResponse(exchange, 403, "Staff access required");
                 return;
             }
@@ -411,7 +411,7 @@ class StaffHandler extends ApiHandler implements HttpHandler {
             String role = JWTUtil.getRole(token);
             
             // Only admin and staff can delete applications
-            if (!"admin".equals(role) && !"staff".equals(role)) {
+            if (!"admin".equals(role) && !"staff".equals(role) && !"instructor".equals(role)) {
                 sendErrorResponse(exchange, 403, "Access denied");
                 return;
             }

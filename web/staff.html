@@ -91,9 +91,6 @@
         .modal.show {
             display: flex !important;
         }
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
         
         /* Responsive Modal Styles for Desktop and Mobile */
         @media (min-width: 769px) {
@@ -250,25 +247,29 @@
         .sidebar-toggle-btn {
             display: none;
             position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 56px;
-            height: 56px;
+            bottom: 25px;
+            right: 25px;
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
-            background: var(--primary-color);
+            background: linear-gradient(135deg, #1e3a5f, #2d5a87);
             color: white;
             border: none;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+            box-shadow: 0 6px 20px rgba(30, 58, 95, 0.4);
             z-index: 1001;
             cursor: pointer;
             align-items: center;
             justify-content: center;
-            font-size: 22px;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            font-size: 24px;
+            transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+        }
+        .sidebar-toggle-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(30, 58, 95, 0.5);
         }
         .sidebar-toggle-btn:active {
-            transform: scale(0.95);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            transform: scale(0.92);
+            box-shadow: 0 3px 10px rgba(30, 58, 95, 0.3);
         }
         .sidebar-overlay {
             display: none;
@@ -277,10 +278,11 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(3px);
             z-index: 999;
             opacity: 0;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.35s ease;
         }
         .sidebar-overlay.show {
             display: block;
@@ -380,47 +382,112 @@
                 height: 100vh;
                 background: var(--white);
                 z-index: 1000;
-                transition: left 0.3s ease;
-                box-shadow: 4px 0 20px rgba(0,0,0,0.15);
+                transition: left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+                box-shadow: 8px 0 30px rgba(0,0,0,0.2);
                 overflow-y: auto;
-                padding-bottom: 80px;
+                overflow-x: hidden;
+                padding-bottom: 100px;
             }
             .sidebar.mobile-open {
                 left: 0;
             }
             
+            .sidebar-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 999;
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.35s ease;
+            }
+            .sidebar-overlay.show {
+                opacity: 1;
+                visibility: visible;
+            }
+            
             .sidebar-user-info {
-                padding: 20px;
-                background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+                padding: 25px 20px;
+                background: linear-gradient(135deg, #1e3a5f, #2d5a87);
                 color: white;
                 text-align: center;
+                position: relative;
+            }
+            .sidebar-user-info::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                height: 30px;
+                background: linear-gradient(to top, rgba(0,0,0,0.1), transparent);
             }
             .sidebar-user-info #user-avatar {
-                width: 70px;
-                height: 70px;
-                font-size: 1.8rem;
-                background: rgba(255,255,255,0.2);
+                width: 75px;
+                height: 75px;
+                font-size: 2rem;
+                background: linear-gradient(135deg, #10b981, #059669);
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 0 auto 15px;
+                color: white;
+                font-weight: bold;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+                border: 3px solid rgba(255,255,255,0.3);
             }
             .sidebar-user-info #user-name {
                 color: white;
-                font-size: 1.1rem;
+                font-size: 1.15rem;
+                font-weight: 600;
             }
             .sidebar-user-info #user-email {
-                color: rgba(255,255,255,0.8);
+                color: rgba(255,255,255,0.75);
                 font-size: 0.85rem;
+                margin-top: 5px;
+            }
+            .sidebar-user-info #user-role {
+                color: #10b981;
+                font-size: 0.75rem;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                margin-top: 8px;
+                font-weight: 600;
             }
             
             .sidebar-menu {
-                padding: 10px 0;
+                padding: 15px 0;
             }
             .sidebar-menu li a {
                 display: flex;
                 align-items: center;
-                padding: 14px 20px;
+                padding: 16px 25px;
                 color: var(--text-color);
                 text-decoration: none;
-                transition: all 0.2s ease;
+                transition: all 0.25s ease;
                 border-left: 3px solid transparent;
+                font-size: 0.95rem;
+            }
+            .sidebar-menu li a:hover {
+                background: var(--bg-light);
+                color: var(--primary-color);
+                padding-left: 30px;
+            }
+            .sidebar-menu li a.active {
+                background: rgba(16, 185, 129, 0.1);
+                color: var(--primary-color);
+                border-left-color: #10b981;
+                font-weight: 500;
+            }
+            .sidebar-menu li a i {
+                width: 25px;
+                font-size: 1.1rem;
+                text-align: center;
+                margin-right: 12px;
             }
             .sidebar-menu li a:hover {
                 background: var(--bg-light);
@@ -671,6 +738,128 @@
             .logo-image {
                 width: 40px;
                 height: 40px;
+            }
+        }
+        
+        /* Desktop Sidebar - visible on desktop screens (992px and above) */
+        @media (min-width: 992px) {
+            .dashboard-grid {
+                display: grid;
+                grid-template-columns: 280px 1fr;
+                min-height: 100vh;
+                padding-top: 70px;
+            }
+            
+            .sidebar {
+                position: fixed;
+                left: 0;
+                top: 70px;
+                width: 280px;
+                height: calc(100vh - 70px);
+                background: linear-gradient(180deg, #1e3a5f 0%, #2d5a87 100%);
+                z-index: 999;
+                box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+                overflow-y: auto;
+            }
+            
+            .sidebar::-webkit-scrollbar {
+                width: 6px;
+            }
+            .sidebar::-webkit-scrollbar-track {
+                background: rgba(0,0,0,0.1);
+            }
+            .sidebar::-webkit-scrollbar-thumb {
+                background: rgba(255,255,255,0.2);
+                border-radius: 3px;
+            }
+            
+            .sidebar .sidebar-user-info {
+                padding: 25px 20px;
+                text-align: center;
+                background: rgba(0,0,0,0.15);
+                border-bottom: 1px solid rgba(255,255,255,0.1);
+            }
+            
+            .sidebar #user-avatar {
+                width: 80px;
+                height: 80px;
+                border-radius: 50%;
+                background: linear-gradient(135deg, #10b981, #059669);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 0 auto 15px;
+                font-size: 2rem;
+                font-weight: bold;
+                color: white;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+                border: 3px solid rgba(255,255,255,0.2);
+            }
+            
+            .sidebar #user-name {
+                color: white;
+                font-size: 1.1rem;
+                font-weight: 600;
+                margin-bottom: 5px;
+            }
+            
+            .sidebar #user-role {
+                color: rgba(255,255,255,0.7);
+                font-size: 0.8rem;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+            }
+            
+            .sidebar #user-email {
+                color: rgba(255,255,255,0.6);
+                font-size: 0.85rem;
+                margin-top: 8px;
+            }
+            
+            .sidebar .sidebar-menu {
+                list-style: none;
+                padding: 15px 0;
+                margin: 0;
+            }
+            
+            .sidebar .sidebar-menu li a {
+                display: flex;
+                align-items: center;
+                padding: 14px 25px;
+                color: rgba(255,255,255,0.75);
+                text-decoration: none;
+                transition: all 0.25s ease;
+                border-left: 3px solid transparent;
+                font-size: 0.95rem;
+            }
+            
+            .sidebar .sidebar-menu li a:hover {
+                background: rgba(255,255,255,0.1);
+                color: white;
+                padding-left: 30px;
+            }
+            
+            .sidebar .sidebar-menu li a.active {
+                background: rgba(255,255,255,0.15);
+                color: white;
+                border-left-color: #10b981;
+                font-weight: 500;
+            }
+            
+            .sidebar .sidebar-menu li a i {
+                width: 30px;
+                font-size: 1.1rem;
+                text-align: center;
+            }
+            
+            .dashboard-content {
+                margin-left: 280px;
+                padding: 25px;
+            }
+            
+            .sidebar-toggle-btn,
+            .sidebar-overlay {
+                display: none !important;
             }
         }
     </style>

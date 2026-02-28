@@ -131,7 +131,7 @@ class AttendanceHandler extends ApiHandler implements HttpHandler {
         }
 
         String role = JWTUtil.getRole(token);
-        if (!"admin".equals(role) && !"staff".equals(role)) {
+        if (!"admin".equals(role) && !"staff".equals(role) && !"instructor".equals(role)) {
             sendErrorResponse(exchange, 403, "Admin or staff access required");
             return;
         }
@@ -306,7 +306,7 @@ class AttendanceHandler extends ApiHandler implements HttpHandler {
         }
         
         // Admin/staff can view all attendance
-        if (!"admin".equals(role) && !"staff".equals(role)) {
+        if (!"admin".equals(role) && !"staff".equals(role) && !"instructor".equals(role)) {
             sendErrorResponse(exchange, 403, "Admin or staff access required");
             return;
         }
@@ -401,7 +401,7 @@ class AttendanceHandler extends ApiHandler implements HttpHandler {
         }
 
         String role = JWTUtil.getRole(token);
-        if (!"admin".equals(role) && !"staff".equals(role)) {
+        if (!"admin".equals(role) && !"staff".equals(role) && !"instructor".equals(role)) {
             sendErrorResponse(exchange, 403, "Admin or staff access required");
             return;
         }
@@ -502,7 +502,7 @@ class AttendanceHandler extends ApiHandler implements HttpHandler {
         }
 
         String role = JWTUtil.getRole(token);
-        if (!"admin".equals(role) && !"staff".equals(role)) {
+        if (!"admin".equals(role) && !"staff".equals(role) && !"instructor".equals(role)) {
             sendErrorResponse(exchange, 403, "Admin or staff access required");
             return;
         }

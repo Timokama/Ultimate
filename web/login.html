@@ -191,6 +191,8 @@
                     redirect = 'admin.html';
                 } else if (user.role === 'staff') {
                     redirect = 'staff.html';
+                } else if (user.role === 'instructor') {
+                    redirect = 'staff.html';
                 }
                 
                 setTimeout(() => {

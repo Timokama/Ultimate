@@ -825,7 +825,7 @@ class ApplicationHandler extends ApiHandler {
         String role = JWTUtil.getRole(token);
         int userId = JWTUtil.getUserId(token);
         
-        // Staff can view applications in their assigned location
+        // Staff | instuctor can view applications in their assigned location
         if ("staff".equals(role)) {
             Map<String, Object> app = DBConnection.getApplicationById(id);
             if (app != null) {
@@ -1163,7 +1163,7 @@ class ApplicationHandler extends ApiHandler {
         
         // Check if admin or staff for access
         String role = JWTUtil.getRole(token);
-        if (!"admin".equals(role) && !"staff".equals(role)) {
+        if (!"admin".equals(role) && !"staff".equals(role) && !"instructor".equals(role)) {
             // Users can only access their own messages
             int userId = JWTUtil.getUserId(token);
             java.util.List<Map<String, Object>> userApps = DBConnection.getApplicationsByUserId(userId);
@@ -1464,7 +1464,7 @@ class ClassHandler extends ApiHandler {
         }
         
         String role = JWTUtil.getRole(token);
-        if (!"admin".equals(role) && !"staff".equals(role)) {
+        if (!"admin".equals(role) && !"staff".equals(role) && !"instructor".equals(role)) {
             sendErrorResponse(exchange, 403, "Admin or Staff access required");
             return;
         }
@@ -1559,7 +1559,7 @@ class ClassHandler extends ApiHandler {
         }
         
         String role = JWTUtil.getRole(token);
-        if (!"admin".equals(role) && !"staff".equals(role)) {
+        if (!"admin".equals(role) && !"staff".equals(role) && !"instructor".equals(role)) {
             sendErrorResponse(exchange, 403, "Admin or Staff access required");
             return;
         }
@@ -1689,7 +1689,7 @@ class DepartmentHandler extends ApiHandler {
             }
             
             String role = JWTUtil.getRole(token);
-            if (!"admin".equals(role) && !"staff".equals(role)) {
+            if (!"admin".equals(role) && !"staff".equals(role) && !"instructor".equals(role)) {
                 sendErrorResponse(exchange, 403, "Admin or staff access required");
                 return;
             }
