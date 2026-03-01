@@ -247,29 +247,20 @@
         .sidebar-toggle-btn {
             display: none;
             position: fixed;
-            bottom: 25px;
-            right: 25px;
-            width: 60px;
-            height: 60px;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #1e3a5f, #2d5a87);
+            background: var(--primary-color);
             color: white;
             border: none;
-            box-shadow: 0 6px 20px rgba(30, 58, 95, 0.4);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
             z-index: 1001;
             cursor: pointer;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
-            transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
-        }
-        .sidebar-toggle-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 8px 25px rgba(30, 58, 95, 0.5);
-        }
-        .sidebar-toggle-btn:active {
-            transform: scale(0.92);
-            box-shadow: 0 3px 10px rgba(30, 58, 95, 0.3);
+            font-size: 20px;
         }
         .sidebar-overlay {
             display: none;
@@ -354,6 +345,8 @@
                 font-size: 13px;
             }
         }
+        
+        @media (max-width: 480px) {
             .navbar .container {
                 flex-wrap: wrap;
                 padding: 10px 15px;
@@ -375,38 +368,32 @@
             
             .sidebar {
                 position: fixed;
-                left: -100%;
-                top: 0;
-                width: 85%;
-                max-width: 320px;
-                height: 100vh;
+                left: -280px;
+                top: 70px;
+                width: 280px;
+                height: calc(100vh - 70px);
                 background: var(--white);
                 z-index: 1000;
-                transition: left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-                box-shadow: 8px 0 30px rgba(0,0,0,0.2);
+                transition: left 0.3s ease;
+                box-shadow: 4px 0 15px rgba(0,0,0,0.1);
                 overflow-y: auto;
-                overflow-x: hidden;
-                padding-bottom: 100px;
             }
             .sidebar.mobile-open {
                 left: 0;
             }
             
             .sidebar-overlay {
+                display: none;
                 position: fixed;
-                top: 0;
+                top: 70px;
                 left: 0;
                 width: 100%;
-                height: 100%;
-                background: rgba(0, 0, 0, 0.5);
+                height: calc(100vh - 70px);
+                background: rgba(0,0,0,0.5);
                 z-index: 999;
-                opacity: 0;
-                visibility: hidden;
-                transition: all 0.35s ease;
             }
             .sidebar-overlay.show {
-                opacity: 1;
-                visibility: visible;
+                display: block;
             }
             
             .sidebar-user-info {
@@ -929,31 +916,51 @@
                 <main class="dashboard-content">
                     <!-- Overview Section -->
                     <div id="section-overview" class="admin-section">
-                        <h2 style="margin-bottom: 20px;">Overview</h2>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; background: linear-gradient(135deg, #1e3a5f 0%, #2d5a87 100%); padding: 20px 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(30, 58, 95, 0.3);">
+                            <div>
+                                <h2 style="margin: 0; color: #fff; font-size: 24px; font-weight: 600;">Dashboard Overview</h2>
+                                <p style="margin: 5px 0 0 0; color: rgba(255,255,255,0.7); font-size: 13px;">Summary of your training location</p>
+                            </div>
+                            <button class="btn btn-primary" onclick="loadStaffOverview()" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);">
+                                <i class="fas fa-sync-alt"></i> Refresh
+                            </button>
+                        </div>
                         <div class="stats-grid">
                             <div class="stat-card">
                                 <h3 id="staff-total-applicants">0</h3>
                                 <p>Total Applicants</p>
                             </div>
-                            <div class="stat-card">
+                            <div class="stat-card" style="background: linear-gradient(135deg, #6366f1, #4f46e5);">
+                                <h3 id="staff-total-enrollments">0</h3>
+                                <p>Total Enrollments</p>
+                            </div>
+                            <div class="stat-card" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
                                 <h3 id="staff-pending-applicants">0</h3>
                                 <p>Pending Approval</p>
                             </div>
-                            <div class="stat-card">
+                            <div class="stat-card" style="background: linear-gradient(135deg, #10b981, #059669);">
                                 <h3 id="staff-approved-applicants">0</h3>
                                 <p>Approved</p>
                             </div>
-                            <div class="stat-card">
+                            <div class="stat-card" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
+                                <h3 id="staff-active-students">0</h3>
+                                <p>Active Students</p>
+                            </div>
+                            <div class="stat-card" style="background: linear-gradient(135deg, #ec4899, #db2777);">
+                                <h3 id="staff-enrollment-completed">0</h3>
+                                <p>Completed</p>
+                            </div>
+                            <div class="stat-card" style="background: linear-gradient(135deg, #3b82f6, #2563eb);">
                                 <h3 id="staff-total-fees">0</h3>
                                 <p>Total Fees (KSh)</p>
                             </div>
-                            <div class="stat-card">
+                            <div class="stat-card" style="background: linear-gradient(135deg, #22c55e, #16a34a);">
                                 <h3 id="staff-total-paid">0</h3>
                                 <p>Total Paid (KSh)</p>
                             </div>
-                            <div class="stat-card">
-                                <h3 id="staff-total-students">0</h3>
-                                <p>Total Students</p>
+                            <div class="stat-card" style="background: linear-gradient(135deg, #ef4444, #dc2626);">
+                                <h3 id="staff-total-balance">0</h3>
+                                <p>Total Balance (KSh)</p>
                             </div>
                         </div>
                     </div>
@@ -984,35 +991,67 @@
                     
                     <!-- Students Section -->
                     <div id="section-students" class="admin-section" style="display: none;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                            <h2 style="margin: 0;">Students</h2>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; background: linear-gradient(135deg, #1e3a5f 0%, #2d5a87 100%); padding: 20px 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(30, 58, 95, 0.3);">
+                            <div>
+                                <h2 style="margin: 0; color: #fff; font-size: 24px; font-weight: 600;">Students Management</h2>
+                                <p style="margin: 5px 0 0 0; color: rgba(255,255,255,0.7); font-size: 13px;">Manage applicants and students at your training location</p>
+                            </div>
+                            <button class="btn btn-primary" onclick="openStudentModal()" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);">
+                                <i class="fas fa-plus"></i> Add Student
+                            </button>
                         </div>
                         
                         <!-- Stats Cards for Students -->
-                        <div class="stats-grid" style="margin-bottom: 20px;">
+                        <div class="stats-grid" style="margin-bottom: 30px;">
                             <div class="stat-card">
-                                <h3 id="staff-total-students">0</h3>
+                                <h3 id="students-total-students">0</h3>
                                 <p>Total Students</p>
                             </div>
-                            <div class="stat-card">
-                                <h3 id="staff-active-students">0</h3>
-                                <p>Active</p>
-                            </div>
-                            <div class="stat-card">
-                                <h3 id="staff-pending-students">0</h3>
+                            <div class="stat-card" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+                                <h3 id="students-pending-students">0</h3>
                                 <p>Pending</p>
                             </div>
-                            <div class="stat-card">
-                                <h3 id="staff-completed-students">0</h3>
+                            <div class="stat-card" style="background: linear-gradient(135deg, #10b981, #059669);">
+                                <h3 id="students-active-students">0</h3>
+                                <p>Active</p>
+                            </div>
+                            <div class="stat-card" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
+                                <h3 id="students-completed-students">0</h3>
                                 <p>Completed</p>
+                            </div>
+                            <div class="stat-card" style="background: linear-gradient(135deg, #3b82f6, #2563eb);">
+                                <h3 id="students-total-fees">0</h3>
+                                <p>Total Fees</p>
+                            </div>
+                            <div class="stat-card" style="background: linear-gradient(135deg, #22c55e, #16a34a);">
+                                <h3 id="students-total-paid">0</h3>
+                                <p>Total Paid</p>
+                            </div>
+                            <div class="stat-card" style="background: linear-gradient(135deg, #ef4444, #dc2626);">
+                                <h3 id="students-total-balance">0</h3>
+                                <p>Total Balance</p>
                             </div>
                         </div>
                         
-                        <div class="filter-bar" style="margin-bottom: 20px; display: flex; gap: 12px; flex-wrap: wrap;">
-                            <select id="location-filter" onchange="filterByLocation()" style="padding: 10px; border-radius: 6px; border: 1px solid #ddd; min-width: 200px;">
-                                <option value="">Loading locations...</option>
+                        <!-- Filters -->
+                        <div style="margin-bottom: 25px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); padding: 15px 20px; border-radius: 10px; border-left: 4px solid #3d7ab5;">
+                            <span style="color: #1e3a5f; font-weight: 600; margin-right: 10px;"><i class="fas fa-filter"></i> Filter:</span>
+                            <input type="text" id="student-search" onkeyup="loadStudents()" placeholder="Search students..." style="padding: 10px 14px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 14px; min-width: 200px;">
+                            <select id="student-category-filter" onchange="loadStudents()" style="padding: 10px 14px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 14px; min-width: 150px;">
+                                <option value="">All Categories</option>
+                                <option value="driving">Driving Courses</option>
+                                <option value="computer">Computer Courses</option>
                             </select>
-                            <button class="btn btn-primary" onclick="loadStudents()">
+                            <select id="student-status-filter" onchange="loadStudents()" style="padding: 10px 14px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 14px; min-width: 150px;">
+                                <option value="">All Status</option>
+                                <option value="active">Active</option>
+                                <option value="pending">Pending</option>
+                                <option value="completed">Completed</option>
+                            </select>
+                            <select id="location-filter" onchange="loadStudents()" style="padding: 10px 14px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 14px; min-width: 180px;">
+                                <option value="">All Locations</option>
+                            </select>
+                            <button class="btn btn-primary" onclick="loadStudents()" style="padding: 10px 20px;">
                                 <i class="fas fa-sync-alt"></i> Refresh
                             </button>
                         </div>
@@ -1559,9 +1598,48 @@
                         <div class="form-row" style="display: grid; grid-template-columns: 1fr; gap: 15px;">
                             <div class="form-group">
                                 <label for="attendance-modal-student" style="color: #1e3a5f; font-weight: 600;">Applicant *</label>
-                                <select id="attendance-modal-student" required style="border: 2px solid #dee2e6; border-radius: 8px; padding: 12px; width: 100%; background: #fff; color: #495057; font-size: 14px;">
+                                <select id="attendance-modal-student" onchange="updateStudentInfo(this)" required style="border: 2px solid #dee2e6; border-radius: 8px; padding: 12px; width: 100%; background: #fff; color: #495057; font-size: 14px;">
                                     <option value="">--- Select Applicant ---</option>
                                 </select>
+                            </div>
+                            <!-- Student Info Display -->
+                            <div id="attendance-student-info" style="display: none; background: #f8f9fa; border-radius: 8px; padding: 15px; margin-top: 10px;">
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                                    <div>
+                                        <small style="color: #6c757d;">Phone:</small>
+                                        <div id="student-phone" style="font-weight: 600; color: #1e3a5f;">-</div>
+                                    </div>
+                                    <div>
+                                        <small style="color: #6c757d;">Email:</small>
+                                        <div id="student-email" style="font-weight: 600; color: #1e3a5f;">-</div>
+                                    </div>
+                                    <div>
+                                        <small style="color: #6c757d;">Location:</small>
+                                        <div id="student-location" style="font-weight: 600; color: #1e3a5f;">-</div>
+                                    </div>
+                                    <div>
+                                        <small style="color: #6c757d;">Course:</small>
+                                        <div id="student-course" style="font-weight: 600; color: #1e3a5f;">-</div>
+                                    </div>
+                                </div>
+                                <!-- Fees Info -->
+                                <div id="attendance-fees-info" style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #dee2e6;">
+                                    <div style="font-weight: 600; color: #1e3a5f; margin-bottom: 10px;"><i class="fas fa-money-bill-wave"></i> Fee Details</div>
+                                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
+                                        <div>
+                                            <small style="color: #6c757d;">Total Fee:</small>
+                                            <div id="student-fee-amount" style="font-weight: 600; color: #1e3a5f;">-</div>
+                                        </div>
+                                        <div>
+                                            <small style="color: #6c757d;">Paid:</small>
+                                            <div id="student-fee-paid" style="font-weight: 600; color: #10b981;">-</div>
+                                        </div>
+                                        <div>
+                                            <small style="color: #6c757d;">Balance:</small>
+                                            <div id="student-fee-balance" style="font-weight: 600; color: #dc2626;">-</div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="form-group">
                                 <label for="attendance-modal-class" style="color: #1e3a5f; font-weight: 600;">Class</label>
@@ -1637,6 +1715,31 @@
                                     <option value="present">Present</option>
                                     <option value="absent">Absent</option>
                                     <option value="late">Late</option>
+                                    <option value="excused">Excused</option>
+                                    <option value="medical">Medical Leave</option>
+                                    <option value="suspended">Suspended</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px;">
+                            <div class="form-group">
+                                <label for="attendance-modal-time-in" style="color: #1e3a5f; font-weight: 600;">Time In</label>
+                                <input type="time" id="attendance-modal-time-in" style="border: 2px solid #dee2e6; border-radius: 8px; padding: 12px; width: 100%; background: #fff; color: #495057; font-size: 14px;">
+                            </div>
+                            <div class="form-group">
+                                <label for="attendance-modal-time-out" style="color: #1e3a5f; font-weight: 600;">Time Out</label>
+                                <input type="time" id="attendance-modal-time-out" style="border: 2px solid #dee2e6; border-radius: 8px; padding: 12px; width: 100%; background: #fff; color: #495057; font-size: 14px;">
+                            </div>
+                        </div>
+                        <div class="form-row" style="display: grid; grid-template-columns: 1fr; gap: 15px; margin-top: 15px;">
+                            <div class="form-group">
+                                <label for="attendance-modal-schedule" style="color: #1e3a5f; font-weight: 600;">Preferred Schedule</label>
+                                <select id="attendance-modal-schedule" style="border: 2px solid #dee2e6; border-radius: 8px; padding: 12px; width: 100%; background: #fff; color: #495057; font-size: 14px;">
+                                    <option value="">--- Select ---</option>
+                                    <option value="Morning">Morning (6AM - 12PM)</option>
+                                    <option value="Afternoon">Afternoon (12PM - 5PM)</option>
+                                    <option value="Evening">Evening (5PM - 8PM)</option>
+                                    <option value="Weekend">Weekend</option>
                                 </select>
                             </div>
                         </div>
@@ -2152,6 +2255,13 @@
         }
         
         // Sidebar toggle functions
+        function toggleMobileMenu() {
+            const navLinks = document.querySelector('.nav-links');
+            const menuBtn = document.querySelector('.mobile-menu-btn');
+            navLinks.classList.toggle('mobile-open');
+            menuBtn.classList.toggle('active');
+        }
+        
         function toggleSidebar() {
             const sidebar = document.querySelector('.sidebar');
             const overlay = document.querySelector('.sidebar-overlay');
@@ -2280,39 +2390,78 @@
         
         async function loadStaffOverview() {
             try {
-                const data = await staff.getApplicants();
+                // Fetch both applicants and enrollments data
+                const applicantsResp = await fetch('/api/staff/applicants', {
+                    headers: { 'Authorization': 'Bearer ' + auth.getToken() }
+                });
+                const enrollmentsResp = await fetch(`/api/enrollments?location=${encodeURIComponent(staffLocation || '')}`, {
+                    headers: { 'Authorization': 'Bearer ' + auth.getToken() }
+                });
+                
+                const data = await applicantsResp.json();
+                const enrollmentsData = await enrollmentsResp.json();
                 
                 // Check if staff has location assigned
                 if (data.error && data.error.includes('no training location')) {
                     showToast('Please contact administrator - No training location assigned to your account', 'warning');
-                    // Show zeros in stats
-                    document.getElementById('staff-total-applicants').textContent = '0';
-                    document.getElementById('staff-pending-applicants').textContent = '0';
-                    document.getElementById('staff-approved-applicants').textContent = '0';
-                    document.getElementById('staff-total-fees').textContent = '0';
-                    document.getElementById('staff-total-paid').textContent = '0';
-                    document.getElementById('staff-total-students').textContent = '0';
-                    return;
                 }
                 
+                // Applicants stats
                 if (data.success) {
                     const applicants = data.applicants || [];
-                    document.getElementById('staff-total-applicants').textContent = applicants.length;
-                    document.getElementById('staff-pending-applicants').textContent = applicants.filter(a => a.status === 'pending').length;
-                    document.getElementById('staff-approved-applicants').textContent = applicants.filter(a => a.status === 'approved').length;
+                    const totalApplicants = document.getElementById('staff-total-applicants');
+                    if (totalApplicants) totalApplicants.textContent = applicants.length;
                     
-                    const totalFees = applicants.reduce((sum, a) => sum + (a.school_fees || 0), 0);
-                    const totalPaid = applicants.reduce((sum, a) => sum + (a.fees_paid || 0), 0);
-                    document.getElementById('staff-total-fees').textContent = formatNumber(totalFees);
-                    document.getElementById('staff-total-paid').textContent = formatNumber(totalPaid);
+                    const pendingApplicants = document.getElementById('staff-pending-applicants');
+                    if (pendingApplicants) pendingApplicants.textContent = applicants.filter(a => a.status === 'pending').length;
                     
-                    document.getElementById('staff-total-students').textContent = applicants.length;
+                    const approvedApplicants = document.getElementById('staff-approved-applicants');
+                    if (approvedApplicants) approvedApplicants.textContent = applicants.filter(a => a.status === 'approved').length;
                 }
                 
-                // Load students count (from applicants data)
-                if (staffLocation || data.location) {
-                    document.getElementById('staff-total-students').textContent = (data.applicants || []).length;
+                // Enrollments stats
+                let totalFees = 0;
+                let totalPaid = 0;
+                let completedCount = 0;
+                let activeCount = 0;
+                let totalEnrollmentsCount = 0;
+                
+                if (enrollmentsData.success && enrollmentsData.enrollments) {
+                    const enrollments = enrollmentsData.enrollments;
+                    totalEnrollmentsCount = enrollments.length;
+                    completedCount = enrollments.filter(e => e.status === 'completed').length;
+                    activeCount = enrollments.filter(e => e.status === 'active').length;
+                    
+                    enrollments.forEach(e => {
+                        totalFees += parseFloat(e.fee_amount) || 0;
+                        totalPaid += parseFloat(e.fee_paid) || 0;
+                    });
                 }
+                
+                // Update Total Enrollments
+                const totalEnrollmentsEl = document.getElementById('staff-total-enrollments');
+                if (totalEnrollmentsEl) totalEnrollmentsEl.textContent = totalEnrollmentsCount;
+                
+                // Update Active Students
+                const activeStudents = document.getElementById('staff-active-students');
+                if (activeStudents) activeStudents.textContent = activeCount;
+                
+                // Update Completed
+                const completedEl = document.getElementById('staff-enrollment-completed');
+                if (completedEl) completedEl.textContent = completedCount;
+                
+                // Update Total Fees
+                const feesEl = document.getElementById('staff-total-fees');
+                if (feesEl) feesEl.textContent = formatNumber(totalFees);
+                
+                // Update Total Paid
+                const paidEl = document.getElementById('staff-total-paid');
+                if (paidEl) paidEl.textContent = formatNumber(totalPaid);
+                
+                // Update Total Balance
+                const balanceEl = document.getElementById('staff-total-balance');
+                if (balanceEl) balanceEl.textContent = formatNumber(totalFees - totalPaid);
+                
             } catch (error) {
                 console.error('Error loading overview:', error);
                 showToast('Error loading dashboard data: ' + error.message, 'error');
@@ -2640,70 +2789,212 @@
             loadStudents();
         }
         
+        // Helper function to update student stats
+        function updateStudentStats(total, active, pending, completed) {
+            const totalStudentsEl = document.getElementById('students-total-students');
+            if (totalStudentsEl) totalStudentsEl.textContent = total;
+            
+            const activeStudentsEl = document.getElementById('students-active-students');
+            if (activeStudentsEl) activeStudentsEl.textContent = active;
+            
+            const pendingStudentsEl = document.getElementById('students-pending-students');
+            if (pendingStudentsEl) pendingStudentsEl.textContent = pending;
+            
+            const completedStudentsEl = document.getElementById('students-completed-students');
+            if (completedStudentsEl) completedStudentsEl.textContent = completed;
+        }
+        
         async function loadStudents() {
             const container = document.getElementById('students-list');
             if (!container) return;
             
+            container.innerHTML = '<div class="course-card" style="text-align: center; padding: 60px 20px;"><div class="course-loader"></div><p style="margin-top: 16px; color: var(--text-light);">Loading students...</p></div>';
+            
             const user = auth.getUser();
             const selectedLocation = document.getElementById('location-filter').value;
-            const location = selectedLocation || staffLocation || user?.training_location || '';
-            
-            let url = '';
-            
-            if (!location) {
-                // No location - fetch ALL applications from /api/staff/applicants endpoint
-                url = '/api/staff/applicants';
-            } else {
-                url = `/api/staff/location-students?location=${encodeURIComponent(location)}`;
+            // Ensure location is always a string
+            let location = '';
+            if (typeof selectedLocation === 'string') {
+                location = selectedLocation;
+            } else if (typeof staffLocation === 'string') {
+                location = staffLocation;
+            } else if (user?.training_location) {
+                location = String(user.training_location);
             }
             
+            // Get filter values
+            const searchFilter = document.getElementById('student-search')?.value?.toLowerCase() || '';
+            const statusFilter = document.getElementById('student-status-filter')?.value || '';
+            const categoryFilter = document.getElementById('student-category-filter')?.value || '';
+            
             try {
-                const response = await fetch(url, {
+                // Fetch from BOTH enrollments AND applicants endpoints
+                // If location is empty (All Locations), don't pass location parameter to get all
+                const enrollmentsUrl = location ? `/api/enrollments?location=${encodeURIComponent(location)}` : '/api/enrollments';
+                const enrollmentsPromise = fetch(enrollmentsUrl, {
                     headers: { 'Authorization': 'Bearer ' + auth.getToken() }
                 });
-                const data = await response.json();
+                
+                const applicantsPromise = fetch('/api/staff/applicants', {
+                    headers: { 'Authorization': 'Bearer ' + auth.getToken() }
+                });
+                
+                const [enrollmentsResp, applicantsResp] = await Promise.all([enrollmentsPromise, applicantsPromise]);
+                
+                // Handle 401 Unauthorized
+                if (enrollmentsResp.status === 401 || applicantsResp.status === 401) {
+                    auth.logout();
+                    window.location.href = 'login.html';
+                    return;
+                }
+                
+                const enrollmentsData = await enrollmentsResp.json();
+                const applicantsData = await applicantsResp.json();
+                
+                // Combine students from both enrollments AND applicants
+                let allStudents = [];
+                
+                // Add enrollments
+                if (enrollmentsData.success && enrollmentsData.enrollments) {
+                    enrollmentsData.enrollments.forEach(e => {
+                        allStudents.push({
+                            id: e.student_id || e.id,
+                            first_name: e.first_name || e.student_name?.split(' ')[0] || '',
+                            last_name: e.last_name || e.student_name?.split(' ').slice(1).join(' ') || '',
+                            email: e.student_email || e.email || '',
+                            phone: e.phone || e.student_phone || '',
+                            status: e.status || 'active',
+                            training_location: e.location || e.training_location || location,
+                            fee_amount: e.fee_amount || 0,
+                            fee_paid: e.fee_paid || 0,
+                            course_type: e.category || e.course_type || ''
+                        });
+                    });
+                }
+                
+                // Add applicants
+                if (applicantsData.success && applicantsData.applicants) {
+                    applicantsData.applicants.forEach(a => {
+                        // Check if this applicant is already in the list (by email)
+                        const exists = allStudents.some(s => s.email && a.email && s.email.toLowerCase() === a.email.toLowerCase());
+                        if (!exists) {
+                            allStudents.push({
+                                id: a.id,
+                                first_name: a.first_name || a.name?.split(' ')[0] || '',
+                                last_name: a.last_name || a.name?.split(' ').slice(1).join(' ') || '',
+                                email: a.email || '',
+                                phone: a.phone || '',
+                                status: a.status || 'pending',
+                                training_location: a.training_location || a.location || location,
+                                fee_amount: a.fees || a.fee_amount || 0,
+                                fee_paid: a.fees_paid || a.fee_paid || 0,
+                                course_type: a.course_type || a.category || ''
+                            });
+                        }
+                    });
+                }
+                
+                // Filter by location if specified (and not empty string for All Locations)
+                if (location && typeof location === 'string') {
+                    allStudents = allStudents.filter(s => 
+                        !s.training_location || String(s.training_location).toLowerCase() === location.toLowerCase()
+                    );
+                }
                 
                 container.innerHTML = '';
                 
-                let students = [];
+                let students = [...allStudents];
                 
-                if (!location) {
-                    // Using /api/staff/applicants endpoint - returns applicants with application data
-                    if (data.success && data.applicants) {
-                        students = data.applicants;
+                // Apply filters locally
+                if (searchFilter) {
+                    students = students.filter(s => {
+                        const name = (s.first_name + ' ' + s.last_name).toLowerCase();
+                        const fullName = (s.full_name || s.name || '').toLowerCase();
+                        const email = (s.email || '').toLowerCase();
+                        const phone = (s.phone || '').toLowerCase();
+                        return name.includes(searchFilter) || fullName.includes(searchFilter) || email.includes(searchFilter) || phone.includes(searchFilter);
+                    });
+                }
+                
+                if (statusFilter) {
+                    students = students.filter(s => (s.status || 'active') === statusFilter);
+                }
+                
+                // Apply category filter if selected
+                if (categoryFilter) {
+                    students = students.filter(s => {
+                        const courseType = (s.course_type || s.category || '').toLowerCase();
+                        return courseType === categoryFilter;
+                    });
+                }
+                
+                // Calculate stats from ALL students (not filtered)
+                // Remove duplicate allStudents declaration - use the one from above
+                
+                // Update stats
+                const totalCount = allStudents.length;
+                const activeCount = allStudents.filter(s => (s.status || 'active') === 'active').length;
+                const pendingCount = allStudents.filter(s => s.status === 'pending').length;
+                const completedCount = allStudents.filter(s => s.status === 'completed').length;
+                updateStudentStats(totalCount, activeCount, pendingCount, completedCount);
+                
+                // Fetch financial data from fees-summary API for accurate stats (only if location is set)
+                if (location) {
+                    try {
+                        const feesUrl = `/api/staff/fees-summary?location=${encodeURIComponent(location)}`;
+                        const feesResponse = await fetch(feesUrl, {
+                            headers: { 'Authorization': 'Bearer ' + auth.getToken() }
+                        });
+                        const feesData = await feesResponse.json();
+                        
+                        if (feesData.success && feesData.summary) {
+                            // Update financial stats from API
+                            const totalFeesEl = document.getElementById('students-total-fees');
+                            if (totalFeesEl) totalFeesEl.textContent = 'KSh ' + (feesData.summary.total_fees || 0).toLocaleString();
+                            
+                            const totalPaidEl = document.getElementById('students-total-paid');
+                            if (totalPaidEl) totalPaidEl.textContent = 'KSh ' + (feesData.summary.total_paid || 0).toLocaleString();
+                            
+                            const totalBalanceEl = document.getElementById('students-total-balance');
+                            if (totalBalanceEl) totalBalanceEl.textContent = 'KSh ' + (feesData.summary.total_balance || 0).toLocaleString();
+                        }
+                    } catch (feesError) {
+                        console.error('Error fetching fees summary:', feesError);
+                        // Fallback: calculate from student data
+                        calculateFinancialStatsFromStudents(allStudents);
                     }
                 } else {
-                    // Using /api/staff/location-students endpoint
-                    if (data.success && data.students && data.students.length > 0) {
-                        students = data.students;
-                    }
+                    // No location - calculate from all students data
+                    calculateFinancialStatsFromStudents(allStudents);
+                }
+                
+                function calculateFinancialStatsFromStudents(students) {
+                    let totalFees = 0;
+                    let totalPaid = 0;
+                    let totalBalance = 0;
+                    
+                    students.forEach(student => {
+                        totalFees += parseFloat(student.fee_amount) || parseFloat(student.total_fees) || 0;
+                        totalPaid += parseFloat(student.fee_paid) || parseFloat(student.total_paid) || 0;
+                        totalBalance += parseFloat(student.balance) || 0;
+                    });
+                    
+                    // Calculate balance as fees - paid
+                    totalBalance = totalFees - totalPaid;
+                    
+                    const totalFeesEl = document.getElementById('students-total-fees');
+                    if (totalFeesEl) totalFeesEl.textContent = 'KSh ' + totalFees.toLocaleString();
+                    
+                    const totalPaidEl = document.getElementById('students-total-paid');
+                    if (totalPaidEl) totalPaidEl.textContent = 'KSh ' + totalPaid.toLocaleString();
+                    
+                    const totalBalanceEl = document.getElementById('students-total-balance');
+                    if (totalBalanceEl) totalBalanceEl.textContent = 'KSh ' + totalBalance.toLocaleString();
                 }
                 
                 if (students.length > 0) {
                     // Store students data globally for edit function
                     window.allStudentsData = students;
-                    
-                    // Calculate stats
-                    const totalCount = students.length;
-                    const activeCount = students.filter(s => (s.status || 'active') === 'active').length;
-                    const pendingCount = students.filter(s => s.status === 'pending').length;
-                    const completedCount = students.filter(s => s.status === 'completed').length;
-                    
-                    // Update total students count
-                    const totalStudentsEl = document.getElementById('staff-total-students');
-                    if (totalStudentsEl) totalStudentsEl.textContent = totalCount;
-                    
-                    // Update active students count
-                    const activeStudentsEl = document.getElementById('staff-active-students');
-                    if (activeStudentsEl) activeStudentsEl.textContent = activeCount;
-                    
-                    // Update pending students count
-                    const pendingStudentsEl = document.getElementById('staff-pending-students');
-                    if (pendingStudentsEl) pendingStudentsEl.textContent = pendingCount;
-                    
-                    // Update completed students count
-                    const completedStudentsEl = document.getElementById('staff-completed-students');
-                    if (completedStudentsEl) completedStudentsEl.textContent = completedCount;
                     
                     let tableHtml = '<table class="students-table"><thead><tr><th>Student</th><th>Email</th><th>Phone</th><th>Role</th><th>Location</th><th>Status</th><th>Actions</th></tr></thead><tbody>';
                     
@@ -2744,7 +3035,15 @@
         async function loadFeesSummary() {
             const user = auth.getUser();
             const selectedLocation = document.querySelector('#section-fees #location-filter').value;
-            const location = selectedLocation || staffLocation || user?.training_location || '';
+            // Ensure location is always a string
+            let location = '';
+            if (typeof selectedLocation === 'string') {
+                location = selectedLocation;
+            } else if (typeof staffLocation === 'string') {
+                location = staffLocation;
+            } else if (user?.training_location) {
+                location = String(user.training_location);
+            }
             
             let url = '';
             
@@ -3277,18 +3576,24 @@
                 container.innerHTML = '';
                 
                 if (data.success && data.attendance) {
-                    let tableHtml = '<table class="students-table"><thead><tr><th>Date</th><th>Student</th><th>Course</th><th>Status</th><th>Notes</th><th>Actions</th></tr></thead><tbody>';
+                    let tableHtml = '<table class="students-table"><thead><tr><th>Date</th><th>Student</th><th>Location</th><th>Course</th><th>Status</th><th>Fee</th><th>Paid</th><th>Balance</th><th>Actions</th></tr></thead><tbody>';
                     
                     data.attendance.forEach(record => {
-                        const statusClass = record.status === 'Present' ? 'payment-paid' : record.status === 'Late' ? 'payment-partial' : 'payment-unpaid';
+                        const statusClass = record.status === 'present' || record.status === 'Present' ? 'payment-paid' : record.status === 'late' || record.status === 'Late' ? 'payment-partial' : 'payment-unpaid';
+                        const feeAmount = record.fee_amount ? parseFloat(record.fee_amount) : 0;
+                        const feePaid = record.fee_paid ? parseFloat(record.fee_paid) : 0;
+                        const feeBalance = record.fee_balance ? parseFloat(record.fee_balance) : (feeAmount - feePaid);
                         
                         tableHtml += `
                             <tr>
                                 <td data-label="Date">${formatDate(record.date)}</td>
                                 <td data-label="Student">${record.student_name || 'N/A'}</td>
-                                <td data-label="Course">${record.course_name || 'N/A'}</td>
+                                <td data-label="Location">${record.location || record.location_name || '-'}</td>
+                                <td data-label="Course">${record.course_name || record.driving_course || record.computer_course || 'N/A'}</td>
                                 <td data-label="Status"><span class="${statusClass}">${record.status}</span></td>
-                                <td data-label="Notes">${record.notes || '-'}</td>
+                                <td data-label="Fee">KSh ${feeAmount.toLocaleString()}</td>
+                                <td data-label="Paid" style="color: #10b981;">KSh ${feePaid.toLocaleString()}</td>
+                                <td data-label="Balance" style="color: ${feeBalance > 0 ? '#dc2626' : '#10b981'};">KSh ${feeBalance.toLocaleString()}</td>
                                 <td data-label="Actions">
                                     <div class="action-buttons">
                                         <button class="btn btn-primary btn-small" onclick="editAttendance(${record.id})"><i class="fas fa-edit"></i></button>
@@ -3314,7 +3619,7 @@
             const modal = document.getElementById('attendance-modal');
             const modalContent = modal.querySelector('.modal-content');
             
-            document.getElementById('attendance-modal-title').textContent = id ? 'Edit Attendance' : 'Add Attendance';
+            document.getElementById('attendance-modal-title').innerHTML = id ? '<i class="fas fa-clipboard-check"></i> Edit Attendance' : '<i class="fas fa-clipboard-check"></i> Add Attendance';
             document.getElementById('attendance-id').value = id || '';
             document.getElementById('attendance-modal-date').value = document.getElementById('attendance-date').value || new Date().toISOString().split('T')[0];
             document.getElementById('attendance-modal-status').value = 'present';
@@ -3327,6 +3632,11 @@
             document.getElementById('attendance-modal-driving').value = '';
             document.getElementById('attendance-modal-computer').value = '';
             document.getElementById('attendance-modal-transmission').value = '';
+            
+            // Reset new fields
+            document.getElementById('attendance-modal-time-in').value = '';
+            document.getElementById('attendance-modal-time-out').value = '';
+            document.getElementById('attendance-modal-schedule').value = '';
             
             // Load students for dropdown
             loadStudentsForAttendanceDropdown();
@@ -3434,14 +3744,40 @@
                         // Display: Full Name only
                         option.textContent = student.full_name;
                         option.dataset.userId = student.user_id;
+                        option.dataset.phone = student.phone || '-';
+                        option.dataset.email = student.email || '-';
+                        option.dataset.location = student.training_location || student.location || '-';
                         option.dataset.courseId = student.course_id || '';
                         option.dataset.courseCategory = student.course_category || '';
+                        option.dataset.courseName = student.course_name || '-';
                         select.appendChild(option);
                     });
                 }
             } catch (error) {
                 console.error('Error loading students:', error);
             }
+        }
+        
+        // Update student info display when selecting a student
+        function updateStudentInfo(select) {
+            const studentInfo = document.getElementById('attendance-student-info');
+            if (!select.value) {
+                if (studentInfo) studentInfo.style.display = 'none';
+                return;
+            }
+            
+            const option = select.options[select.selectedIndex];
+            const phoneEl = document.getElementById('student-phone');
+            const emailEl = document.getElementById('student-email');
+            const locationEl = document.getElementById('student-location');
+            const courseEl = document.getElementById('student-course');
+            
+            if (phoneEl) phoneEl.textContent = option.dataset.phone || '-';
+            if (emailEl) emailEl.textContent = option.dataset.email || '-';
+            if (locationEl) locationEl.textContent = option.dataset.location || '-';
+            if (courseEl) courseEl.textContent = option.dataset.courseName || '-';
+            
+            if (studentInfo) studentInfo.style.display = 'block';
         }
         
         async function loadCoursesForAttendanceDropdown() {
@@ -3521,9 +3857,48 @@
             const status = document.getElementById('attendance-modal-status').value;
             const notes = document.getElementById('attendance-modal-notes').value;
             
+            // New fields
+            const timeIn = document.getElementById('attendance-modal-time-in').value;
+            const timeOut = document.getElementById('attendance-modal-time-out').value;
+            const preferredSchedule = document.getElementById('attendance-modal-schedule').value;
+            
             if (!studentId || !date) {
                 showAlert('Please fill in all required fields', 'error');
                 return;
+            }
+            
+            // Validate that driving_course or computer_course is in enrollments/applications
+            if ((drivingCourse || computerCourse) && studentId) {
+                try {
+                    // Check if student has valid enrollment for the selected course
+                    const enrollResponse = await fetch(`/api/enrollments?student_id=${studentId}`, {
+                        headers: { 'Authorization': 'Bearer ' + auth.getToken() }
+                    });
+                    const enrollData = await enrollResponse.json();
+                    
+                    let hasValidEnrollment = false;
+                    if (enrollData.success && enrollData.enrollments) {
+                        for (const e of enrollData.enrollments) {
+                            if (e.status === 'active') {
+                                if (drivingCourse && (e.driving_course === drivingCourse || e.driving_course?.includes(drivingCourse))) {
+                                    hasValidEnrollment = true;
+                                    break;
+                                }
+                                if (computerCourse && (e.computer_course === computerCourse || e.computer_course?.includes(computerCourse))) {
+                                    hasValidEnrollment = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    
+                    if (!hasValidEnrollment) {
+                        showToast('Please select Applicant applications and enrollments only', 'warning');
+                        return;
+                    }
+                } catch (e) {
+                    console.error('Error validating enrollment:', e);
+                }
             }
             
             const formData = {
@@ -3536,6 +3911,9 @@
                 date: date,
                 status: status,
                 notes: notes,
+                time_in: timeIn,
+                time_out: timeOut,
+                preferred_schedule: preferredSchedule,
                 location: staffLocation
             };
             
@@ -3554,6 +3932,9 @@
                 params.append('date', date);
                 params.append('status', status);
                 if (notes) params.append('notes', notes);
+                if (timeIn) params.append('time_in', timeIn);
+                if (timeOut) params.append('time_out', timeOut);
+                if (preferredSchedule) params.append('preferred_schedule', preferredSchedule);
                 if (staffLocation) params.append('location', staffLocation);
                 
                 const response = await fetch(url, {
@@ -3587,18 +3968,62 @@
                 });
                 const data = await response.json();
                 
-                if (data.success && data.record) {
-                    const record = data.record;
+                if (data.success && data.attendance) {
+                    const record = data.attendance;
                     openAttendanceModal(record.id);
-                    document.getElementById('attendance-modal-date').value = record.date;
+                    document.getElementById('attendance-modal-date').value = record.date || '';
                     document.getElementById('attendance-modal-student').value = record.student_id || '';
-                    document.getElementById('attendance-modal-class').value = record.class_id || '';
+                    document.getElementById('attendance-modal-class').value = record.class_id > 0 ? record.class_id : '';
                     document.getElementById('attendance-modal-license').value = record.license_type || '';
                     document.getElementById('attendance-modal-driving').value = record.driving_course || '';
                     document.getElementById('attendance-modal-computer').value = record.computer_course || '';
                     document.getElementById('attendance-modal-transmission').value = record.transmission || '';
                     document.getElementById('attendance-modal-status').value = record.status || 'present';
                     document.getElementById('attendance-modal-notes').value = record.notes || '';
+                    
+                    // Populate new fields
+                    document.getElementById('attendance-modal-time-in').value = record.time_in || '';
+                    document.getElementById('attendance-modal-time-out').value = record.time_out || '';
+                    document.getElementById('attendance-modal-schedule').value = record.preferred_schedule || '';
+                    
+                    // Show student name in title when editing
+                    const studentName = record.student_first_name && record.student_last_name 
+                        ? `${record.student_first_name} ${record.student_last_name}` 
+                        : record.student_name || '';
+                    if (studentName) {
+                        document.getElementById('attendance-modal-title').innerHTML = `<i class="fas fa-clipboard-check"></i> Edit Attendance - ${studentName}`;
+                    }
+                    
+                    // Show student info in the display area
+                    const studentInfo = document.getElementById('attendance-student-info');
+                    if (studentInfo) {
+                        const phoneEl = document.getElementById('student-phone');
+                        const emailEl = document.getElementById('student-email');
+                        const locationEl = document.getElementById('student-location');
+                        const courseEl = document.getElementById('student-course');
+                        
+                        if (phoneEl) phoneEl.textContent = record.student_phone || record.phone || '-';
+                        if (emailEl) emailEl.textContent = record.student_email || record.email || '-';
+                        // Use location_name from the joined locations table
+                        if (locationEl) locationEl.textContent = record.location_name || record.location || '-';
+                        if (courseEl) courseEl.textContent = record.driving_course || record.computer_course || '-';
+                        
+                        studentInfo.style.display = 'block';
+                    }
+                    
+                    // Show fee details
+                    const feesInfo = document.getElementById('attendance-fees-info');
+                    if (feesInfo) {
+                        const feeAmountEl = document.getElementById('student-fee-amount');
+                        const feePaidEl = document.getElementById('student-fee-paid');
+                        const feeBalanceEl = document.getElementById('student-fee-balance');
+                        
+                        if (feeAmountEl) feeAmountEl.textContent = record.fee_amount ? 'KSh ' + parseFloat(record.fee_amount).toLocaleString() : '-';
+                        if (feePaidEl) feePaidEl.textContent = record.fee_paid ? 'KSh ' + parseFloat(record.fee_paid).toLocaleString() : '-';
+                        if (feeBalanceEl) feeBalanceEl.textContent = record.fee_balance ? 'KSh ' + parseFloat(record.fee_balance).toLocaleString() : '-';
+                        
+                        feesInfo.style.display = 'block';
+                    }
                 }
             } catch (error) {
                 showAlert('Error loading attendance: ' + error.message, 'error');
