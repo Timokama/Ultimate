@@ -5168,7 +5168,13 @@
         // Handle profile form submission
         document.getElementById('staff-profile-form')?.addEventListener('submit', async (e) => {
             e.preventDefault();
+            const user = auth.getUser();
+            if (!user || !user.id) {
+                showAlert('User not logged in', 'error');
+                return;
+            }
             const formData = {
+                user_id: user.id,
                 full_name: document.getElementById('staff-fullname').value,
                 phone: document.getElementById('staff-phone').value,
                 training_location: document.getElementById('staff-location').value,

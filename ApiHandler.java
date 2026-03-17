@@ -439,8 +439,21 @@ class AuthHandler extends ApiHandler {
             
             System.err.println("[LOGIN DEBUG] Success for user: " + email + ", role: " + role);
             
+            String trainingLocation = "";
+            if (locationId != null) {
+                try {
+                    int locId = Integer.parseInt(String.valueOf(locationId));
+                    Map<String, Object> loc = DBConnection.getLocationById(locId);
+                    if (loc != null && loc.get("name") != null) {
+                        trainingLocation = (String) loc.get("name");
+                    }
+                } catch (Exception e) {
+                    // Ignore
+                }
+            }
+            
             String json = "{\"success\": true, \"token\": \"" + token + "\", \"user\": {\"id\": " + userId + 
-                         ", \"email\": \"" + escapeJson(email) + "\", \"full_name\": \"" + escapeJson(fullName) + "\", \"role\": \"" + escapeJson(role) + "\", \"location_id\": " + (locationId != null ? locationId : "null") + "}}";
+                         ", \"email\": \"" + escapeJson(email) + "\", \"full_name\": \"" + escapeJson(fullName) + "\", \"phone\": \"" + escapeJson(phone != null ? phone : "") + "\", \"role\": \"" + escapeJson(role) + "\", \"location_id\": " + (locationId != null ? locationId : "null") + ", \"training_location\": \"" + escapeJson(trainingLocation) + "\"}}";
             sendJsonResponse(exchange, 200, json);
         } else {
             System.err.println("[LOGIN DEBUG] Invalid credentials for: " + email);
