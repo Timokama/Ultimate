@@ -515,6 +515,14 @@
                     // User is admin - show Admin Panel
                     authNavLink.innerHTML = '<i class="fas fa-cog"></i> Admin Panel';
                     authNavLink.href = 'admin.html';
+                } else if (user.role === 'staff') {
+                    // User is admin - show staff Panel
+                    authNavLink.innerHTML = '<i class="fas fa-cog"></i> Admin Panel';
+                    authNavLink.href = 'staff.html';
+                } else if (user.role === 'instructor') {
+                    // User is admin - show instructor Panel
+                    authNavLink.innerHTML = '<i class="fas fa-cog"></i> Admin Panel';
+                    authNavLink.href = 'staff.html';
                 } else {
                     // User is regular student - show Dashboard
                     authNavLink.innerHTML = '<i class="fas fa-user-circle"></i> Dashboard';

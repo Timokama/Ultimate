@@ -812,11 +812,15 @@ class AttendanceHandler extends ApiHandler implements HttpHandler {
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT a.*, u.first_name as student_first_name, u.last_name as student_last_name, ");
         sql.append("u.full_name as student_name, u.email as student_email, ");
-        sql.append("c.name as class_name, c.code as class_code, co.name as course_name ");
+        sql.append("c.name as class_name, c.code as class_code, co.name as course_name, ");
+        sql.append("COALESCE(app.school_fees, 0) + COALESCE(enr.fee_amount, 0) as fee_amount, ");
+        sql.append("COALESCE(app.fees_paid, 0) + COALESCE(enr.fee_paid, 0) as fee_paid ");
         sql.append("FROM attendance a ");
         sql.append("LEFT JOIN users u ON a.student_id = u.id ");
         sql.append("LEFT JOIN classes c ON a.class_id = c.id AND a.class_id > 0 ");
         sql.append("LEFT JOIN courses co ON c.course_id = co.id OR a.class_id < 0 ");
+        sql.append("LEFT JOIN applications app ON a.student_id = app.user_id AND app.status IN ('approved', 'enrolled') ");
+        sql.append("LEFT JOIN enrollments enr ON a.student_id = enr.student_id AND (a.class_id = enr.class_id OR a.class_id > 0) AND enr.status IN ('enrolled', 'active') ");
         sql.append("WHERE 1=1 ");
         
         if (studentIdFilter != null && !studentIdFilter.isEmpty()) {
@@ -861,11 +865,15 @@ class AttendanceHandler extends ApiHandler implements HttpHandler {
     private Map<String, Object> getAttendanceById(int attendanceId) {
         String sql = "SELECT a.*, u.first_name as student_first_name, u.last_name as student_last_name, " +
                      "u.full_name as student_name, u.email as student_email, " +
-                     "c.name as class_name, c.code as class_code, co.name as course_name " +
+                     "c.name as class_name, c.code as class_code, co.name as course_name, " +
+                     "COALESCE(app.school_fees, 0) + COALESCE(enr.fee_amount, 0) as fee_amount, " +
+                     "COALESCE(app.fees_paid, 0) + COALESCE(enr.fee_paid, 0) as fee_paid " +
                      "FROM attendance a " +
                      "LEFT JOIN users u ON a.student_id = u.id " +
                      "LEFT JOIN classes c ON a.class_id = c.id " +
                      "LEFT JOIN courses co ON c.course_id = co.id " +
+                     "LEFT JOIN applications app ON a.student_id = app.user_id AND app.status IN ('approved', 'enrolled') " +
+                     "LEFT JOIN enrollments enr ON a.student_id = enr.student_id AND (a.class_id = enr.class_id OR a.class_id > 0) AND enr.status IN ('enrolled', 'active') " +
                      "WHERE a.id = ?";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -1233,6 +1241,29 @@ class AttendanceHandler extends ApiHandler implements HttpHandler {
         } catch (SQLException e) {
             // Field not in result set
         }
+        
+        // Include fee info if available
+        try {
+            map.put("fee_amount", rs.getDouble("fee_amount"));
+        } catch (SQLException e) {
+            map.put("fee_amount", 0.0);
+        }
+        try {
+            map.put("fee_paid", rs.getDouble("fee_paid"));
+        } catch (SQLException e) {
+            map.put("fee_paid", 0.0);
+        }
+        
+        // Calculate balance
+        double feeAmount = 0.0;
+        double feePaid = 0.0;
+        try {
+            feeAmount = rs.getDouble("fee_amount");
+        } catch (SQLException e) { }
+        try {
+            feePaid = rs.getDouble("fee_paid");
+        } catch (SQLException e) { }
+        map.put("fee_balance", feeAmount - feePaid);
         
         return map;
     }

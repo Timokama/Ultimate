@@ -4111,17 +4111,24 @@
             }
             
             let html = '<table class="admin-table"><thead><tr>';
-            html += '<th>Date</th><th>Student</th><th>Course</th><th>Status</th><th>Notes</th>';
+            html += '<th>Date</th><th>Student</th><th>Course</th><th>Status</th><th>Fee</th><th>Paid</th><th>Balance</th><th>Notes</th>';
             html += '</tr></thead><tbody>';
             
             records.forEach(record => {
                 const status = record.status || 'present';
                 const displayStatus = status.charAt(0).toUpperCase() + status.slice(1);
+                const feeAmount = record.fee_amount ? parseFloat(record.fee_amount) : 0;
+                const feePaid = record.fee_paid ? parseFloat(record.fee_paid) : 0;
+                const feeBalance = record.fee_balance ? parseFloat(record.fee_balance) : (feeAmount - feePaid);
+                
                 html += '<tr>';
                 html += '<td>' + (record.date || '') + '</td>';
                 html += '<td>' + (record.student_name || record.student || 'N/A') + '</td>';
                 html += '<td>' + (record.course_name || record.course || 'N/A') + '</td>';
                 html += '<td><span class="status-badge status-' + status + '">' + displayStatus + '</span></td>';
+                html += '<td>KSh ' + feeAmount.toLocaleString() + '</td>';
+                html += '<td style="color: #10b981;">KSh ' + feePaid.toLocaleString() + '</td>';
+                html += '<td style="color: ' + (feeBalance > 0 ? '#dc2626' : '#10b981') + ';">KSh ' + feeBalance.toLocaleString() + '</td>';
                 html += '<td>' + (record.notes || '') + '</td>';
                 html += '</tr>';
             });
