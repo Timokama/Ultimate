@@ -1203,6 +1203,11 @@ class AttendanceHandler extends ApiHandler implements HttpHandler {
             // Field not in result set
         }
         try {
+            map.put("student_phone", rs.getString("student_phone"));
+        } catch (SQLException e) {
+            // Field not in result set
+        }
+        try {
             map.put("class_name", rs.getString("class_name"));
         } catch (SQLException e) {
             // Field not in result set
