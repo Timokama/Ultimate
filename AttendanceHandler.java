@@ -283,7 +283,7 @@ class AttendanceHandler extends ApiHandler implements HttpHandler {
             String startDate = queryParams.get("start_date");
             String endDate = queryParams.get("end_date");
             
-            List<Map<String, Object>> attendanceList = getAttendanceRecords(String.valueOf(userId), null, null, dateFilter, null, startDate, endDate);
+            List<Map<String, Object>> attendanceList = getAttendanceRecords(String.valueOf(userId), null, null, dateFilter, null, startDate, endDate, null, null);
             
             int total = attendanceList.size();
             int present = 0;
@@ -320,8 +320,10 @@ class AttendanceHandler extends ApiHandler implements HttpHandler {
         String statusFilter = queryParams.get("status");
         String startDate = queryParams.get("start_date");
         String endDate = queryParams.get("end_date");
+        String phoneFilter = queryParams.get("phone");
+        String nameFilter = queryParams.get("name");
 
-        List<Map<String, Object>> attendanceList = getAttendanceRecords(studentIdFilter, classIdFilter, courseIdFilter, dateFilter, statusFilter, startDate, endDate);
+        List<Map<String, Object>> attendanceList = getAttendanceRecords(studentIdFilter, classIdFilter, courseIdFilter, dateFilter, statusFilter, startDate, endDate, phoneFilter, nameFilter);
         
         // Calculate summary
         int total = attendanceList.size();
@@ -806,12 +808,12 @@ class AttendanceHandler extends ApiHandler implements HttpHandler {
      */
     private List<Map<String, Object>> getAttendanceRecords(String studentIdFilter, String classIdFilter, 
                                                             String courseIdFilter, String dateFilter, String statusFilter,
-                                                            String startDate, String endDate) {
+                                                            String startDate, String endDate, String phoneFilter, String nameFilter) {
         List<Map<String, Object>> attendanceList = new ArrayList<>();
         
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT a.*, u.first_name as student_first_name, u.last_name as student_last_name, ");
-        sql.append("u.full_name as student_name, u.email as student_email, ");
+        sql.append("u.full_name as student_name, u.email as student_email, u.phone as student_phone, ");
         sql.append("c.name as class_name, c.code as class_code, co.name as course_name, ");
         sql.append("COALESCE(app.school_fees, 0) + COALESCE(enr.fee_amount, 0) as fee_amount, ");
         sql.append("COALESCE(app.fees_paid, 0) + COALESCE(enr.fee_paid, 0) as fee_paid ");
@@ -844,6 +846,12 @@ class AttendanceHandler extends ApiHandler implements HttpHandler {
         }
         if (endDate != null && !endDate.isEmpty()) {
             sql.append("AND a.date <= '").append(endDate).append("' ");
+        }
+        if (phoneFilter != null && !phoneFilter.isEmpty()) {
+            sql.append("AND u.phone LIKE '%").append(phoneFilter).append("%' ");
+        }
+        if (nameFilter != null && !nameFilter.isEmpty()) {
+            sql.append("AND u.full_name ILIKE '%").append(nameFilter).append("%' ");
         }
         sql.append("ORDER BY a.date DESC");
         

@@ -1070,24 +1070,27 @@
                             </button>
                         </div>
                         <div class="form-bar" style="background: var(--white); padding: 20px; border-radius: 10px; margin-bottom: 20px; box-shadow: var(--shadow-sm);">
-                            <div class="form-row" style="display: flex; gap: 15px; flex-wrap: wrap;">
-                                <div class="form-group" style="flex: 1; min-width: 150px;">
-                                    <label for="attendance-date">Date</label>
-                                    <input type="date" id="attendance-date" onchange="loadAttendance()">
+                            <div class="form-row" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 15px;">
+                                <div class="form-group">
+                                    <label for="attendance-date" style="color: #1e3a5f; font-weight: 600;">Date</label>
+                                    <input type="date" id="attendance-date" onchange="loadAttendance()" style="border: 2px solid #dee2e6; border-radius: 8px; padding: 10px; width: 100%; background: #fff; color: #495057; font-size: 14px;">
                                 </div>
-                                <div class="form-group" style="flex: 1; min-width: 200px;">
-                                    <label for="attendance-course">Course</label>
-                                    <select id="attendance-course" onchange="loadAttendance()">
+                                <div class="form-group">
+                                    <label for="attendance-phone" style="color: #1e3a5f; font-weight: 600;">Phone</label>
+                                    <input type="text" id="attendance-phone" placeholder="Enter phone number..." onkeyup="loadAttendance()" style="border: 2px solid #dee2e6; border-radius: 8px; padding: 10px; width: 100%; background: #fff; color: #495057; font-size: 14px;">
+                                </div>
+                                <div class="form-group">
+                                    <label for="attendance-student" style="color: #1e3a5f; font-weight: 600;">Student Name</label>
+                                    <input type="text" id="attendance-student" placeholder="Enter student name..." onkeyup="loadAttendance()" autocomplete="off" style="border: 2px solid #dee2e6; border-radius: 8px; padding: 10px; width: 100%; background: #fff; color: #495057; font-size: 14px;">
+                                </div>
+                                <div class="form-group">
+                                    <label for="attendance-course" style="color: #1e3a5f; font-weight: 600;">Course</label>
+                                    <select id="attendance-course" onchange="loadAttendance()" style="border: 2px solid #dee2e6; border-radius: 8px; padding: 10px; width: 100%; background: #fff; color: #495057; font-size: 14px;">
                                         <option value="">All Courses</option>
                                     </select>
                                 </div>
-                                <div class="form-group" style="flex: 2; min-width: 250px;">
-                                    <label for="attendance-student">Student</label>
-                                    <input type="text" id="attendance-student" placeholder="Search student..." onkeyup="searchStudentForAttendance()" autocomplete="off">
-                                    <div id="student-search-results" style="position: absolute; background: white; border: 1px solid #ddd; border-radius: 6px; max-height: 200px; overflow-y: auto; z-index: 100; display: none; min-width: 250px; box-shadow: var(--shadow-md);"></div>
-                                </div>
                             </div>
-                            <div class="action-buttons" style="margin-top: 15px;">
+                            <div class="action-buttons">
                                 <button class="btn btn-outline" onclick="loadAttendance()">
                                     <i class="fas fa-sync-alt"></i> Refresh
                                 </button>
@@ -3513,30 +3516,43 @@
             const container = document.getElementById('attendance-list');
             if (!container) return;
             
+            container.innerHTML = '<div class="course-card" style="text-align: center; padding: 60px 20px;"><div class="course-loader"></div><p style="margin-top: 16px; color: var(--text-light);">Loading attendance...</p></div>';
+            
             const date = document.getElementById('attendance-date').value;
+            const phone = document.getElementById('attendance-phone').value;
+            const name = document.getElementById('attendance-student').value;
             const courseId = document.getElementById('attendance-course').value;
             const studentId = document.getElementById('attendance-student')?.dataset?.studentId;
             const location = staffLocation || '';
             
-            if (!date) {
-                container.innerHTML = '<p class="text-center" style="padding: 40px; color: var(--text-light);">Please select a date.</p>';
-                return;
+            // Build URL - allow loading without date
+            let url = '/api/attendance?';
+            if (date) {
+                url += 'date=' + encodeURIComponent(date) + '&';
             }
+            if (courseId) url += 'course_id=' + encodeURIComponent(courseId) + '&';
+            if (studentId) url += 'student_id=' + encodeURIComponent(studentId) + '&';
+            if (phone) url += 'phone=' + encodeURIComponent(phone) + '&';
+            if (name && !studentId) url += 'name=' + encodeURIComponent(name) + '&';
+            if (location) url += 'location=' + encodeURIComponent(location);
+            
+            // Remove trailing &
+            url = url.replace(/&$/, '');
             
             try {
-                let url = `/api/attendance?date=${encodeURIComponent(date)}`;
-                if (courseId) url += `&course_id=${encodeURIComponent(courseId)}`;
-                if (studentId) url += `&student_id=${encodeURIComponent(studentId)}`;
-                if (location) url += `&location=${encodeURIComponent(location)}`;
-                
                 const response = await fetch(url, {
                     headers: { 'Authorization': 'Bearer ' + auth.getToken() }
                 });
                 const data = await response.json();
                 
+                console.log('Attendance response:', data);
                 container.innerHTML = '';
                 
                 if (data.success && data.attendance) {
+                    if (data.attendance.length === 0) {
+                        container.innerHTML = '<p class="text-center" style="padding: 40px; color: var(--text-light);">No attendance records found.</p>';
+                        return;
+                    }
                     let tableHtml = '<table class="students-table"><thead><tr><th>Date</th><th>Student</th><th>Course</th><th>Status</th><th>Fee</th><th>Paid</th><th>Balance</th><th>Actions</th></tr></thead><tbody>';
                     
                     data.attendance.forEach(record => {
@@ -4014,7 +4030,9 @@
                     results.innerHTML = '';
                     filtered.forEach(student => {
                         const div = document.createElement('div');
-                        div.style.cssText = 'padding: 10px; cursor: pointer; border-bottom: 1px solid #eee;';
+                        div.style.cssText = 'padding: 12px; cursor: pointer; border-bottom: 1px solid #eee; color: #1e3a5f; font-size: 14px;';
+                        div.onmouseover = function() { this.style.backgroundColor = '#f0f4f8'; };
+                        div.onmouseout = function() { this.style.backgroundColor = '#fff'; };
                         div.textContent = `${student.first_name} ${student.last_name}`;
                         div.onclick = () => {
                             document.getElementById('attendance-student').value = `${student.first_name} ${student.last_name}`;
