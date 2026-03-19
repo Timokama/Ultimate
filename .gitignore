@@ -30,3 +30,6 @@ __pycache__/
 # Backup files
 *_backup.sql
 *.bak
+
+# IDE files
+.idea/
