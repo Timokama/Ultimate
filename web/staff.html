@@ -3058,8 +3058,12 @@
             
             container.innerHTML = '<div class="course-card" style="text-align: center; padding: 60px 20px;"><div class="course-loader"></div><p style="margin-top: 16px; color: var(--text-light);">Loading classes...</p></div>';
             
+            // Get staff location for filtering
+            const location = staffLocation || '';
+            const url = location ? `/api/classes?location=${encodeURIComponent(location)}` : '/api/classes';
+            
             try {
-                const response = await fetch('/api/classes', {
+                const response = await fetch(url, {
                     headers: { 'Authorization': 'Bearer ' + auth.getToken() }
                 });
                 const data = await response.json();
@@ -3444,8 +3448,12 @@
             
             container.innerHTML = '<div class="course-card" style="text-align: center; padding: 60px 20px;"><div class="course-loader"></div><p style="margin-top: 16px; color: var(--text-light);">Loading departments...</p></div>';
             
+            // Get staff location for filtering
+            const location = staffLocation || '';
+            const url = location ? `/api/departments?location=${encodeURIComponent(location)}` : '/api/departments';
+            
             try {
-                const response = await fetch('/api/departments', {
+                const response = await fetch(url, {
                     headers: { 'Authorization': 'Bearer ' + auth.getToken() }
                 });
                 const data = await response.json();

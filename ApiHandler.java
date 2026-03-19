@@ -1749,7 +1749,25 @@ class DepartmentHandler extends ApiHandler {
     }
     
     private void handleGetDepartments(HttpExchange exchange) throws IOException {
-        List<Map<String, Object>> departments = DBConnection.getAllDepartments();
+        // Check for location parameter
+        String query = exchange.getRequestURI().getQuery();
+        String location = null;
+        if (query != null && query.contains("location=")) {
+            String[] params = query.split("&");
+            for (String param : params) {
+                if (param.startsWith("location=")) {
+                    location = param.substring("location=".length());
+                    break;
+                }
+            }
+        }
+        
+        List<Map<String, Object>> departments;
+        if (location != null && !location.isEmpty()) {
+            departments = DBConnection.getDepartmentsByLocation(location);
+        } else {
+            departments = DBConnection.getAllDepartments();
+        }
         
         StringBuilder json = new StringBuilder("{\"success\": true, \"departments\": [");
         for (int i = 0; i < departments.size(); i++) {

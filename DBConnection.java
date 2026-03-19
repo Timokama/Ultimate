@@ -147,6 +147,32 @@ public class DBConnection {
         return departments;
     }
     
+    public static List<Map<String, Object>> getDepartmentsByLocation(String location) {
+        List<Map<String, Object>> departments = new ArrayList<>();
+        // Try to match by location_id (if location is a number) or by location name
+        String sql = "SELECT d.* FROM departments d " +
+                     "LEFT JOIN locations l ON d.location_id = l.id " +
+                     "WHERE d.is_active = true AND (l.name ILIKE ? OR l.id::text = ? OR d.location_id = ?) " +
+                     "ORDER BY d.name";
+        try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
+            stmt.setString(1, "%" + location + "%");
+            stmt.setString(2, location);
+            // Try to parse location as integer for location_id
+            try {
+                stmt.setInt(3, Integer.parseInt(location));
+            } catch (NumberFormatException e) {
+                stmt.setNull(3, Types.INTEGER);
+            }
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                departments.add(mapDepartment(rs));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return departments;
+    }
+    
     private static Map<String, Object> mapDepartment(ResultSet rs) throws SQLException {
         Map<String, Object> dept = new HashMap<>();
         dept.put("id", rs.getInt("id"));
