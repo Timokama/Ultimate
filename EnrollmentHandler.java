@@ -614,7 +614,7 @@ class EnrollmentHandler extends ApiHandler implements HttpHandler {
         List<Map<String, Object>> enrollments = new ArrayList<>();
         
         StringBuilder sql = new StringBuilder();
-        sql.append("SELECT e.*, u.first_name as student_first_name, u.last_name as student_last_name, u.email as student_email, ");
+        sql.append("SELECT e.*, u.first_name as student_first_name, u.last_name as student_last_name, u.email as student_email, u.phone as student_phone, ");
         sql.append("c.name as course_name, c.code as course_code, c.duration_hours, c.price ");
         sql.append("FROM enrollments e ");
         sql.append("LEFT JOIN users u ON e.student_id = u.id ");
@@ -707,7 +707,7 @@ class EnrollmentHandler extends ApiHandler implements HttpHandler {
      * Get enrollment by ID
      */
     private Map<String, Object> getEnrollmentById(int enrollmentId) {
-        String sql = "SELECT e.*, u.first_name as student_first_name, u.last_name as student_last_name, u.email as student_email, " +
+        String sql = "SELECT e.*, u.first_name as student_first_name, u.last_name as student_last_name, u.email as student_email, u.phone as student_phone, " +
                      "c.name as course_name, c.code as course_code, c.duration_hours, c.price, " +
                      "cl.name as class_name, cl.code as class_code " +
                      "FROM enrollments e " +
@@ -971,6 +971,7 @@ class EnrollmentHandler extends ApiHandler implements HttpHandler {
             enrollment.put("student_last_name", lastName);
             enrollment.put("student_name", (firstName != null ? firstName : "") + " " + (lastName != null ? lastName : ""));
             enrollment.put("student_email", rs.getString("student_email"));
+            enrollment.put("student_phone", rs.getString("student_phone"));
         } catch (SQLException e) {
             // Student info not available in this query
         }

@@ -2960,7 +2960,7 @@
                     // Store students data globally for edit function
                     window.allStudentsData = students;
                     
-                    let tableHtml = '<table class="students-table"><thead><tr><th>Student</th><th>Email</th><th>Phone</th><th>Role</th><th>Location</th><th>Status</th><th>Actions</th></tr></thead><tbody>';
+                    let tableHtml = '<table class="students-table"><thead><tr><th>Student</th><th>Email</th><th>Phone</th><th>Location</th><th>Status</th><th>Actions</th></tr></thead><tbody>';
                     
                     students.forEach(student => {
                         const studentName = student.first_name && student.last_name ? `${student.first_name} ${student.last_name}` : student.full_name || student.name || 'Unknown';
@@ -2973,7 +2973,6 @@
                                 <td data-label="Student"><strong>${studentName}</strong></td>
                                 <td data-label="Email">${student.email || 'N/A'}</td>
                                 <td data-label="Phone">${student.phone || 'N/A'}</td>
-                                <td data-label="Role"><span class="badge">${studentRole}</span></td>
                                 <td data-label="Location">${studentLocation}</td>
                                 <td data-label="Status"><span class="${studentStatus === 'active' ? 'payment-paid' : 'payment-unpaid'}">${studentStatus}</span></td>
                                 <td data-label="Actions">
