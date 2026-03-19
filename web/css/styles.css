@@ -1783,6 +1783,14 @@ h4 { font-size: 1.25rem; }
         overflow-y: auto;
     }
     
+    /* Read-only field styling */
+    .readonly-field {
+        background-color: #f3f4f6 !important;
+        color: #6b7280 !important;
+        cursor: not-allowed !important;
+        border-color: #d1d5db !important;
+    }
+    
     .stats-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 12px;

@@ -1011,8 +1011,21 @@ class StaffHandler extends ApiHandler implements HttpHandler {
             String token = getTokenFromHeader(exchange);
             String role = JWTUtil.getRole(token);
             
-            // Get all users except admin
-            List<Map<String, Object>> students = DBConnection.getStudentsWithEnrollmentsForAttendance(null);
+            // Parse query parameters for location filter
+            String query = exchange.getRequestURI().getQuery();
+            String location = null;
+            if (query != null && query.contains("location=")) {
+                String[] params = query.split("&");
+                for (String param : params) {
+                    if (param.startsWith("location=")) {
+                        location = java.net.URLDecoder.decode(param.split("=")[1], "UTF-8");
+                        break;
+                    }
+                }
+            }
+            
+            // Get all users except admin, filtered by location if provided
+            List<Map<String, Object>> students = DBConnection.getStudentsWithEnrollmentsForAttendance(location);
             
             String json = "{\"success\": true, \"students\": " + listToJsonMaps(students) + ", " +
                          "\"count\": " + students.size() + "}";

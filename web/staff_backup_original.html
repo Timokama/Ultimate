@@ -28,154 +28,10 @@
             font-size: 0.65rem;
             font-weight: 500;
             color: rgba(255,255,255,0.9);
-        }
-        /* Modal Responsive Styles */
-        @media (max-width: 768px) {
-            .modal-content {
-                width: 95% !important;
-                max-width: 95% !important;
-                margin: 10px !important;
-                border-radius: 12px !important;
-            }
-            .modal-content .modal-body {
-                padding: 15px !important;
-                max-height: 75vh !important;
-                overflow-y: auto !important;
-            }
-            .modal-content .form-row {
-                grid-template-columns: 1fr !important;
-            }
-            .modal-content .attendance-form-section {
-                padding: 12px !important;
-                margin-bottom: 12px !important;
-            }
-            .modal-content h4 {
-                font-size: 14px !important;
-            }
-            .modal-content select,
-            .modal-content input,
-            .modal-content textarea {
-                padding: 8px !important;
-                font-size: 13px !important;
-            }
-            .modal-content .modal-header {
-                padding: 12px 15px !important;
-            }
-            .modal-content .modal-header h3 {
-                font-size: 16px !important;
-            }
-        }
-        @media (max-width: 480px) {
-            .modal-content {
-                width: 100% !important;
-                max-width: 100% !important;
-                margin: 0 !important;
-                border-radius: 0 !important;
-                height: 100% !important;
-                max-height: 100% !important;
-                position: fixed !important;
-                top: 0 !important;
-                left: 0 !important;
-                right: 0 !important;
-                bottom: 0 !important;
-            }
-            .modal-content .modal-body {
-                max-height: calc(100vh - 60px) !important;
-                overflow-y: auto !important;
-            }
-        }
-        /* Modal display */
-        .modal {
-            display: none;
-        }
-        .modal.show {
-            display: flex !important;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
         
-        /* Responsive Modal Styles for Desktop and Mobile */
-        @media (min-width: 769px) {
-            .modal {
-                align-items: center;
-                justify-content: center;
-            }
-            .modal-content {
-                max-width: 800px;
-                width: 95%;
-                margin: 5vh auto;
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .modal {
-                align-items: flex-start;
-                justify-content: center;
-                padding: 10px;
-                overflow-y: auto;
-            }
-            .modal-content {
-                width: 95% !important;
-                max-width: 95%;
-                margin: 10px auto;
-                max-height: 90vh;
-            }
-            .modal-body {
-                padding: 15px !important;
-                max-height: calc(90vh - 120px) !important;
-                overflow-y: auto;
-            }
-            .form-row {
-                grid-template-columns: 1fr !important;
-            }
-            .modal-header {
-                padding: 12px 15px !important;
-            }
-            .modal-header h3 {
-                font-size: 16px !important;
-            }
-            .modal-close {
-                width: 28px !important;
-                height: 28px !important;
-                font-size: 18px !important;
-            }
-            .modal-footer {
-                flex-direction: column;
-                gap: 8px !important;
-            }
-            .modal-footer button {
-                width: 100%;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .modal-content {
-                width: 100% !important;
-                max-width: 100%;
-                margin: 5px auto;
-                border-radius: 8px !important;
-            }
-            .modal-header {
-                padding: 10px 12px !important;
-            }
-            .modal-body {
-                padding: 12px !important;
-            }
-            .attendance-form-section,
-            .enrollment-form-section {
-                padding: 12px !important;
-            }
-        }
-        
-        /* Desktop specific modal fixes */
-        @media (min-width: 992px) {
-            .modal-content {
-                max-width: 800px;
-            }
-            .modal-body {
-                max-height: 70vh;
-                overflow-y: auto;
-            }
-        }
-
         /* Modal Styles */
         .modal {
             display: none;
@@ -249,18 +105,23 @@
             position: fixed;
             bottom: 20px;
             right: 20px;
-            width: 50px;
-            height: 50px;
+            width: 56px;
+            height: 56px;
             border-radius: 50%;
             background: var(--primary-color);
             color: white;
             border: none;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.25);
             z-index: 1001;
             cursor: pointer;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
+            font-size: 22px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .sidebar-toggle-btn:active {
+            transform: scale(0.95);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
         }
         .sidebar-overlay {
             display: none;
@@ -269,11 +130,10 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(3px);
+            background: rgba(0,0,0,0.5);
             z-index: 999;
             opacity: 0;
-            transition: opacity 0.35s ease;
+            transition: opacity 0.3s ease;
         }
         .sidebar-overlay.show {
             display: block;
@@ -282,71 +142,6 @@
         
         /* Mobile Navigation */
         @media (max-width: 992px) {
-            .modal {
-                padding: 10px;
-                align-items: flex-end;
-            }
-            .modal-content {
-                max-width: 100%;
-                max-height: 90vh;
-                border-radius: 16px 16px 0 0;
-                width: 100%;
-            }
-            .modal-header {
-                padding: 14px 16px;
-                flex-wrap: wrap;
-                gap: 10px;
-            }
-            .modal-header h3 {
-                font-size: 1rem;
-                flex: 1;
-            }
-            .modal-close {
-                font-size: 24px;
-                padding: 4px;
-            }
-            .modal-body {
-                padding: 16px;
-                max-height: 60vh;
-                overflow-y: auto;
-            }
-            .modal-footer {
-                padding: 12px 16px;
-                flex-direction: row;
-                flex-wrap: wrap;
-                gap: 8px;
-            }
-            .modal-footer .btn {
-                flex: 1 1 auto;
-                min-width: 100px;
-                justify-content: center;
-            }
-            /* Make form elements full width in modals */
-            .modal-content .form-group,
-            .modal-content .form-row > div {
-                width: 100%;
-                flex: 100%;
-            }
-            .modal-content select,
-            .modal-content input,
-            .modal-content textarea {
-                width: 100%;
-                font-size: 14px;
-                padding: 10px 12px;
-            }
-            /* Tab styling in modals */
-            .edit-tabs {
-                flex-wrap: wrap;
-            }
-            .edit-tabs button {
-                flex: 1 1 auto;
-                min-width: 80px;
-                padding: 10px 8px;
-                font-size: 13px;
-            }
-        }
-        
-        @media (max-width: 480px) {
             .navbar .container {
                 flex-wrap: wrap;
                 padding: 10px 15px;
@@ -368,113 +163,54 @@
             
             .sidebar {
                 position: fixed;
-                left: -280px;
-                top: 70px;
-                width: 280px;
-                height: calc(100vh - 70px);
+                left: -100%;
+                top: 0;
+                width: 85%;
+                max-width: 320px;
+                height: 100vh;
                 background: var(--white);
                 z-index: 1000;
                 transition: left 0.3s ease;
-                box-shadow: 4px 0 15px rgba(0,0,0,0.1);
+                box-shadow: 4px 0 20px rgba(0,0,0,0.15);
                 overflow-y: auto;
+                padding-bottom: 80px;
             }
             .sidebar.mobile-open {
                 left: 0;
             }
             
-            .sidebar-overlay {
-                display: none;
-                position: fixed;
-                top: 70px;
-                left: 0;
-                width: 100%;
-                height: calc(100vh - 70px);
-                background: rgba(0,0,0,0.5);
-                z-index: 999;
-            }
-            .sidebar-overlay.show {
-                display: block;
-            }
-            
             .sidebar-user-info {
-                padding: 25px 20px;
-                background: linear-gradient(135deg, #1e3a5f, #2d5a87);
+                padding: 20px;
+                background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
                 color: white;
                 text-align: center;
-                position: relative;
-            }
-            .sidebar-user-info::after {
-                content: '';
-                position: absolute;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                height: 30px;
-                background: linear-gradient(to top, rgba(0,0,0,0.1), transparent);
             }
             .sidebar-user-info #user-avatar {
-                width: 75px;
-                height: 75px;
-                font-size: 2rem;
-                background: linear-gradient(135deg, #10b981, #059669);
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                margin: 0 auto 15px;
-                color: white;
-                font-weight: bold;
-                box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-                border: 3px solid rgba(255,255,255,0.3);
+                width: 70px;
+                height: 70px;
+                font-size: 1.8rem;
+                background: rgba(255,255,255,0.2);
             }
             .sidebar-user-info #user-name {
                 color: white;
-                font-size: 1.15rem;
-                font-weight: 600;
+                font-size: 1.1rem;
             }
             .sidebar-user-info #user-email {
-                color: rgba(255,255,255,0.75);
+                color: rgba(255,255,255,0.8);
                 font-size: 0.85rem;
-                margin-top: 5px;
-            }
-            .sidebar-user-info #user-role {
-                color: #10b981;
-                font-size: 0.75rem;
-                text-transform: uppercase;
-                letter-spacing: 1px;
-                margin-top: 8px;
-                font-weight: 600;
             }
             
             .sidebar-menu {
-                padding: 15px 0;
+                padding: 10px 0;
             }
             .sidebar-menu li a {
                 display: flex;
                 align-items: center;
-                padding: 16px 25px;
+                padding: 14px 20px;
                 color: var(--text-color);
                 text-decoration: none;
-                transition: all 0.25s ease;
+                transition: all 0.2s ease;
                 border-left: 3px solid transparent;
-                font-size: 0.95rem;
-            }
-            .sidebar-menu li a:hover {
-                background: var(--bg-light);
-                color: var(--primary-color);
-                padding-left: 30px;
-            }
-            .sidebar-menu li a.active {
-                background: rgba(16, 185, 129, 0.1);
-                color: var(--primary-color);
-                border-left-color: #10b981;
-                font-weight: 500;
-            }
-            .sidebar-menu li a i {
-                width: 25px;
-                font-size: 1.1rem;
-                text-align: center;
-                margin-right: 12px;
             }
             .sidebar-menu li a:hover {
                 background: var(--bg-light);
@@ -509,6 +245,7 @@
                 font-size: 0.9rem;
                 color: var(--text-light);
             }
+        }
         
         /* Mobile Stats Grid */
         @media (max-width: 768px) {
@@ -676,35 +413,6 @@
                 font-size: 0.7rem;
             }
             
-            /* Small Mobile Modal Styles */
-            .modal {
-                padding: 5px;
-            }
-            .modal-content {
-                border-radius: 12px 12px 0 0;
-                max-height: 95vh;
-            }
-            .modal-header {
-                padding: 12px;
-            }
-            .modal-header h3 {
-                font-size: 0.95rem;
-            }
-            .modal-close {
-                font-size: 22px;
-            }
-            .modal-body {
-                padding: 12px;
-                max-height: 65vh;
-            }
-            .modal-footer {
-                padding: 10px 12px;
-            }
-            .modal-footer .btn {
-                padding: 10px 12px;
-                font-size: 13px;
-            }
-            
             .sidebar {
                 width: 90%;
                 max-width: 300px;
@@ -725,128 +433,6 @@
             .logo-image {
                 width: 40px;
                 height: 40px;
-            }
-        }
-        
-        /* Desktop Sidebar - visible on desktop screens (992px and above) */
-        @media (min-width: 992px) {
-            .dashboard-grid {
-                display: grid;
-                grid-template-columns: 280px 1fr;
-                min-height: 100vh;
-                padding-top: 70px;
-            }
-            
-            .sidebar {
-                position: fixed;
-                left: 0;
-                top: 70px;
-                width: 280px;
-                height: calc(100vh - 70px);
-                background: linear-gradient(180deg, #1e3a5f 0%, #2d5a87 100%);
-                z-index: 999;
-                box-shadow: 2px 0 10px rgba(0,0,0,0.1);
-                overflow-y: auto;
-            }
-            
-            .sidebar::-webkit-scrollbar {
-                width: 6px;
-            }
-            .sidebar::-webkit-scrollbar-track {
-                background: rgba(0,0,0,0.1);
-            }
-            .sidebar::-webkit-scrollbar-thumb {
-                background: rgba(255,255,255,0.2);
-                border-radius: 3px;
-            }
-            
-            .sidebar .sidebar-user-info {
-                padding: 25px 20px;
-                text-align: center;
-                background: rgba(0,0,0,0.15);
-                border-bottom: 1px solid rgba(255,255,255,0.1);
-            }
-            
-            .sidebar #user-avatar {
-                width: 80px;
-                height: 80px;
-                border-radius: 50%;
-                background: linear-gradient(135deg, #10b981, #059669);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                margin: 0 auto 15px;
-                font-size: 2rem;
-                font-weight: bold;
-                color: white;
-                box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-                border: 3px solid rgba(255,255,255,0.2);
-            }
-            
-            .sidebar #user-name {
-                color: white;
-                font-size: 1.1rem;
-                font-weight: 600;
-                margin-bottom: 5px;
-            }
-            
-            .sidebar #user-role {
-                color: rgba(255,255,255,0.7);
-                font-size: 0.8rem;
-                text-transform: uppercase;
-                letter-spacing: 1px;
-            }
-            
-            .sidebar #user-email {
-                color: rgba(255,255,255,0.6);
-                font-size: 0.85rem;
-                margin-top: 8px;
-            }
-            
-            .sidebar .sidebar-menu {
-                list-style: none;
-                padding: 15px 0;
-                margin: 0;
-            }
-            
-            .sidebar .sidebar-menu li a {
-                display: flex;
-                align-items: center;
-                padding: 14px 25px;
-                color: rgba(255,255,255,0.75);
-                text-decoration: none;
-                transition: all 0.25s ease;
-                border-left: 3px solid transparent;
-                font-size: 0.95rem;
-            }
-            
-            .sidebar .sidebar-menu li a:hover {
-                background: rgba(255,255,255,0.1);
-                color: white;
-                padding-left: 30px;
-            }
-            
-            .sidebar .sidebar-menu li a.active {
-                background: rgba(255,255,255,0.15);
-                color: white;
-                border-left-color: #10b981;
-                font-weight: 500;
-            }
-            
-            .sidebar .sidebar-menu li a i {
-                width: 30px;
-                font-size: 1.1rem;
-                text-align: center;
-            }
-            
-            .dashboard-content {
-                margin-left: 280px;
-                padding: 25px;
-            }
-            
-            .sidebar-toggle-btn,
-            .sidebar-overlay {
-                display: none !important;
             }
         }
     </style>
@@ -916,51 +502,31 @@
                 <main class="dashboard-content">
                     <!-- Overview Section -->
                     <div id="section-overview" class="admin-section">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; background: linear-gradient(135deg, #1e3a5f 0%, #2d5a87 100%); padding: 20px 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(30, 58, 95, 0.3);">
-                            <div>
-                                <h2 style="margin: 0; color: #fff; font-size: 24px; font-weight: 600;">Dashboard Overview</h2>
-                                <p style="margin: 5px 0 0 0; color: rgba(255,255,255,0.7); font-size: 13px;">Summary of your training location</p>
-                            </div>
-                            <button class="btn btn-primary" onclick="loadStaffOverview()" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);">
-                                <i class="fas fa-sync-alt"></i> Refresh
-                            </button>
-                        </div>
+                        <h2 style="margin-bottom: 20px;">Overview</h2>
                         <div class="stats-grid">
                             <div class="stat-card">
                                 <h3 id="staff-total-applicants">0</h3>
                                 <p>Total Applicants</p>
                             </div>
-                            <div class="stat-card" style="background: linear-gradient(135deg, #6366f1, #4f46e5);">
-                                <h3 id="staff-total-enrollments">0</h3>
-                                <p>Total Enrollments</p>
-                            </div>
-                            <div class="stat-card" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+                            <div class="stat-card">
                                 <h3 id="staff-pending-applicants">0</h3>
                                 <p>Pending Approval</p>
                             </div>
-                            <div class="stat-card" style="background: linear-gradient(135deg, #10b981, #059669);">
+                            <div class="stat-card">
                                 <h3 id="staff-approved-applicants">0</h3>
                                 <p>Approved</p>
                             </div>
-                            <div class="stat-card" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
-                                <h3 id="staff-active-students">0</h3>
-                                <p>Active Students</p>
-                            </div>
-                            <div class="stat-card" style="background: linear-gradient(135deg, #ec4899, #db2777);">
-                                <h3 id="staff-enrollment-completed">0</h3>
-                                <p>Completed</p>
-                            </div>
-                            <div class="stat-card" style="background: linear-gradient(135deg, #3b82f6, #2563eb);">
+                            <div class="stat-card">
                                 <h3 id="staff-total-fees">0</h3>
                                 <p>Total Fees (KSh)</p>
                             </div>
-                            <div class="stat-card" style="background: linear-gradient(135deg, #22c55e, #16a34a);">
+                            <div class="stat-card">
                                 <h3 id="staff-total-paid">0</h3>
                                 <p>Total Paid (KSh)</p>
                             </div>
-                            <div class="stat-card" style="background: linear-gradient(135deg, #ef4444, #dc2626);">
-                                <h3 id="staff-total-balance">0</h3>
-                                <p>Total Balance (KSh)</p>
+                            <div class="stat-card">
+                                <h3 id="staff-total-students">0</h3>
+                                <p>Total Students</p>
                             </div>
                         </div>
                     </div>
@@ -991,67 +557,35 @@
                     
                     <!-- Students Section -->
                     <div id="section-students" class="admin-section" style="display: none;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; background: linear-gradient(135deg, #1e3a5f 0%, #2d5a87 100%); padding: 20px 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(30, 58, 95, 0.3);">
-                            <div>
-                                <h2 style="margin: 0; color: #fff; font-size: 24px; font-weight: 600;">Students Management</h2>
-                                <p style="margin: 5px 0 0 0; color: rgba(255,255,255,0.7); font-size: 13px;">Manage applicants and students at your training location</p>
-                            </div>
-                            <button class="btn btn-primary" onclick="openStudentModal()" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);">
-                                <i class="fas fa-plus"></i> Add Student
-                            </button>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                            <h2 style="margin: 0;">Students</h2>
                         </div>
                         
                         <!-- Stats Cards for Students -->
-                        <div class="stats-grid" style="margin-bottom: 30px;">
+                        <div class="stats-grid" style="margin-bottom: 20px;">
                             <div class="stat-card">
-                                <h3 id="students-total-students">0</h3>
+                                <h3 id="staff-total-students">0</h3>
                                 <p>Total Students</p>
                             </div>
-                            <div class="stat-card" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
-                                <h3 id="students-pending-students">0</h3>
-                                <p>Pending</p>
-                            </div>
-                            <div class="stat-card" style="background: linear-gradient(135deg, #10b981, #059669);">
-                                <h3 id="students-active-students">0</h3>
+                            <div class="stat-card">
+                                <h3 id="staff-active-students">0</h3>
                                 <p>Active</p>
                             </div>
-                            <div class="stat-card" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
-                                <h3 id="students-completed-students">0</h3>
+                            <div class="stat-card">
+                                <h3 id="staff-pending-students">0</h3>
+                                <p>Pending</p>
+                            </div>
+                            <div class="stat-card">
+                                <h3 id="staff-completed-students">0</h3>
                                 <p>Completed</p>
-                            </div>
-                            <div class="stat-card" style="background: linear-gradient(135deg, #3b82f6, #2563eb);">
-                                <h3 id="students-total-fees">0</h3>
-                                <p>Total Fees</p>
-                            </div>
-                            <div class="stat-card" style="background: linear-gradient(135deg, #22c55e, #16a34a);">
-                                <h3 id="students-total-paid">0</h3>
-                                <p>Total Paid</p>
-                            </div>
-                            <div class="stat-card" style="background: linear-gradient(135deg, #ef4444, #dc2626);">
-                                <h3 id="students-total-balance">0</h3>
-                                <p>Total Balance</p>
                             </div>
                         </div>
                         
-                        <!-- Filters -->
-                        <div style="margin-bottom: 25px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); padding: 15px 20px; border-radius: 10px; border-left: 4px solid #3d7ab5;">
-                            <span style="color: #1e3a5f; font-weight: 600; margin-right: 10px;"><i class="fas fa-filter"></i> Filter:</span>
-                            <input type="text" id="student-search" onkeyup="loadStudents()" placeholder="Search students..." style="padding: 10px 14px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 14px; min-width: 200px;">
-                            <select id="student-category-filter" onchange="loadStudents()" style="padding: 10px 14px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 14px; min-width: 150px;">
-                                <option value="">All Categories</option>
-                                <option value="driving">Driving Courses</option>
-                                <option value="computer">Computer Courses</option>
+                        <div class="filter-bar" style="margin-bottom: 20px; display: flex; gap: 12px; flex-wrap: wrap;">
+                            <select id="location-filter" onchange="filterByLocation()" style="padding: 10px; border-radius: 6px; border: 1px solid #ddd; min-width: 200px;">
+                                <option value="">Loading locations...</option>
                             </select>
-                            <select id="student-status-filter" onchange="loadStudents()" style="padding: 10px 14px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 14px; min-width: 150px;">
-                                <option value="">All Status</option>
-                                <option value="active">Active</option>
-                                <option value="pending">Pending</option>
-                                <option value="completed">Completed</option>
-                            </select>
-                            <select id="location-filter" onchange="loadStudents()" style="padding: 10px 14px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 14px; min-width: 180px;">
-                                <option value="">All Locations</option>
-                            </select>
-                            <button class="btn btn-primary" onclick="loadStudents()" style="padding: 10px 20px;">
+                            <button class="btn btn-primary" onclick="loadStudents()">
                                 <i class="fas fa-sync-alt"></i> Refresh
                             </button>
                         </div>
@@ -1060,14 +594,8 @@
                     
                     <!-- Attendance Section -->
                     <div id="section-attendance" class="admin-section" style="display: none;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; background: linear-gradient(135deg, #1e3a5f 0%, #2d5a87 100%); padding: 20px 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(30, 58, 95, 0.3);">
-                            <div>
-                                <h2 style="margin: 0; color: #fff; font-size: 24px; font-weight: 600;">Attendance Management</h2>
-                                <p style="margin: 5px 0 0 0; color: rgba(255,255,255,0.7); font-size: 13px;">Track student attendance and participation</p>
-                            </div>
-                            <button class="btn btn-primary" onclick="openAttendanceModal()" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);">
-                                <i class="fas fa-plus"></i> Add Attendance
-                            </button>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                            <h2 style="margin: 0;">Attendance Management</h2>
                         </div>
                         <div class="form-bar" style="background: var(--white); padding: 20px; border-radius: 10px; margin-bottom: 20px; box-shadow: var(--shadow-sm);">
                             <div class="form-row" style="display: flex; gap: 15px; flex-wrap: wrap;">
@@ -1088,6 +616,9 @@
                                 </div>
                             </div>
                             <div class="action-buttons" style="margin-top: 15px;">
+                                <button class="btn btn-primary" onclick="openAttendanceModal()">
+                                    <i class="fas fa-plus"></i> Add Attendance
+                                </button>
                                 <button class="btn btn-outline" onclick="loadAttendance()">
                                     <i class="fas fa-sync-alt"></i> Refresh
                                 </button>
@@ -1098,81 +629,45 @@
                     
                     <!-- Enrollment Section -->
                     <div id="section-enrollment" class="admin-section" style="display: none;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; background: linear-gradient(135deg, #1e3a5f 0%, #2d5a87 100%); padding: 20px 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(30, 58, 95, 0.3);">
-                            <div>
-                                <h2 style="margin: 0; color: #fff; font-size: 24px; font-weight: 600;">Enrollment Management</h2>
-                                <p style="margin: 5px 0 0 0; color: rgba(255,255,255,0.7); font-size: 13px;">Manage student enrollments and track progress</p>
-                            </div>
-                            <button class="btn btn-primary" onclick="openEnrollmentModal()" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);">
-                                <i class="fas fa-plus"></i> New Enrollment
-                            </button>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                            <h2 style="margin: 0;">Enrollment Management</h2>
                         </div>
-                        
-                        <!-- Stats Grid -->
-                        <div class="stats-grid" style="margin-bottom: 30px;">
-                            <div class="stat-card">
-                                <h3 id="staff-enrollment-total">0</h3>
-                                <p>Total Enrollments</p>
+                        <div class="form-bar" style="background: var(--white); padding: 20px; border-radius: 10px; margin-bottom: 20px; box-shadow: var(--shadow-sm);">
+                            <div class="form-row" style="display: flex; gap: 15px; flex-wrap: wrap;">
+                                <div class="form-group" style="flex: 1; min-width: 200px;">
+                                    <label for="enrollment-student">Student</label>
+                                    <select id="enrollment-student">
+                                        <option value="">Select Student</option>
+                                    </select>
+                                </div>
+                                <div class="form-group" style="flex: 1; min-width: 200px;">
+                                    <label for="enrollment-course">Course</label>
+                                    <select id="enrollment-course">
+                                        <option value="">Select Course</option>
+                                    </select>
+                                </div>
+                                <div class="form-group" style="flex: 1; min-width: 150px;">
+                                    <label for="enrollment-status">Status</label>
+                                    <select id="enrollment-status" onchange="loadEnrollments()">
+                                        <option value="">All Status</option>
+                                        <option value="pending">Pending</option>
+                                        <option value="approved">Approved</option>
+                                        <option value="rejected">Rejected</option>
+                                        <option value="active">Active</option>
+                                        <option value="completed">Completed</option>
+                                    </select>
+                                </div>
                             </div>
-                            <div class="stat-card" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
-                                <h3 id="staff-enrollment-pending">0</h3>
-                                <p>Pending</p>
-                            </div>
-                            <div class="stat-card" style="background: linear-gradient(135deg, #10b981, #059669);">
-                                <h3 id="staff-enrollment-active">0</h3>
-                                <p>Active</p>
-                            </div>
-                            <div class="stat-card" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
-                                <h3 id="staff-enrollment-completed">0</h3>
-                                <p>Completed</p>
-                            </div>
-                            <div class="stat-card" style="background: linear-gradient(135deg, #3b82f6, #2563eb);">
-                                <h3 id="staff-enrollment-fees">0</h3>
-                                <p>Total Fees</p>
-                            </div>
-                            <div class="stat-card" style="background: linear-gradient(135deg, #22c55e, #16a34a);">
-                                <h3 id="staff-enrollment-paid">0</h3>
-                                <p>Total Paid</p>
-                            </div>
-                            <div class="stat-card" style="background: linear-gradient(135deg, #ef4444, #dc2626);">
-                                <h3 id="staff-enrollment-balance">0</h3>
-                                <p>Total Balance</p>
+                            <div class="action-buttons" style="margin-top: 15px;">
+                                <button class="btn btn-primary" onclick="openEnrollmentModal()">
+                                    <i class="fas fa-plus"></i> Add Enrollment
+                                </button>
+                                <button class="btn btn-outline" onclick="loadEnrollments()">
+                                    <i class="fas fa-sync-alt"></i> Refresh
+                                </button>
                             </div>
                         </div>
-                        
-                        <!-- Filters -->
-                        <div style="margin-bottom: 25px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); padding: 15px 20px; border-radius: 10px; border-left: 4px solid #3d7ab5;">
-                            <span style="color: #1e3a5f; font-weight: 600; margin-right: 10px;"><i class="fas fa-filter"></i> Filter:</span>
-                            <input type="text" id="enrollment-search" onkeyup="loadEnrollments()" placeholder="Search enrollments..." style="padding: 10px 14px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 14px; min-width: 200px;">
-                            <select id="enrollment-category-filter" onchange="loadEnrollments()" style="padding: 10px 14px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 14px; min-width: 150px;">
-                                <option value="">All Categories</option>
-                                <option value="driving">Driving Courses</option>
-                                <option value="computer">Computer Courses</option>
-                            </select>
-                            <select id="enrollment-status-filter" onchange="loadEnrollments()" style="padding: 10px 14px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 14px; min-width: 150px;">
-                                <option value="">All Status</option>
-                                <option value="enrolled">Enrolled</option>
-                                <option value="active">Active</option>
-                                <option value="completed">Completed</option>
-                                <option value="dropped">Dropped</option>
-                                <option value="suspended">Suspended</option>
-                            </select>
-                            <button onclick="loadEnrollments()" class="btn btn-small" style="background: #3d7ab5; color: white; border: none;"><i class="fas fa-sync-alt"></i> Refresh</button>
-                            <!-- View Toggle -->
-                            <div style="display: flex; align-items: center; gap: 8px; margin-left: 10px;">
-                                <span style="color: #1e3a5f; font-weight: 600; font-size: 14px;">View:</span>
-                                <button onclick="setEnrollmentView('table')" id="enrollment-view-table" class="btn btn-small" style="background: #3d7ab5; color: white; border: none; padding: 8px 12px; border-radius: 6px;" title="Table View"><i class="fas fa-table"></i></button>
-                                <button onclick="setEnrollmentView('cards')" id="enrollment-view-cards" class="btn btn-small" style="background: #e2e8f0; color: #64748b; border: none; padding: 8px 12px; border-radius: 6px;" title="Cards View"><i class="fas fa-th"></i></button>
-                            </div>
-                        </div>
-                        
-                        <!-- Enrollments List -->
-                        <div id="enrollment-list">
-                            <div class="course-card" style="text-align: center; padding: 60px 20px;">
-                                <div class="course-loader"></div>
-                                <p style="margin-top: 16px; color: var(--text-light);">Loading enrollments...</p>
-                            </div>
-                        </div>
+                        <div id="enrollment-list"></div>
                     </div>
                     
                     <!-- Classes Section -->
@@ -1581,325 +1076,103 @@
     </div>
 
     <!-- Attendance Modal -->
-    <div id="attendance-modal" class="modal" style="z-index: 999999;">
-        <div class="modal-content attendance-modal-content" style="background: linear-gradient(135deg, #1e3a5f 0%, #2d5a87 50%, #3d7ab5 100%); border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.5); max-width: 800px; width: 95%; position: relative; z-index: 1000000; margin-top: 5vh;">
-            <div class="modal-header" style="background: rgba(255,255,255,0.1); border-bottom: 1px solid rgba(255,255,255,0.2); padding: 20px 25px; border-radius: 16px 16px 0 0;">
-                <h3 id="attendance-modal-title" style="color: #fff; margin: 0; font-size: 22px; font-weight: 600;"><i class="fas fa-clipboard-check"></i> Add Attendance</h3>
-                <button class="modal-close" id="attendance-close-btn" onclick="closeAttendanceModal(); return false;" style="color: #fff; background: rgba(255,255,255,0.2); border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: 20px; transition: all 0.3s; z-index: 999999; position: relative;">&times;</button>
+    <div id="attendance-modal" class="modal">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <h3><i class="fas fa-clipboard-check"></i> <span id="attendance-modal-title">Add Attendance</span></h3>
+                <button class="modal-close" onclick="closeAttendanceModal()">&times;</button>
             </div>
-            <form id="attendance-form" onsubmit="saveAttendance(); return false;" novalidate>
-                <div class="modal-body" style="padding: 25px; border-radius: 0; max-height: 70vh; overflow-y: auto; background: #f8fafc;">
-                    <input type="hidden" id="attendance-id">
-                    
-                    <div class="attendance-form-section" style="background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-                        <h4 style="color: #1e3a5f; font-size: 16px; font-weight: 700; margin: 0 0 15px 0; padding-bottom: 10px; border-bottom: 2px solid #e9ecef;"><i class="fas fa-user"></i> Attendance Information</h4>
-                        <p style="color: #6c757d; font-size: 13px; margin: 0 0 15px 0;">Select the applicant for this attendance record</p>
-                        
-                        <div class="form-row" style="display: grid; grid-template-columns: 1fr; gap: 15px;">
-                            <div class="form-group">
-                                <label for="attendance-modal-student" style="color: #1e3a5f; font-weight: 600;">Applicant *</label>
-                                <select id="attendance-modal-student" onchange="updateStudentInfo(this)" required style="border: 2px solid #dee2e6; border-radius: 8px; padding: 12px; width: 100%; background: #fff; color: #495057; font-size: 14px;">
-                                    <option value="">--- Select Applicant ---</option>
-                                </select>
-                            </div>
+            <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
+                <input type="hidden" id="attendance-id">
+                <div style="background: var(--bg-secondary); padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                    <h4 style="margin: 0 0 15px 0; color: var(--primary-color); font-size: 14px;"><i class="fas fa-info-circle"></i> Attendance Details</h4>
+                    <div style="display: grid; gap: 15px;">
+                        <div>
+                            <label for="attendance-modal-date">Date *</label>
+                            <input type="date" id="attendance-modal-date" style="width: 100%; padding: 10px; border: none; border-bottom: 2px solid var(--primary-color); background: transparent; color: var(--text-color); font-size: 14px; outline: none;">
                         </div>
-                            <div class="form-group">
-                                <label for="attendance-modal-class" style="color: #1e3a5f; font-weight: 600;">Class</label>
-                                <select id="attendance-modal-class" style="border: 2px solid #dee2e6; border-radius: 8px; padding: 12px; width: 100%; background: #fff; color: #495057; font-size: 14px;">
-                                    <option value="">--- Select ---</option>
-                                </select>
-                            </div>
+                        <div>
+                            <label for="attendance-modal-student">Student *</label>
+                            <select id="attendance-modal-student" required style="width: 100%; padding: 10px; border: 2px solid var(--border-color); border-radius: 8px; background: var(--bg-color); color: var(--text-color); font-size: 14px; outline: none;">
+                                <option value="">Select Student</option>
+                            </select>
                         </div>
-                    </div>
-                    
-                    <div class="attendance-form-section" style="background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-                        <h4 style="color: #1e3a5f; font-size: 16px; font-weight: 700; margin: 0 0 15px 0; padding-bottom: 10px; border-bottom: 2px solid #e9ecef;"><i class="fas fa-car"></i> Course Selection</h4>
-                        <p style="color: #6c757d; font-size: 13px; margin: 0 0 15px 0;">Choose driving and/or computer courses</p>
-                        
-                        <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                            <div class="form-group">
-                                <label for="attendance-modal-license" style="color: #1e3a5f; font-weight: 600;">License Type</label>
-                                <select id="attendance-modal-license" style="border: 2px solid #dee2e6; border-radius: 8px; padding: 12px; width: 100%; background: #fff; color: #495057; font-size: 14px;">
-                                    <option value="">--- Select ---</option>
-                                    <option value="Class B">Class B</option>
-                                    <option value="Class C">Class C</option>
-                                    <option value="Class D">Class D</option>
-                                    <option value="Class A">Class A</option>
-                                    <option value="Motorcycle">Motorcycle</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="attendance-modal-driving" style="color: #1e3a5f; font-weight: 600;">Driving Course</label>
-                                <select id="attendance-modal-driving" style="border: 2px solid #dee2e6; border-radius: 8px; padding: 12px; width: 100%; background: #fff; color: #495057; font-size: 14px;">
-                                    <option value="">--- Select ---</option>
-                                    <option value="Defensive Driving">Defensive Driving</option>
-                                    <option value="Refresher Course">Refresher Course</option>
-                                </select>
-                            </div>
+                        <div>
+                            <label for="attendance-modal-course">Course</label>
+                            <select id="attendance-modal-course" style="width: 100%; padding: 10px; border: 2px solid var(--border-color); border-radius: 8px; background: var(--bg-color); color: var(--text-color); font-size: 14px; outline: none;">
+                                <option value="">Select Course</option>
+                            </select>
                         </div>
-                        <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px;">
-                            <div class="form-group">
-                                <label for="attendance-modal-computer" style="color: #1e3a5f; font-weight: 600;">Computer Course</label>
-                                <select id="attendance-modal-computer" style="border: 2px solid #dee2e6; border-radius: 8px; padding: 12px; width: 100%; background: #fff; color: #495057; font-size: 14px;">
-                                    <option value="">--- Select ---</option>
-                                    <option value="Computer Basics">Computer Basics</option>
-                                    <option value="Programming">Programming</option>
-                                    <option value="Graphic Design">Graphic Design</option>
-                                    <option value="SPSS">SPSS</option>
-                                    <option value="Secretarial">Secretarial</option>
-                                    <option value="Computer Accounting">Computer Accounting</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="attendance-modal-transmission" style="color: #1e3a5f; font-weight: 600;">Transmission</label>
-                                <select id="attendance-modal-transmission" style="border: 2px solid #dee2e6; border-radius: 8px; padding: 12px; width: 100%; background: #fff; color: #495057; font-size: 14px;">
-                                    <option value="">--- Select ---</option>
-                                    <option value="Manual">Manual</option>
-                                    <option value="Automatic">Automatic</option>
-                                    <option value="Both">Both</option>
-                                </select>
-                            </div>
+                        <div>
+                            <label for="attendance-modal-status">Status *</label>
+                            <select id="attendance-modal-status" required style="width: 100%; padding: 10px; border: 2px solid var(--border-color); border-radius: 8px; background: var(--bg-color); color: var(--text-color); font-size: 14px; outline: none;">
+                                <option value="Present">Present</option>
+                                <option value="Absent">Absent</option>
+                                <option value="Late">Late</option>
+                            </select>
                         </div>
-                    </div>
-                    
-                    <div class="attendance-form-section" style="background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-                        <h4 style="color: #1e3a5f; font-size: 16px; font-weight: 700; margin: 0 0 15px 0; padding-bottom: 10px; border-bottom: 2px solid #e9ecef;"><i class="fas fa-calendar-alt"></i> Attendance Details</h4>
-                        <p style="color: #6c757d; font-size: 13px; margin: 0 0 15px 0;">Record attendance information</p>
-                        
-                        <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                            <div class="form-group">
-                                <label for="attendance-modal-date" style="color: #1e3a5f; font-weight: 600;">Date *</label>
-                                <input type="date" id="attendance-modal-date" required style="border: 2px solid #dee2e6; border-radius: 8px; padding: 12px; width: 100%; background: #fff; color: #495057; font-size: 14px;">
-                            </div>
-                            <div class="form-group">
-                                <label for="attendance-modal-status" style="color: #1e3a5f; font-weight: 600;">Status *</label>
-                                <select id="attendance-modal-status" required style="border: 2px solid #dee2e6; border-radius: 8px; padding: 12px; width: 100%; background: #fff; color: #495057; font-size: 14px;">
-                                    <option value="present">Present</option>
-                                    <option value="absent">Absent</option>
-                                    <option value="late">Late</option>
-                                    <option value="excused">Excused</option>
-                                    <option value="medical">Medical Leave</option>
-                                    <option value="suspended">Suspended</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px;">
-                            <div class="form-group">
-                                <label for="attendance-modal-time-in" style="color: #1e3a5f; font-weight: 600;">Time In</label>
-                                <input type="time" id="attendance-modal-time-in" style="border: 2px solid #dee2e6; border-radius: 8px; padding: 12px; width: 100%; background: #fff; color: #495057; font-size: 14px;">
-                            </div>
-                            <div class="form-group">
-                                <label for="attendance-modal-time-out" style="color: #1e3a5f; font-weight: 600;">Time Out</label>
-                                <input type="time" id="attendance-modal-time-out" style="border: 2px solid #dee2e6; border-radius: 8px; padding: 12px; width: 100%; background: #fff; color: #495057; font-size: 14px;">
-                            </div>
-                        </div>
-                        <div class="form-row" style="display: grid; grid-template-columns: 1fr; gap: 15px; margin-top: 15px;">
-                            <div class="form-group">
-                                <label for="attendance-modal-schedule" style="color: #1e3a5f; font-weight: 600;">Preferred Schedule</label>
-                                <select id="attendance-modal-schedule" style="border: 2px solid #dee2e6; border-radius: 8px; padding: 12px; width: 100%; background: #fff; color: #495057; font-size: 14px;">
-                                    <option value="">--- Select ---</option>
-                                    <option value="Morning">Morning (6AM - 12PM)</option>
-                                    <option value="Afternoon">Afternoon (12PM - 5PM)</option>
-                                    <option value="Evening">Evening (5PM - 8PM)</option>
-                                    <option value="Weekend">Weekend</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group" style="margin-top: 15px;">
-                            <label for="attendance-modal-notes" style="color: #1e3a5f; font-weight: 600;">Notes</label>
-                            <textarea id="attendance-modal-notes" rows="3" placeholder="Additional notes..." style="border: 2px solid #dee2e6; border-radius: 8px; padding: 12px; width: 100%; background: #fff; color: #495057; font-size: 14px; resize: vertical;"></textarea>
+                        <div>
+                            <label for="attendance-modal-notes">Notes</label>
+                            <textarea id="attendance-modal-notes" rows="3" placeholder="Additional notes..." style="width: 100%; padding: 10px; border: none; border-bottom: 2px solid var(--primary-color); background: transparent; color: var(--text-color); font-size: 14px; outline: none; resize: vertical;"></textarea>
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer" style="padding: 20px 25px; border-top: 1px solid rgba(255,255,255,0.2); display: flex; gap: 12px; justify-content: flex-end;">
-                    <button type="button" id="attendance-cancel-btn" onclick="closeAttendanceModal(); return false;" style="padding: 12px 24px; border-radius: 8px; font-weight: 600; border: 2px solid #6c757d; background: #fff; color: #6c757d; cursor: pointer; z-index: 999999; position: relative;">
-                        <i class="fas fa-times"></i> Cancel
-                    </button>
-                    <button type="submit" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); color: #fff; cursor: pointer;">
-                        <i class="fas fa-save"></i> Save Attendance
-                    </button>
-                </div>
-            </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeAttendanceModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveAttendance()">
+                    <i class="fas fa-save"></i> Save Attendance
+                </button>
+            </div>
         </div>
     </div>
     
     <!-- Enrollment Modal -->
-    <div id="enrollment-modal" class="modal" style="z-index: 999999;">
-        <div class="modal-content enrollment-modal-content" style="background: linear-gradient(135deg, #1e3a5f 0%, #2d5a87 50%, #3d7ab5 100%); border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.5); max-width: 800px; width: 95%; position: relative; z-index: 1000000; margin-top: 5vh;">
-            <div class="modal-header" style="background: rgba(255,255,255,0.1); border-bottom: 1px solid rgba(255,255,255,0.2); padding: 20px 25px; border-radius: 16px 16px 0 0;">
-                <h3 id="enrollment-modal-title" style="color: #fff; margin: 0; font-size: 22px; font-weight: 600;"><i class="fas fa-user-plus"></i> Add Enrollment</h3>
-                <button class="modal-close" id="enrollment-close-btn" onclick="closeEnrollmentModal(); return false;" style="color: #fff; background: rgba(255,255,255,0.2); border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: 20px; transition: all 0.3s; z-index: 999999; position: relative;">&times;</button>
+    <div id="enrollment-modal" class="modal">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <h3><i class="fas fa-user-plus"></i> <span id="enrollment-modal-title">Add Enrollment</span></h3>
+                <button class="modal-close" onclick="closeEnrollmentModal()">&times;</button>
             </div>
-            <form id="enrollment-form" onsubmit="handleEnrollmentSubmit(event)" novalidate>
-                <div class="modal-body enrollment-form-wrapper" style="padding: 25px; border-radius: 0; max-height: 70vh; overflow-y: auto; background: #f8fafc;">
-                    <input type="hidden" id="enrollment-id" name="enrollment_id">
-                    <input type="hidden" id="enrollment-student-id" name="student_id">
-                    
-                    <div class="enrollment-form-section" style="background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-                        <h4 style="color: #1e3a5f; font-size: 16px; font-weight: 700; margin: 0 0 15px 0; padding-bottom: 10px; border-bottom: 2px solid #e9ecef;"><i class="fas fa-user"></i> Student Information</h4>
-                        <p id="enrollment-student-label" style="color: #6c757d; font-size: 13px; margin: 0 0 15px 0;">Select the student for this enrollment</p>
-                    
-                    <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                        <div class="form-group" id="student-select-group">
-                            <label for="enrollment-modal-student" style="color: #1e3a5f; font-weight: 600;">Student *</label>
-                            <select id="enrollment-modal-student" name="student_id" required style="border: 2px solid #dee2e6; border-radius: 8px; padding: 12px; width: 100%; background: #fff; color: #495057; font-size: 14px;">
+            <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
+                <input type="hidden" id="enrollment-id">
+                <div style="background: var(--bg-secondary); padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                    <h4 style="margin: 0 0 15px 0; color: var(--primary-color); font-size: 14px;"><i class="fas fa-info-circle"></i> Enrollment Details</h4>
+                    <div style="display: grid; gap: 15px;">
+                        <div>
+                            <label for="enrollment-modal-student">Student *</label>
+                            <select id="enrollment-modal-student" required style="width: 100%; padding: 10px; border: 2px solid var(--border-color); border-radius: 8px; background: var(--bg-color); color: var(--text-color); font-size: 14px; outline: none;">
                                 <option value="">Select Student</option>
                             </select>
                         </div>
-                        <div class="form-group" id="student-name-group" style="display: none;">
-                            <label style="color: #1e3a5f; font-weight: 600;">Student</label>
-                            <div id="enrollment-student-name" style="border: 2px solid #28a745; border-radius: 8px; padding: 12px; background: #e8f5e9; color: #1e3a5f; font-size: 14px; font-weight: 600;"></div>
+                        <div>
+                            <label for="enrollment-modal-course">Course *</label>
+                            <select id="enrollment-modal-course" required style="width: 100%; padding: 10px; border: 2px solid var(--border-color); border-radius: 8px; background: var(--bg-color); color: var(--text-color); font-size: 14px; outline: none;">
+                                <option value="">Select Course</option>
+                            </select>
                         </div>
-                        <div class="form-group">
-                            <label for="enrollment-modal-location-id" style="color: #1e3a5f; font-weight: 600;">Location</label>
-                            <select id="enrollment-modal-location-id" name="location_id" style="border: 2px solid #dee2e6; border-radius: 8px; padding: 12px; width: 100%; background: #fff; color: #495057; font-size: 14px;">
-                                <option value="">Select Location</option>
+                        <div>
+                            <label for="enrollment-modal-date">Enrollment Date</label>
+                            <input type="date" id="enrollment-modal-date" style="width: 100%; padding: 10px; border: none; border-bottom: 2px solid var(--primary-color); background: transparent; color: var(--text-color); font-size: 14px; outline: none;">
+                        </div>
+                        <div>
+                            <label for="enrollment-modal-status">Status</label>
+                            <select id="enrollment-modal-status" style="width: 100%; padding: 10px; border: 2px solid var(--border-color); border-radius: 8px; background: var(--bg-color); color: var(--text-color); font-size: 14px; outline: none;">
+                                <option value="pending">Pending</option>
+                                <option value="approved">Approved</option>
+                                <option value="active">Active</option>
+                                <option value="completed">Completed</option>
                             </select>
                         </div>
                     </div>
-                    </div>
-                    
-                    <div class="enrollment-form-section" style="background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-                        <h4 style="color: #1e3a5f; font-size: 16px; font-weight: 700; margin: 0 0 15px 0; padding-bottom: 10px; border-bottom: 2px solid #e9ecef;"><i class="fas fa-calendar-alt"></i> Enrollment Details</h4>
-                        <p style="color: #6c757d; font-size: 13px; margin: 0 0 15px 0;">Basic enrollment information</p>
-                        <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                            <div class="form-group">
-                                <label for="enrollment-modal-date" style="color: #1e3a5f; font-weight: 600;">Enrollment Date</label>
-                                <input type="date" id="enrollment-modal-date" name="enrollment_date" style="border: 2px solid #dee2e6; border-radius: 8px; padding: 12px; width: 100%; background: #fff; color: #495057; font-size: 14px;">
-                            </div>
-                            <div class="form-group">
-                                <label for="enrollment-modal-status" style="color: #1e3a5f; font-weight: 600;">Status</label>
-                                <select id="enrollment-modal-status" name="status" style="border: 2px solid #dee2e6; border-radius: 8px; padding: 12px; width: 100%; background: #fff; color: #495057; font-size: 14px;">
-                                    <option value="enrolled">Enrolled</option>
-                                    <option value="active">Active</option>
-                                    <option value="completed">Completed</option>
-                                    <option value="dropped">Dropped</option>
-                                    <option value="suspended">Suspended</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                            <div class="form-group">
-                                <label for="enrollment-modal-start" style="color: #1e3a5f; font-weight: 600;">Start Time</label>
-                                <input type="datetime-local" id="enrollment-modal-start" name="start_time" style="border: 2px solid #dee2e6; border-radius: 8px; padding: 12px; width: 100%; background: #fff; color: #495057; font-size: 14px;">
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="enrollment-form-section" style="background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-                        <h4 style="color: #1e3a5f; font-size: 16px; font-weight: 700; margin: 0 0 15px 0; padding-bottom: 10px; border-bottom: 2px solid #e9ecef;"><i class="fas fa-money-bill-wave"></i> Payment Information</h4>
-                        <p style="color: #6c757d; font-size: 13px; margin: 0 0 15px 0;">Fee and payment details</p>
-                        <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                            <div class="form-group">
-                                <label for="enrollment-modal-fee" style="color: #1e3a5f; font-weight: 600;">Fee Amount (KSh)</label>
-                                <input type="number" id="enrollment-modal-fee" name="fee_amount" step="0.01" min="0" placeholder="0.00" style="border: 2px solid #dee2e6; border-radius: 8px; padding: 12px; width: 100%; background: #fff; color: #495057; font-size: 14px;">
-                            </div>
-                            <div class="form-group">
-                                <label for="enrollment-modal-paid" style="color: #1e3a5f; font-weight: 600;">Fee Paid (KSh)</label>
-                                <input type="number" id="enrollment-modal-paid" name="fee_paid" step="0.01" min="0" placeholder="0.00" onchange="calculateEnrollmentBalance()" style="border: 2px solid #dee2e6; border-radius: 8px; padding: 12px; width: 100%; background: #fff; color: #495057; font-size: 14px;">
-                            </div>
-                        </div>
-                        <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                            <div class="form-group">
-                                <label for="enrollment-balance" style="color: #1e3a5f; font-weight: 600;">Fee Balance (KSh)</label>
-                                <input type="number" id="enrollment-balance" name="fee_balance" step="0.01" min="0" placeholder="0.00" readonly style="border: 2px solid #28a745; border-radius: 8px; padding: 12px; width: 100%; background: #e8f5e9; color: #28a745; font-size: 14px; font-weight: 600;">
-                            </div>
-                            <div class="form-group">
-                                <label for="enrollment-modal-payment" style="color: #1e3a5f; font-weight: 600;">Payment Status</label>
-                                <select id="enrollment-modal-payment" name="payment_status" style="border: 2px solid #dee2e6; border-radius: 8px; padding: 12px; width: 100%; background: #fff; color: #495057; font-size: 14px;">
-                                    <option value="unpaid">Unpaid</option>
-                                    <option value="partial">Partial</option>
-                                    <option value="paid">Paid</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="enrollment-form-section" style="background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-                        <h4 style="color: #1e3a5f; font-size: 16px; font-weight: 700; margin: 0 0 15px 0; padding-bottom: 10px; border-bottom: 2px solid #e9ecef;"><i class="fas fa-car"></i> Course Selection</h4>
-                        <p style="color: #6c757d; font-size: 13px; margin: 0 0 15px 0;">Choose driving and/or computer courses</p>
-                        <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                            <div class="form-group">
-                                <label for="enrollment-modal-license" style="color: #1e3a5f; font-weight: 600;">License Type</label>
-                                <select id="enrollment-modal-license" name="license_type" style="border: 2px solid #dee2e6; border-radius: 8px; padding: 12px; width: 100%; background: #fff; color: #495057; font-size: 14px;">
-                                    <option value="">Select License Type</option>
-                                    <option value="Class B">Class B</option>
-                                    <option value="Class C">Class C</option>
-                                    <option value="Class D">Class D</option>
-                                    <option value="Class A">Class A</option>
-                                    <option value="Motorcycle">Motorcycle</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="enrollment-modal-driving" style="color: #1e3a5f; font-weight: 600;">Driving Course</label>
-                                <select id="enrollment-modal-driving" name="driving_course" onchange="calculateEnrollmentFee()" style="border: 2px solid #dee2e6; border-radius: 8px; padding: 12px; width: 100%; background: #fff; color: #495057; font-size: 14px;">
-                                    <option value="">Select Driving Course</option>
-                                    <option value="Defensive Driving">Defensive Driving</option>
-                                    <option value="Refresher Course">Refresher Course</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                            <div class="form-group">
-                                <label for="enrollment-modal-computer" style="color: #1e3a5f; font-weight: 600;">Computer Course</label>
-                                <select id="enrollment-modal-computer" name="computer_course" onchange="calculateEnrollmentFee()" style="border: 2px solid #dee2e6; border-radius: 8px; padding: 12px; width: 100%; background: #fff; color: #495057; font-size: 14px;">
-                                    <option value="">Select Computer Course</option>
-                                    <option value="Computer Basics">Computer Basics</option>
-                                    <option value="Programming">Programming</option>
-                                    <option value="Graphic Design">Graphic Design</option>
-                                    <option value="SPSS">SPSS</option>
-                                    <option value="Secretarial">Secretarial</option>
-                                    <option value="Computer Accounting">Computer Accounting</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="enrollment-modal-transmission" style="color: #1e3a5f; font-weight: 600;">Transmission</label>
-                                <select id="enrollment-modal-transmission" name="transmission" style="border: 2px solid #dee2e6; border-radius: 8px; padding: 12px; width: 100%; background: #fff; color: #495057; font-size: 14px;">
-                                    <option value="">Select Transmission</option>
-                                    <option value="Manual">Manual</option>
-                                    <option value="Automatic">Automatic</option>
-                                    <option value="Both">Both</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                            <div class="form-group">
-                                <label for="enrollment-modal-schedule" style="color: #1e3a5f; font-weight: 600;">Preferred Schedule</label>
-                                <select id="enrollment-modal-schedule" name="preferred_schedule" style="border: 2px solid #dee2e6; border-radius: 8px; padding: 12px; width: 100%; background: #fff; color: #495057; font-size: 14px;">
-                                    <option value="">Select Schedule</option>
-                                    <option value="Morning">Morning</option>
-                                    <option value="Afternoon">Afternoon</option>
-                                    <option value="Evening">Evening</option>
-                                    <option value="Weekend">Weekend</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="enrollment-form-section" style="background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-                        <h4 style="color: #1e3a5f; font-size: 16px; font-weight: 700; margin: 0 0 15px 0; padding-bottom: 10px; border-bottom: 2px solid #e9ecef;"><i class="fas fa-certificate"></i> Completion Details</h4>
-                        <p style="color: #6c757d; font-size: 13px; margin: 0 0 15px 0;">Certificate and completion information</p>
-                        <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                            <div class="form-group">
-                                <label for="enrollment-modal-completion" style="color: #1e3a5f; font-weight: 600;">Completion Date</label>
-                                <input type="date" id="enrollment-modal-completion" name="completion_date" style="border: 2px solid #dee2e6; border-radius: 8px; padding: 12px; width: 100%; background: #fff; color: #495057; font-size: 14px;">
-                            </div>
-                            <div class="form-group">
-                                <label for="enrollment-modal-cert" style="color: #1e3a5f; font-weight: 600;">Certificate Number</label>
-                                <input type="text" id="enrollment-modal-cert" name="certificate_number" placeholder="Certificate Number" style="border: 2px solid #dee2e6; border-radius: 8px; padding: 12px; width: 100%; background: #fff; color: #495057; font-size: 14px;">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="enrollment-modal-notes" style="color: #1e3a5f; font-weight: 600;">Notes</label>
-                            <textarea id="enrollment-modal-notes" name="notes" rows="3" placeholder="Additional notes..." style="border: 2px solid #dee2e6; border-radius: 8px; padding: 12px; width: 100%; background: #fff; color: #495057; font-size: 14px; resize: vertical;"></textarea>
-                        </div>
-                    </div>
                 </div>
-                <div class="modal-footer" style="background: rgba(255,255,255,0.1); padding: 15px 25px; border-radius: 0 0 16px 16px; display: flex; justify-content: flex-end; gap: 10px;">
-                    <button type="button" class="btn btn-outline" id="enrollment-cancel-btn" onclick="closeEnrollmentModal(); return false;" style="color: #fff; border: 2px solid rgba(255,255,255,0.5); background: transparent; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s; z-index: 999999; position: relative;">Cancel</button>
-                    <button type="submit" class="btn btn-primary" style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); border: none; color: #fff; padding: 10px 25px; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s; box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);"><i class="fas fa-save"></i> Save Enrollment</button>
-                </div>
-            </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeEnrollmentModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveEnrollment()">
+                    <i class="fas fa-save"></i> Save Enrollment
+                </button>
+            </div>
         </div>
     </div>
     
@@ -2217,13 +1490,6 @@
         }
         
         // Sidebar toggle functions
-        function toggleMobileMenu() {
-            const navLinks = document.querySelector('.nav-links');
-            const menuBtn = document.querySelector('.mobile-menu-btn');
-            navLinks.classList.toggle('mobile-open');
-            menuBtn.classList.toggle('active');
-        }
-        
         function toggleSidebar() {
             const sidebar = document.querySelector('.sidebar');
             const overlay = document.querySelector('.sidebar-overlay');
@@ -2256,9 +1522,8 @@
             document.getElementById('user-email').textContent = user.email || '';
             document.getElementById('user-avatar').textContent = (user.full_name || 'S').charAt(0).toUpperCase();
             
-            // Use local user data for location - prefer location_id for filtering, fall back to training_location
-            const userLocationId = user.location_id || '';
-            staffLocation = userLocationId || user.training_location || '';
+            // Use local user data for training location
+            staffLocation = user.training_location || '';
             
             // Update profile form if on profile section
             if (document.getElementById('staff-fullname')) {
@@ -2352,78 +1617,39 @@
         
         async function loadStaffOverview() {
             try {
-                // Fetch both applicants and enrollments data
-                const applicantsResp = await fetch('/api/staff/applicants', {
-                    headers: { 'Authorization': 'Bearer ' + auth.getToken() }
-                });
-                const enrollmentsResp = await fetch(`/api/enrollments?location=${encodeURIComponent(staffLocation || '')}`, {
-                    headers: { 'Authorization': 'Bearer ' + auth.getToken() }
-                });
-                
-                const data = await applicantsResp.json();
-                const enrollmentsData = await enrollmentsResp.json();
+                const data = await staff.getApplicants();
                 
                 // Check if staff has location assigned
                 if (data.error && data.error.includes('no training location')) {
                     showToast('Please contact administrator - No training location assigned to your account', 'warning');
+                    // Show zeros in stats
+                    document.getElementById('staff-total-applicants').textContent = '0';
+                    document.getElementById('staff-pending-applicants').textContent = '0';
+                    document.getElementById('staff-approved-applicants').textContent = '0';
+                    document.getElementById('staff-total-fees').textContent = '0';
+                    document.getElementById('staff-total-paid').textContent = '0';
+                    document.getElementById('staff-total-students').textContent = '0';
+                    return;
                 }
                 
-                // Applicants stats
                 if (data.success) {
                     const applicants = data.applicants || [];
-                    const totalApplicants = document.getElementById('staff-total-applicants');
-                    if (totalApplicants) totalApplicants.textContent = applicants.length;
+                    document.getElementById('staff-total-applicants').textContent = applicants.length;
+                    document.getElementById('staff-pending-applicants').textContent = applicants.filter(a => a.status === 'pending').length;
+                    document.getElementById('staff-approved-applicants').textContent = applicants.filter(a => a.status === 'approved').length;
                     
-                    const pendingApplicants = document.getElementById('staff-pending-applicants');
-                    if (pendingApplicants) pendingApplicants.textContent = applicants.filter(a => a.status === 'pending').length;
+                    const totalFees = applicants.reduce((sum, a) => sum + (a.school_fees || 0), 0);
+                    const totalPaid = applicants.reduce((sum, a) => sum + (a.fees_paid || 0), 0);
+                    document.getElementById('staff-total-fees').textContent = formatNumber(totalFees);
+                    document.getElementById('staff-total-paid').textContent = formatNumber(totalPaid);
                     
-                    const approvedApplicants = document.getElementById('staff-approved-applicants');
-                    if (approvedApplicants) approvedApplicants.textContent = applicants.filter(a => a.status === 'approved').length;
+                    document.getElementById('staff-total-students').textContent = applicants.length;
                 }
                 
-                // Enrollments stats
-                let totalFees = 0;
-                let totalPaid = 0;
-                let completedCount = 0;
-                let activeCount = 0;
-                let totalEnrollmentsCount = 0;
-                
-                if (enrollmentsData.success && enrollmentsData.enrollments) {
-                    const enrollments = enrollmentsData.enrollments;
-                    totalEnrollmentsCount = enrollments.length;
-                    completedCount = enrollments.filter(e => e.status === 'completed').length;
-                    activeCount = enrollments.filter(e => e.status === 'active').length;
-                    
-                    enrollments.forEach(e => {
-                        totalFees += parseFloat(e.fee_amount) || 0;
-                        totalPaid += parseFloat(e.fee_paid) || 0;
-                    });
+                // Load students count (from applicants data)
+                if (staffLocation || data.location) {
+                    document.getElementById('staff-total-students').textContent = (data.applicants || []).length;
                 }
-                
-                // Update Total Enrollments
-                const totalEnrollmentsEl = document.getElementById('staff-total-enrollments');
-                if (totalEnrollmentsEl) totalEnrollmentsEl.textContent = totalEnrollmentsCount;
-                
-                // Update Active Students
-                const activeStudents = document.getElementById('staff-active-students');
-                if (activeStudents) activeStudents.textContent = activeCount;
-                
-                // Update Completed
-                const completedEl = document.getElementById('staff-enrollment-completed');
-                if (completedEl) completedEl.textContent = completedCount;
-                
-                // Update Total Fees
-                const feesEl = document.getElementById('staff-total-fees');
-                if (feesEl) feesEl.textContent = formatNumber(totalFees);
-                
-                // Update Total Paid
-                const paidEl = document.getElementById('staff-total-paid');
-                if (paidEl) paidEl.textContent = formatNumber(totalPaid);
-                
-                // Update Total Balance
-                const balanceEl = document.getElementById('staff-total-balance');
-                if (balanceEl) balanceEl.textContent = formatNumber(totalFees - totalPaid);
-                
             } catch (error) {
                 console.error('Error loading overview:', error);
                 showToast('Error loading dashboard data: ' + error.message, 'error');
@@ -2433,9 +1659,6 @@
         // Staff applications data storage
         let allStaffApplications = [];
         let staffAppViewMode = 'cards';
-        
-        // Enrollments view mode (cards/table)
-        let enrollmentsViewMode = 'table';
         
         // Load All Applications for staff (filtered by location)
         async function loadStaffApplicants() {
@@ -2493,27 +1716,6 @@
                 btn.innerHTML = staffAppViewMode === 'cards' ? '<i class="fas fa-table"></i> Table View' : '<i class="fas fa-th"></i> Cards View';
             }
             displayStaffApplications(allStaffApplications);
-        }
-        
-        // Toggle between cards and table view for enrollments
-        function setEnrollmentView(view) {
-            enrollmentsViewMode = view;
-            const tableBtn = document.getElementById('enrollment-view-table');
-            const cardsBtn = document.getElementById('enrollment-view-cards');
-            if (tableBtn && cardsBtn) {
-                if (view === 'table') {
-                    tableBtn.style.background = '#3d7ab5';
-                    tableBtn.style.color = 'white';
-                    cardsBtn.style.background = '#e2e8f0';
-                    cardsBtn.style.color = '#64748b';
-                } else {
-                    cardsBtn.style.background = '#3d7ab5';
-                    cardsBtn.style.color = 'white';
-                    tableBtn.style.background = '#e2e8f0';
-                    tableBtn.style.color = '#64748b';
-                }
-            }
-            loadEnrollments();
         }
         
         // Display applications in staff view (both card and table)
@@ -2751,212 +1953,70 @@
             loadStudents();
         }
         
-        // Helper function to update student stats
-        function updateStudentStats(total, active, pending, completed) {
-            const totalStudentsEl = document.getElementById('students-total-students');
-            if (totalStudentsEl) totalStudentsEl.textContent = total;
-            
-            const activeStudentsEl = document.getElementById('students-active-students');
-            if (activeStudentsEl) activeStudentsEl.textContent = active;
-            
-            const pendingStudentsEl = document.getElementById('students-pending-students');
-            if (pendingStudentsEl) pendingStudentsEl.textContent = pending;
-            
-            const completedStudentsEl = document.getElementById('students-completed-students');
-            if (completedStudentsEl) completedStudentsEl.textContent = completed;
-        }
-        
         async function loadStudents() {
             const container = document.getElementById('students-list');
             if (!container) return;
             
-            container.innerHTML = '<div class="course-card" style="text-align: center; padding: 60px 20px;"><div class="course-loader"></div><p style="margin-top: 16px; color: var(--text-light);">Loading students...</p></div>';
-            
             const user = auth.getUser();
             const selectedLocation = document.getElementById('location-filter').value;
-            // Ensure location is always a string
-            let location = '';
-            if (typeof selectedLocation === 'string') {
-                location = selectedLocation;
-            } else if (typeof staffLocation === 'string') {
-                location = staffLocation;
-            } else if (user?.training_location) {
-                location = String(user.training_location);
+            const location = selectedLocation || staffLocation || user?.training_location || '';
+            
+            let url = '';
+            
+            if (!location) {
+                // No location - fetch ALL applications from /api/staff/applicants endpoint
+                url = '/api/staff/applicants';
+            } else {
+                url = `/api/staff/location-students?location=${encodeURIComponent(location)}`;
             }
             
-            // Get filter values
-            const searchFilter = document.getElementById('student-search')?.value?.toLowerCase() || '';
-            const statusFilter = document.getElementById('student-status-filter')?.value || '';
-            const categoryFilter = document.getElementById('student-category-filter')?.value || '';
-            
             try {
-                // Fetch from BOTH enrollments AND applicants endpoints
-                // If location is empty (All Locations), don't pass location parameter to get all
-                const enrollmentsUrl = location ? `/api/enrollments?location=${encodeURIComponent(location)}` : '/api/enrollments';
-                const enrollmentsPromise = fetch(enrollmentsUrl, {
+                const response = await fetch(url, {
                     headers: { 'Authorization': 'Bearer ' + auth.getToken() }
                 });
-                
-                const applicantsPromise = fetch('/api/staff/applicants', {
-                    headers: { 'Authorization': 'Bearer ' + auth.getToken() }
-                });
-                
-                const [enrollmentsResp, applicantsResp] = await Promise.all([enrollmentsPromise, applicantsPromise]);
-                
-                // Handle 401 Unauthorized
-                if (enrollmentsResp.status === 401 || applicantsResp.status === 401) {
-                    auth.logout();
-                    window.location.href = 'login.html';
-                    return;
-                }
-                
-                const enrollmentsData = await enrollmentsResp.json();
-                const applicantsData = await applicantsResp.json();
-                
-                // Combine students from both enrollments AND applicants
-                let allStudents = [];
-                
-                // Add enrollments
-                if (enrollmentsData.success && enrollmentsData.enrollments) {
-                    enrollmentsData.enrollments.forEach(e => {
-                        allStudents.push({
-                            id: e.student_id || e.id,
-                            first_name: e.first_name || e.student_name?.split(' ')[0] || '',
-                            last_name: e.last_name || e.student_name?.split(' ').slice(1).join(' ') || '',
-                            email: e.student_email || e.email || '',
-                            phone: e.phone || e.student_phone || '',
-                            status: e.status || 'active',
-                            training_location: e.location || e.training_location || location,
-                            fee_amount: e.fee_amount || 0,
-                            fee_paid: e.fee_paid || 0,
-                            course_type: e.category || e.course_type || ''
-                        });
-                    });
-                }
-                
-                // Add applicants
-                if (applicantsData.success && applicantsData.applicants) {
-                    applicantsData.applicants.forEach(a => {
-                        // Check if this applicant is already in the list (by email)
-                        const exists = allStudents.some(s => s.email && a.email && s.email.toLowerCase() === a.email.toLowerCase());
-                        if (!exists) {
-                            allStudents.push({
-                                id: a.id,
-                                first_name: a.first_name || a.name?.split(' ')[0] || '',
-                                last_name: a.last_name || a.name?.split(' ').slice(1).join(' ') || '',
-                                email: a.email || '',
-                                phone: a.phone || '',
-                                status: a.status || 'pending',
-                                training_location: a.training_location || a.location || location,
-                                fee_amount: a.fees || a.fee_amount || 0,
-                                fee_paid: a.fees_paid || a.fee_paid || 0,
-                                course_type: a.course_type || a.category || ''
-                            });
-                        }
-                    });
-                }
-                
-                // Filter by location if specified (and not empty string for All Locations)
-                if (location && typeof location === 'string') {
-                    allStudents = allStudents.filter(s => 
-                        !s.training_location || String(s.training_location).toLowerCase() === location.toLowerCase()
-                    );
-                }
+                const data = await response.json();
                 
                 container.innerHTML = '';
                 
-                let students = [...allStudents];
+                let students = [];
                 
-                // Apply filters locally
-                if (searchFilter) {
-                    students = students.filter(s => {
-                        const name = (s.first_name + ' ' + s.last_name).toLowerCase();
-                        const fullName = (s.full_name || s.name || '').toLowerCase();
-                        const email = (s.email || '').toLowerCase();
-                        const phone = (s.phone || '').toLowerCase();
-                        return name.includes(searchFilter) || fullName.includes(searchFilter) || email.includes(searchFilter) || phone.includes(searchFilter);
-                    });
-                }
-                
-                if (statusFilter) {
-                    students = students.filter(s => (s.status || 'active') === statusFilter);
-                }
-                
-                // Apply category filter if selected
-                if (categoryFilter) {
-                    students = students.filter(s => {
-                        const courseType = (s.course_type || s.category || '').toLowerCase();
-                        return courseType === categoryFilter;
-                    });
-                }
-                
-                // Calculate stats from ALL students (not filtered)
-                // Remove duplicate allStudents declaration - use the one from above
-                
-                // Update stats
-                const totalCount = allStudents.length;
-                const activeCount = allStudents.filter(s => (s.status || 'active') === 'active').length;
-                const pendingCount = allStudents.filter(s => s.status === 'pending').length;
-                const completedCount = allStudents.filter(s => s.status === 'completed').length;
-                updateStudentStats(totalCount, activeCount, pendingCount, completedCount);
-                
-                // Fetch financial data from fees-summary API for accurate stats (only if location is set)
-                if (location) {
-                    try {
-                        const feesUrl = `/api/staff/fees-summary?location=${encodeURIComponent(location)}`;
-                        const feesResponse = await fetch(feesUrl, {
-                            headers: { 'Authorization': 'Bearer ' + auth.getToken() }
-                        });
-                        const feesData = await feesResponse.json();
-                        
-                        if (feesData.success && feesData.summary) {
-                            // Update financial stats from API
-                            const totalFeesEl = document.getElementById('students-total-fees');
-                            if (totalFeesEl) totalFeesEl.textContent = 'KSh ' + (feesData.summary.total_fees || 0).toLocaleString();
-                            
-                            const totalPaidEl = document.getElementById('students-total-paid');
-                            if (totalPaidEl) totalPaidEl.textContent = 'KSh ' + (feesData.summary.total_paid || 0).toLocaleString();
-                            
-                            const totalBalanceEl = document.getElementById('students-total-balance');
-                            if (totalBalanceEl) totalBalanceEl.textContent = 'KSh ' + (feesData.summary.total_balance || 0).toLocaleString();
-                        }
-                    } catch (feesError) {
-                        console.error('Error fetching fees summary:', feesError);
-                        // Fallback: calculate from student data
-                        calculateFinancialStatsFromStudents(allStudents);
+                if (!location) {
+                    // Using /api/staff/applicants endpoint - returns applicants with application data
+                    if (data.success && data.applicants) {
+                        students = data.applicants;
                     }
                 } else {
-                    // No location - calculate from all students data
-                    calculateFinancialStatsFromStudents(allStudents);
-                }
-                
-                function calculateFinancialStatsFromStudents(students) {
-                    let totalFees = 0;
-                    let totalPaid = 0;
-                    let totalBalance = 0;
-                    
-                    students.forEach(student => {
-                        totalFees += parseFloat(student.fee_amount) || parseFloat(student.total_fees) || 0;
-                        totalPaid += parseFloat(student.fee_paid) || parseFloat(student.total_paid) || 0;
-                        totalBalance += parseFloat(student.balance) || 0;
-                    });
-                    
-                    // Calculate balance as fees - paid
-                    totalBalance = totalFees - totalPaid;
-                    
-                    const totalFeesEl = document.getElementById('students-total-fees');
-                    if (totalFeesEl) totalFeesEl.textContent = 'KSh ' + totalFees.toLocaleString();
-                    
-                    const totalPaidEl = document.getElementById('students-total-paid');
-                    if (totalPaidEl) totalPaidEl.textContent = 'KSh ' + totalPaid.toLocaleString();
-                    
-                    const totalBalanceEl = document.getElementById('students-total-balance');
-                    if (totalBalanceEl) totalBalanceEl.textContent = 'KSh ' + totalBalance.toLocaleString();
+                    // Using /api/staff/location-students endpoint
+                    if (data.success && data.students && data.students.length > 0) {
+                        students = data.students;
+                    }
                 }
                 
                 if (students.length > 0) {
                     // Store students data globally for edit function
                     window.allStudentsData = students;
+                    
+                    // Calculate stats
+                    const totalCount = students.length;
+                    const activeCount = students.filter(s => (s.status || 'active') === 'active').length;
+                    const pendingCount = students.filter(s => s.status === 'pending').length;
+                    const completedCount = students.filter(s => s.status === 'completed').length;
+                    
+                    // Update total students count
+                    const totalStudentsEl = document.getElementById('staff-total-students');
+                    if (totalStudentsEl) totalStudentsEl.textContent = totalCount;
+                    
+                    // Update active students count
+                    const activeStudentsEl = document.getElementById('staff-active-students');
+                    if (activeStudentsEl) activeStudentsEl.textContent = activeCount;
+                    
+                    // Update pending students count
+                    const pendingStudentsEl = document.getElementById('staff-pending-students');
+                    if (pendingStudentsEl) pendingStudentsEl.textContent = pendingCount;
+                    
+                    // Update completed students count
+                    const completedStudentsEl = document.getElementById('staff-completed-students');
+                    if (completedStudentsEl) completedStudentsEl.textContent = completedCount;
                     
                     let tableHtml = '<table class="students-table"><thead><tr><th>Student</th><th>Email</th><th>Phone</th><th>Role</th><th>Location</th><th>Status</th><th>Actions</th></tr></thead><tbody>';
                     
@@ -2997,15 +2057,7 @@
         async function loadFeesSummary() {
             const user = auth.getUser();
             const selectedLocation = document.querySelector('#section-fees #location-filter').value;
-            // Ensure location is always a string
-            let location = '';
-            if (typeof selectedLocation === 'string') {
-                location = selectedLocation;
-            } else if (typeof staffLocation === 'string') {
-                location = staffLocation;
-            } else if (user?.training_location) {
-                location = String(user.training_location);
-            }
+            const location = selectedLocation || staffLocation || user?.training_location || '';
             
             let url = '';
             
@@ -3538,23 +2590,18 @@
                 container.innerHTML = '';
                 
                 if (data.success && data.attendance) {
-                    let tableHtml = '<table class="students-table"><thead><tr><th>Date</th><th>Student</th><th>Course</th><th>Status</th><th>Fee</th><th>Paid</th><th>Balance</th><th>Actions</th></tr></thead><tbody>';
+                    let tableHtml = '<table class="students-table"><thead><tr><th>Date</th><th>Student</th><th>Course</th><th>Status</th><th>Notes</th><th>Actions</th></tr></thead><tbody>';
                     
                     data.attendance.forEach(record => {
-                        const statusClass = record.status === 'present' || record.status === 'Present' ? 'payment-paid' : record.status === 'late' || record.status === 'Late' ? 'payment-partial' : 'payment-unpaid';
-                        const feeAmount = record.fee_amount ? parseFloat(record.fee_amount) : 0;
-                        const feePaid = record.fee_paid ? parseFloat(record.fee_paid) : 0;
-                        const feeBalance = record.fee_balance ? parseFloat(record.fee_balance) : (feeAmount - feePaid);
+                        const statusClass = record.status === 'Present' ? 'payment-paid' : record.status === 'Late' ? 'payment-partial' : 'payment-unpaid';
                         
                         tableHtml += `
                             <tr>
                                 <td data-label="Date">${formatDate(record.date)}</td>
                                 <td data-label="Student">${record.student_name || 'N/A'}</td>
-                                <td data-label="Course">${record.course_name || record.driving_course || record.computer_course || 'N/A'}</td>
+                                <td data-label="Course">${record.course_name || 'N/A'}</td>
                                 <td data-label="Status"><span class="${statusClass}">${record.status}</span></td>
-                                <td data-label="Fee">KSh ${feeAmount.toLocaleString()}</td>
-                                <td data-label="Paid" style="color: #10b981;">KSh ${feePaid.toLocaleString()}</td>
-                                <td data-label="Balance" style="color: ${feeBalance > 0 ? '#dc2626' : '#10b981'};">KSh ${feeBalance.toLocaleString()}</td>
+                                <td data-label="Notes">${record.notes || '-'}</td>
                                 <td data-label="Actions">
                                     <div class="action-buttons">
                                         <button class="btn btn-primary btn-small" onclick="editAttendance(${record.id})"><i class="fas fa-edit"></i></button>
@@ -3577,114 +2624,30 @@
         }
         
         function openAttendanceModal(id = null) {
-            const modal = document.getElementById('attendance-modal');
-            const modalContent = modal.querySelector('.modal-content');
-            
-            document.getElementById('attendance-modal-title').innerHTML = id ? '<i class="fas fa-clipboard-check"></i> Edit Attendance' : '<i class="fas fa-clipboard-check"></i> Add Attendance';
+            document.getElementById('attendance-modal-title').textContent = id ? 'Edit Attendance' : 'Add Attendance';
             document.getElementById('attendance-id').value = id || '';
             document.getElementById('attendance-modal-date').value = document.getElementById('attendance-date').value || new Date().toISOString().split('T')[0];
-            document.getElementById('attendance-modal-status').value = 'present';
+            document.getElementById('attendance-modal-status').value = 'Present';
             document.getElementById('attendance-modal-notes').value = '';
-            
-            // Reset form fields
-            document.getElementById('attendance-modal-student').value = '';
-            document.getElementById('attendance-modal-class').value = '';
-            document.getElementById('attendance-modal-license').value = '';
-            document.getElementById('attendance-modal-driving').value = '';
-            document.getElementById('attendance-modal-computer').value = '';
-            document.getElementById('attendance-modal-transmission').value = '';
-            
-            // Reset new fields
-            document.getElementById('attendance-modal-time-in').value = '';
-            document.getElementById('attendance-modal-time-out').value = '';
-            document.getElementById('attendance-modal-schedule').value = '';
             
             // Load students for dropdown
             loadStudentsForAttendanceDropdown();
-            loadClassesForAttendanceDropdown();
+            loadCoursesForAttendanceDropdown();
             
-            // Show modal - add show class and set display to flex
-            modal.classList.add('show');
-            modal.style.setProperty('display', 'flex', 'important');
-            modal.style.visibility = 'visible';
-            modal.style.position = 'fixed';
-            modal.style.top = '0';
-            modal.style.left = '0';
-            modal.style.width = '100%';
-            modal.style.height = '100%';
-            modal.style.background = 'rgba(0, 0, 0, 0.5)';
-            modal.style.zIndex = '999999';
-            modal.style.alignItems = 'center';
-            modal.style.justifyContent = 'center';
-            
-            // Ensure modal content is visible
-            if (modalContent) {
-                modalContent.classList.add('show');
-                modalContent.style.setProperty('display', 'block', 'important');
-                modalContent.style.visibility = 'visible';
-                modalContent.style.zIndex = '1000000';
-            }
+            document.getElementById('attendance-modal').classList.add('show');
         }
         
         function closeAttendanceModal() {
-            var modal = document.getElementById('attendance-modal');
-            var modalContent = modal.querySelector('.modal-content');
-            
-            // Remove show class and hide
-            modal.classList.remove('show');
-            modal.style.display = 'none';
-            modal.style.visibility = 'hidden';
-            
-            // Also hide content
-            if (modalContent) {
-                modalContent.style.display = 'none';
-            }
-            
-            // Reset form when closing
-            var form = document.getElementById('attendance-form');
-            if (form) {
-                form.reset();
-            }
+            document.getElementById('attendance-modal').classList.remove('show');
         }
-        
-        // Close modal when clicking outside
-        document.addEventListener('DOMContentLoaded', function() {
-            var attendanceModal = document.getElementById('attendance-modal');
-            var attendanceCloseBtn = document.getElementById('attendance-close-btn');
-            var attendanceCancelBtn = document.getElementById('attendance-cancel-btn');
-            
-            if (attendanceCloseBtn) {
-                attendanceCloseBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    closeAttendanceModal();
-                });
-            }
-            
-            if (attendanceCancelBtn) {
-                attendanceCancelBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    closeAttendanceModal();
-                });
-            }
-            
-            if (attendanceModal) {
-                attendanceModal.addEventListener('click', function(e) {
-                    if (e.target === attendanceModal) {
-                        closeAttendanceModal();
-                    }
-                });
-            }
-        });
         
         async function loadStudentsForAttendanceDropdown() {
             const select = document.getElementById('attendance-modal-student');
             if (!select) return;
             
             try {
-                // Fetch all users except admin (no location filter)
-                const response = await fetch('/api/staff/students-with-enrollments', {
+                const location = staffLocation || '';
+                const response = await fetch(`/api/staff/students?location=${encodeURIComponent(location)}`, {
                     headers: { 'Authorization': 'Bearer ' + auth.getToken() }
                 });
                 
@@ -3698,19 +2661,11 @@
                 const data = await response.json();
                 
                 if (data.success && data.students) {
-                    select.innerHTML = '<option value="">--- Select Applicant ---</option>';
+                    select.innerHTML = '<option value="">Select Student</option>';
                     data.students.forEach(student => {
                         const option = document.createElement('option');
-                        option.value = student.user_id;
-                        // Display: Full Name only
-                        option.textContent = student.full_name;
-                        option.dataset.userId = student.user_id;
-                        option.dataset.phone = student.phone || '-';
-                        option.dataset.email = student.email || '-';
-                        option.dataset.location = student.training_location || student.location || '-';
-                        option.dataset.courseId = student.course_id || '';
-                        option.dataset.courseCategory = student.course_category || '';
-                        option.dataset.courseName = student.course_name || '-';
+                        option.value = student.id;
+                        option.textContent = `${student.first_name} ${student.last_name}`;
                         select.appendChild(option);
                     });
                 }
@@ -3719,46 +2674,20 @@
             }
         }
         
-        // Update student info display when selecting a student
-        function updateStudentInfo(select) {
-            const studentInfo = document.getElementById('attendance-student-info');
-            if (!select.value) {
-                if (studentInfo) studentInfo.style.display = 'none';
-                return;
-            }
-            
-            const option = select.options[select.selectedIndex];
-            const phoneEl = document.getElementById('student-phone');
-            const emailEl = document.getElementById('student-email');
-            const locationEl = document.getElementById('student-location');
-            const courseEl = document.getElementById('student-course');
-            
-            if (phoneEl) phoneEl.textContent = option.dataset.phone || '-';
-            if (emailEl) emailEl.textContent = option.dataset.email || '-';
-            if (locationEl) locationEl.textContent = option.dataset.location || '-';
-            if (courseEl) courseEl.textContent = option.dataset.courseName || '-';
-            
-            if (studentInfo) studentInfo.style.display = 'block';
-        }
-        
         async function loadCoursesForAttendanceDropdown() {
             const select = document.getElementById('attendance-modal-course');
             if (!select) return;
             
             try {
-                // Fetch courses filtered by driving_course and computer_course categories
-                const response = await fetch('/api/courses?categories=driving_course,computer_course');
+                const response = await fetch('/api/courses');
                 const data = await response.json();
                 
                 if (data.success && data.courses) {
-                    select.innerHTML = '<option value="">--- Select ---</option>';
+                    select.innerHTML = '<option value="">Select Course</option>';
                     data.courses.forEach(course => {
                         const option = document.createElement('option');
                         option.value = course.id;
-                        // Display: Course Name - Category
-                        const category = course.category || '';
-                        option.textContent = category ? `${course.name} (${category})` : course.name;
-                        option.dataset.category = category;
+                        option.textContent = course.name;
                         select.appendChild(option);
                     });
                 }
@@ -3767,116 +2696,25 @@
             }
         }
         
-        async function loadClassesForAttendanceDropdown() {
-            const select = document.getElementById('attendance-modal-class');
-            if (!select) return;
-            
-            try {
-                // Fetch classes filtered by staff location
-                const location = staffLocation || '';
-                const url = location ? `/api/classes?location=${encodeURIComponent(location)}` : '/api/classes';
-                const response = await fetch(url, {
-                    headers: { 'Authorization': 'Bearer ' + auth.getToken() }
-                });
-                
-                const data = await response.json();
-                
-                if (data.success && data.classes) {
-                    select.innerHTML = '<option value="">--- Select Class ---</option>';
-                    data.classes.forEach(cls => {
-                        const option = document.createElement('option');
-                        option.value = cls.id;
-                        // Display: Class Name - Course Name - Location
-                        const courseName = cls.course_name || '';
-                        const locationName = cls.location_name || '';
-                        const schedule = cls.days_of_week ? `${cls.days_of_week} ${cls.start_time || ''}-${cls.end_time || ''}` : '';
-                        let displayText = cls.name;
-                        if (courseName) displayText += ` - ${courseName}`;
-                        if (locationName) displayText += ` (${locationName})`;
-                        if (schedule) displayText += ` - ${schedule}`;
-                        option.textContent = displayText;
-                        option.dataset.courseId = cls.course_id || '';
-                        select.appendChild(option);
-                    });
-                }
-            } catch (error) {
-                console.error('Error loading classes:', error);
-            }
-        }
-        
-        async function saveAttendance(event) {
-            if (event) {
-                event.preventDefault();
-            }
-            
+        async function saveAttendance() {
             const id = document.getElementById('attendance-id').value;
             const studentId = document.getElementById('attendance-modal-student').value;
-            const classId = document.getElementById('attendance-modal-class').value;
-            const licenseType = document.getElementById('attendance-modal-license').value;
-            const drivingCourse = document.getElementById('attendance-modal-driving').value;
-            const computerCourse = document.getElementById('attendance-modal-computer').value;
-            const transmission = document.getElementById('attendance-modal-transmission').value;
+            const courseId = document.getElementById('attendance-modal-course').value;
             const date = document.getElementById('attendance-modal-date').value;
             const status = document.getElementById('attendance-modal-status').value;
             const notes = document.getElementById('attendance-modal-notes').value;
-            
-            // New fields
-            const timeIn = document.getElementById('attendance-modal-time-in').value;
-            const timeOut = document.getElementById('attendance-modal-time-out').value;
-            const preferredSchedule = document.getElementById('attendance-modal-schedule').value;
             
             if (!studentId || !date) {
                 showAlert('Please fill in all required fields', 'error');
                 return;
             }
             
-            // Validate that driving_course or computer_course is in enrollments/applications
-            if ((drivingCourse || computerCourse) && studentId) {
-                try {
-                    // Check if student has valid enrollment for the selected course
-                    const enrollResponse = await fetch(`/api/enrollments?student_id=${studentId}`, {
-                        headers: { 'Authorization': 'Bearer ' + auth.getToken() }
-                    });
-                    const enrollData = await enrollResponse.json();
-                    
-                    let hasValidEnrollment = false;
-                    if (enrollData.success && enrollData.enrollments) {
-                        for (const e of enrollData.enrollments) {
-                            if (e.status === 'active') {
-                                if (drivingCourse && (e.driving_course === drivingCourse || e.driving_course?.includes(drivingCourse))) {
-                                    hasValidEnrollment = true;
-                                    break;
-                                }
-                                if (computerCourse && (e.computer_course === computerCourse || e.computer_course?.includes(computerCourse))) {
-                                    hasValidEnrollment = true;
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                    
-                    if (!hasValidEnrollment) {
-                        showToast('Please select Applicant applications and enrollments only', 'warning');
-                        return;
-                    }
-                } catch (e) {
-                    console.error('Error validating enrollment:', e);
-                }
-            }
-            
             const formData = {
                 student_id: studentId,
-                class_id: classId,
-                license_type: licenseType,
-                driving_course: drivingCourse,
-                computer_course: computerCourse,
-                transmission: transmission,
+                course_id: courseId,
                 date: date,
                 status: status,
                 notes: notes,
-                time_in: timeIn,
-                time_out: timeOut,
-                preferred_schedule: preferredSchedule,
                 location: staffLocation
             };
             
@@ -3884,29 +2722,13 @@
                 const method = id ? 'PUT' : 'POST';
                 const url = id ? `/api/attendance/${id}` : '/api/attendance';
                 
-                // Convert to URLSearchParams for form-encoded data
-                const params = new URLSearchParams();
-                params.append('student_id', studentId);
-                if (classId) params.append('class_id', classId);
-                if (licenseType) params.append('license_type', licenseType);
-                if (drivingCourse) params.append('driving_course', drivingCourse);
-                if (computerCourse) params.append('computer_course', computerCourse);
-                if (transmission) params.append('transmission', transmission);
-                params.append('date', date);
-                params.append('status', status);
-                if (notes) params.append('notes', notes);
-                if (timeIn) params.append('time_in', timeIn);
-                if (timeOut) params.append('time_out', timeOut);
-                if (preferredSchedule) params.append('preferred_schedule', preferredSchedule);
-                if (staffLocation) params.append('location', staffLocation);
-                
                 const response = await fetch(url, {
                     method: method,
                     headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Content-Type': 'application/json',
                         'Authorization': 'Bearer ' + auth.getToken()
                     },
-                    body: params.toString()
+                    body: JSON.stringify(formData)
                 });
                 
                 const data = await response.json();
@@ -3924,38 +2746,20 @@
         }
         
         async function editAttendance(id) {
-            console.log('editAttendance called with id:', id);
             try {
                 const response = await fetch(`/api/attendance/${id}`, {
                     headers: { 'Authorization': 'Bearer ' + auth.getToken() }
                 });
                 const data = await response.json();
                 
-                if (data.success && data.attendance) {
-                    const record = data.attendance;
+                if (data.success && data.record) {
+                    const record = data.record;
                     openAttendanceModal(record.id);
-                    document.getElementById('attendance-modal-date').value = record.date || '';
+                    document.getElementById('attendance-modal-date').value = record.date;
                     document.getElementById('attendance-modal-student').value = record.student_id || '';
-                    document.getElementById('attendance-modal-class').value = record.class_id > 0 ? record.class_id : '';
-                    document.getElementById('attendance-modal-license').value = record.license_type || '';
-                    document.getElementById('attendance-modal-driving').value = record.driving_course || '';
-                    document.getElementById('attendance-modal-computer').value = record.computer_course || '';
-                    document.getElementById('attendance-modal-transmission').value = record.transmission || '';
-                    document.getElementById('attendance-modal-status').value = record.status || 'present';
+                    document.getElementById('attendance-modal-course').value = record.course_id || '';
+                    document.getElementById('attendance-modal-status').value = record.status || 'Present';
                     document.getElementById('attendance-modal-notes').value = record.notes || '';
-                    
-                    // Populate new fields
-                    document.getElementById('attendance-modal-time-in').value = record.time_in || '';
-                    document.getElementById('attendance-modal-time-out').value = record.time_out || '';
-                    document.getElementById('attendance-modal-schedule').value = record.preferred_schedule || '';
-                    
-                    // Show student name in title when editing
-                    const studentName = record.student_first_name && record.student_last_name 
-                        ? `${record.student_first_name} ${record.student_last_name}` 
-                        : record.student_name || '';
-                    if (studentName) {
-                        document.getElementById('attendance-modal-title').innerHTML = `<i class="fas fa-clipboard-check"></i> Edit Attendance - ${studentName}`;
-                    }
                 }
             } catch (error) {
                 showAlert('Error loading attendance: ' + error.message, 'error');
@@ -4034,8 +2838,8 @@
         // ==================== ENROLLMENT SECTION ====================
         
         async function loadStudentsForEnrollment() {
-            // Load for modal dropdown (enrollment form)
-            const select = document.getElementById('enrollment-modal-student');
+            const select = document.getElementById('enrollment-student');
+            if (!select) return;
             
             try {
                 const location = staffLocation || '';
@@ -4053,15 +2857,13 @@
                 const data = await response.json();
                 
                 if (data.success && data.students) {
-                    if (select) {
-                        select.innerHTML = '<option value="">Select Student</option>';
-                        data.students.forEach(student => {
-                            const option = document.createElement('option');
-                            option.value = student.id;
-                            option.textContent = `#${student.id} - ${student.first_name} ${student.last_name}`;
-                            select.appendChild(option);
-                        });
-                    }
+                    select.innerHTML = '<option value="">Select Student</option>';
+                    data.students.forEach(student => {
+                        const option = document.createElement('option');
+                        option.value = student.id;
+                        option.textContent = `${student.first_name} ${student.last_name}`;
+                        select.appendChild(option);
+                    });
                 }
             } catch (error) {
                 console.error('Error loading students:', error);
@@ -4104,20 +2906,16 @@
             const container = document.getElementById('enrollment-list');
             if (!container) return;
             
-            // Get filter values from new admin-style filters
-            const statusFilter = document.getElementById('enrollment-status-filter');
-            const status = statusFilter ? statusFilter.value : '';
-            const categoryFilter = document.getElementById('enrollment-category-filter');
-            const category = categoryFilter ? categoryFilter.value : '';
-            const searchFilter = document.getElementById('enrollment-search');
-            const search = searchFilter ? searchFilter.value : '';
+            const studentId = document.getElementById('enrollment-student').value;
+            const courseId = document.getElementById('enrollment-course').value;
+            const status = document.getElementById('enrollment-status').value;
             const location = staffLocation || '';
             
             try {
                 let url = `/api/enrollments?location=${encodeURIComponent(location)}`;
+                if (studentId) url += `&student_id=${encodeURIComponent(studentId)}`;
+                if (courseId) url += `&course_id=${encodeURIComponent(courseId)}`;
                 if (status) url += `&status=${encodeURIComponent(status)}`;
-                if (search) url += `&search=${encodeURIComponent(search)}`;
-                if (category) url += `&category=${encodeURIComponent(category)}`;
                 
                 const response = await fetch(url, {
                     headers: { 'Authorization': 'Bearer ' + auth.getToken() }
@@ -4135,135 +2933,33 @@
                 container.innerHTML = '';
                 
                 if (data.success && data.enrollments) {
-                    // Calculate enrollment stats
-                    const totalEnrollments = data.enrollments.length;
-                    const pendingEnrollments = data.enrollments.filter(e => e.status === 'enrolled' || e.status === 'pending').length;
-                    const activeEnrollments = data.enrollments.filter(e => e.status === 'active').length;
-                    const completedEnrollments = data.enrollments.filter(e => e.status === 'completed').length;
+                    let tableHtml = '<table class="students-table"><thead><tr><th>Student</th><th>Course</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead><tbody>';
                     
-                    // Calculate fee stats
-                    let totalFees = 0;
-                    let totalPaid = 0;
-                    let totalBalance = 0;
                     data.enrollments.forEach(enrollment => {
-                        totalFees += parseFloat(enrollment.fee_amount) || 0;
-                        totalPaid += parseFloat(enrollment.fee_paid) || 0;
-                        totalBalance += (parseFloat(enrollment.fee_amount) || 0) - (parseFloat(enrollment.fee_paid) || 0);
-                    });
-                    
-                    // Update stat cards
-                    const totalEl = document.getElementById('staff-enrollment-total');
-                    const pendingEl = document.getElementById('staff-enrollment-pending');
-                    const activeEl = document.getElementById('staff-enrollment-active');
-                    const completedEl = document.getElementById('staff-enrollment-completed');
-                    const feesEl = document.getElementById('staff-enrollment-fees');
-                    const paidEl = document.getElementById('staff-enrollment-paid');
-                    const balanceEl = document.getElementById('staff-enrollment-balance');
-                    
-                    if (totalEl) totalEl.textContent = totalEnrollments;
-                    if (pendingEl) pendingEl.textContent = pendingEnrollments;
-                    if (activeEl) activeEl.textContent = activeEnrollments;
-                    if (completedEl) completedEl.textContent = completedEnrollments;
-                    if (feesEl) feesEl.textContent = 'KSh ' + totalFees.toLocaleString();
-                    if (paidEl) paidEl.textContent = 'KSh ' + totalPaid.toLocaleString();
-                    if (balanceEl) balanceEl.textContent = 'KSh ' + totalBalance.toLocaleString();
-                    
-                    if (enrollmentsViewMode === 'cards') {
-                        // Display as cards (similar to applications section)
-                        let cardsHtml = '<div style="display: grid; gap: 20px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 350px), 1fr));">';
+                        const statusClass = enrollment.status === 'approved' || enrollment.status === 'active' || enrollment.status === 'completed' ? 'payment-paid' : 
+                                            enrollment.status === 'rejected' ? 'payment-unpaid' : 'payment-partial';
                         
-                        data.enrollments.forEach(enrollment => {
-                            const statusClass = enrollment.status === 'approved' || enrollment.status === 'active' || enrollment.status === 'completed' ? 'status-approved' : 
-                                                enrollment.status === 'rejected' ? 'status-rejected' : 'status-pending';
-                            
-                            // Display both courses if both exist
-                            const drivingCourse = enrollment.driving_course || '';
-                            const computerCourse = enrollment.computer_course || '';
-                            const coursesDisplay = (drivingCourse && computerCourse) ? 
-                                drivingCourse + ', ' + computerCourse : 
-                                (drivingCourse || computerCourse || 'N/A');
-                            
-                            cardsHtml += `
-                                <div class="course-card" style="padding: 20px;">
-                                    <div style="margin-bottom: 16px;">
-                                        <h3 style="margin-bottom: 4px; font-size: 18px; font-weight: 600;">Enrollment #${enrollment.enrollment_number || enrollment.id}</h3>
-                                        <p style="font-size: 16px; font-weight: 500; color: var(--primary-color);">${enrollment.student_name || 'N/A'}</p>
-                                        <p style="font-size: 13px; color: var(--text-light);">${enrollment.student_email || ''} • ${formatDate(enrollment.enrollment_date)}</p>
-                                    </div>
-                                    
-                                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; font-size: 12px;">
-                                        <div><strong>Course:</strong> ${coursesDisplay}</div>
-                                        <div><strong>License:</strong> ${enrollment.license_type || '-'}</div>
-                                        <div><strong>Transmission:</strong> ${enrollment.transmission || '-'}</div>
-                                        <div><strong>Schedule:</strong> ${enrollment.preferred_schedule || '-'}</div>
-                                        <div><strong>Fee:</strong> ${enrollment.fee_amount || 0}</div>
-                                        <div><strong>Paid:</strong> ${enrollment.fee_paid || 0}</div>
-                                        <div><strong>Balance:</strong> ${(enrollment.fee_amount || 0) - (enrollment.fee_paid || 0)}</div>
-                                        <div><strong>Payment:</strong> ${enrollment.payment_status || 'unpaid'}</div>
-                                    </div>
-                                    
-                                    <div style="display: flex; gap: 12px; margin-bottom: 16px; align-items: center;">
-                                        <span class="status-badge ${statusClass}">${enrollment.status}</span>
-                                    </div>
-                                    
+                        tableHtml += `
+                            <tr>
+                                <td data-label="Student">${enrollment.student_name || 'N/A'}</td>
+                                <td data-label="Course">${enrollment.course_name || 'N/A'}</td>
+                                <td data-label="Date">${formatDate(enrollment.enrollment_date)}</td>
+                                <td data-label="Status"><span class="${statusClass}">${enrollment.status}</span></td>
+                                <td data-label="Actions">
                                     <div class="action-buttons">
-                                        <button class="btn btn-primary btn-small" onclick="editEnrollment(${enrollment.id})"><i class="fas fa-edit"></i> Edit</button>
+                                        <button class="btn btn-primary btn-small" onclick="editEnrollment(${enrollment.id})"><i class="fas fa-edit"></i></button>
                                         ${enrollment.status === 'pending' ? `
-                                            <button class="btn btn-secondary btn-small" onclick="approveEnrollment(${enrollment.id})"><i class="fas fa-check"></i> Approve</button>
-                                            <button class="btn btn-outline btn-small" onclick="rejectEnrollment(${enrollment.id})"><i class="fas fa-times"></i> Reject</button>
+                                            <button class="btn btn-secondary btn-small" onclick="approveEnrollment(${enrollment.id})"><i class="fas fa-check"></i></button>
+                                            <button class="btn btn-outline btn-small" onclick="rejectEnrollment(${enrollment.id})"><i class="fas fa-times"></i></button>
                                         ` : ''}
                                     </div>
-                                </div>
-                            `;
-                        });
-                        
-                        cardsHtml += '</div>';
-                        container.innerHTML = cardsHtml;
-                    } else {
-                        // Display as table
-                        let tableHtml = '<table class="students-table"><thead><tr><th>Student</th><th>Course</th><th>Category</th><th>License</th><th>Fee</th><th>Paid</th><th>Balance</th><th>Status</th><th>Actions</th></tr></thead><tbody>';
-                        
-                        data.enrollments.forEach(enrollment => {
-                            const statusClass = enrollment.status === 'approved' || enrollment.status === 'active' || enrollment.status === 'completed' ? 'payment-paid' : 
-                                                enrollment.status === 'rejected' ? 'payment-unpaid' : 'payment-partial';
-                            const balance = (enrollment.fee_amount || 0) - (enrollment.fee_paid || 0);
-                            
-                            // Display both courses if both exist
-                            const drivingCourse = enrollment.driving_course || '';
-                            const computerCourse = enrollment.computer_course || '';
-                            const coursesDisplay = (drivingCourse && computerCourse) ? 
-                                drivingCourse + ', ' + computerCourse : 
-                                (drivingCourse || computerCourse || 'N/A');
-                            const categoriesDisplay = (drivingCourse && computerCourse) ? 
-                                'Driving, Computer' : 
-                                (drivingCourse ? 'Driving' : (computerCourse ? 'Computer' : '-'));
-                            
-                            tableHtml += `
-                                <tr>
-                                    <td data-label="Student">${enrollment.student_name || 'N/A'}</td>
-                                    <td data-label="Course">${coursesDisplay}</td>
-                                    <td data-label="Category">${categoriesDisplay}</td>
-                                    <td data-label="License">${enrollment.license_type || '-'}</td>
-                                    <td data-label="Fee">${enrollment.fee_amount || 0}</td>
-                                    <td data-label="Paid">${enrollment.fee_paid || 0}</td>
-                                    <td data-label="Balance">${balance}</td>
-                                    <td data-label="Status"><span class="${statusClass}">${enrollment.status}</span></td>
-                                    <td data-label="Actions">
-                                        <div class="action-buttons">
-                                            <button class="btn btn-primary btn-small" onclick="editEnrollment(${enrollment.id})"><i class="fas fa-edit"></i></button>
-                                            ${enrollment.status === 'pending' ? `
-                                                <button class="btn btn-secondary btn-small" onclick="approveEnrollment(${enrollment.id})"><i class="fas fa-check"></i></button>
-                                                <button class="btn btn-outline btn-small" onclick="rejectEnrollment(${enrollment.id})"><i class="fas fa-times"></i></button>
-                                            ` : ''}
-                                        </div>
-                                    </td>
-                                </tr>
-                            `;
-                        });
-                        
-                        tableHtml += '</tbody></table>';
-                        container.innerHTML = tableHtml;
-                    }
+                                </td>
+                            </tr>
+                        `;
+                    });
+                    
+                    tableHtml += '</tbody></table>';
+                    container.innerHTML = tableHtml;
                 } else {
                     container.innerHTML = '<p class="text-center" style="padding: 40px; color: var(--text-light);">No enrollments found.</p>';
                 }
@@ -4274,119 +2970,21 @@
         }
         
         function openEnrollmentModal(id = null) {
-            const modal = document.getElementById('enrollment-modal');
-            const modalContent = modal.querySelector('.modal-content');
-            
-            document.getElementById('enrollment-modal-title').innerHTML = id ? '<i class="fas fa-edit"></i> Edit Enrollment' : '<i class="fas fa-user-plus"></i> Add Enrollment';
+            document.getElementById('enrollment-modal-title').textContent = id ? 'Edit Enrollment' : 'Add Enrollment';
             document.getElementById('enrollment-id').value = id || '';
-            document.getElementById('enrollment-student-id').value = '';
-            document.getElementById('enrollment-form').reset();
             document.getElementById('enrollment-modal-date').value = new Date().toISOString().split('T')[0];
-            document.getElementById('enrollment-modal-status').value = 'enrolled';
-            document.getElementById('enrollment-balance').value = '';
+            document.getElementById('enrollment-modal-status').value = 'pending';
             
-            // Reset student display
-            const studentSelectGroup = document.getElementById('student-select-group');
-            const studentNameGroup = document.getElementById('student-name-group');
-            const studentLabel = document.getElementById('enrollment-student-label');
-            
-            if (!id) {
-                // New enrollment - show student dropdown
-                if (studentSelectGroup) studentSelectGroup.style.display = 'block';
-                if (studentNameGroup) studentNameGroup.style.display = 'none';
-                if (studentLabel) {
-                    studentLabel.textContent = 'Select the student for this enrollment';
-                    studentLabel.style.fontWeight = 'normal';
-                    studentLabel.style.color = '';
-                }
-            } else {
-                // Edit enrollment - will show student name after loading
-                if (studentSelectGroup) studentSelectGroup.style.display = 'none';
-                if (studentNameGroup) studentNameGroup.style.display = 'block';
-            }
-            
-            // Load students, driving courses, computer courses and locations
+            // Load students and courses
             loadStudentsForEnrollmentModal();
-            loadDrivingCoursesForEnrollmentModal();
-            loadComputerCoursesForEnrollmentModal();
-            loadLocationsForEnrollmentModal();
+            loadCoursesForEnrollmentModal();
             
-            // Set default location for staff
-            const locationSelect = document.getElementById('enrollment-modal-location-id');
-            if (locationSelect && staffLocation) {
-                locationSelect.value = staffLocation;
-            }
-            
-            // Show modal - add show class and set display to flex
-            modal.classList.add('show');
-            modal.style.setProperty('display', 'flex', 'important');
-            modal.style.visibility = 'visible';
-            modal.style.position = 'fixed';
-            modal.style.top = '0';
-            modal.style.left = '0';
-            modal.style.width = '100%';
-            modal.style.height = '100%';
-            modal.style.background = 'rgba(0, 0, 0, 0.5)';
-            modal.style.zIndex = '999999';
-            modal.style.alignItems = 'center';
-            modal.style.justifyContent = 'center';
-            
-            // Ensure modal content is visible
-            if (modalContent) {
-                modalContent.classList.add('show');
-                modalContent.style.setProperty('display', 'block', 'important');
-                modalContent.style.visibility = 'visible';
-                modalContent.style.zIndex = '1000000';
-            }
+            document.getElementById('enrollment-modal').classList.add('show');
         }
         
         function closeEnrollmentModal() {
-            const modal = document.getElementById('enrollment-modal');
-            const modalContent = modal.querySelector('.modal-content');
-            
-            // Remove show class and hide
-            modal.classList.remove('show');
-            modal.style.display = 'none';
-            modal.style.visibility = 'hidden';
-            
-            // Also hide content
-            if (modalContent) {
-                modalContent.classList.remove('show');
-                modalContent.style.display = 'none';
-            }
+            document.getElementById('enrollment-modal').classList.remove('show');
         }
-        
-        // Add event listeners for enrollment modal close buttons
-        document.addEventListener('DOMContentLoaded', function() {
-            const enrollmentCloseBtn = document.getElementById('enrollment-close-btn');
-            const enrollmentCancelBtn = document.getElementById('enrollment-cancel-btn');
-            const enrollmentModal = document.getElementById('enrollment-modal');
-            
-            if (enrollmentCloseBtn) {
-                enrollmentCloseBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    closeEnrollmentModal();
-                });
-            }
-            
-            if (enrollmentCancelBtn) {
-                enrollmentCancelBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    closeEnrollmentModal();
-                });
-            }
-            
-            // Close modal when clicking outside (on the backdrop)
-            if (enrollmentModal) {
-                enrollmentModal.addEventListener('click', function(e) {
-                    if (e.target === enrollmentModal) {
-                        closeEnrollmentModal();
-                    }
-                });
-            }
-        });
         
         async function loadStudentsForEnrollmentModal() {
             const select = document.getElementById('enrollment-modal-student');
@@ -4440,13 +3038,8 @@
                 const data = await response.json();
                 
                 if (data.success && data.courses) {
-                    // Filter courses by Driving and Computer categories
-                    const filteredCourses = data.courses.filter(course => 
-                        course.category === 'Driving' || course.category === 'Computer'
-                    );
-                    
                     select.innerHTML = '<option value="">Select Course</option>';
-                    filteredCourses.forEach(course => {
+                    data.courses.forEach(course => {
                         const option = document.createElement('option');
                         option.value = course.id;
                         option.textContent = course.name;
@@ -4458,224 +3051,24 @@
             }
         }
         
-        // Load driving courses for enrollment modal
-        async function loadDrivingCoursesForEnrollmentModal() {
-            const select = document.getElementById('enrollment-modal-driving');
-            if (!select) return;
-            
-            try {
-                const response = await fetch('/api/courses?category=Driving', {
-                    headers: { 'Authorization': 'Bearer ' + auth.getToken() }
-                });
-                
-                if (response.status === 401) {
-                    auth.logout();
-                    window.location.href = 'login.html';
-                    return;
-                }
-                
-                const data = await response.json();
-                
-                if (data.success && data.courses) {
-                    select.innerHTML = '<option value="">Select Driving Course</option>';
-                    data.courses.forEach(course => {
-                        const option = document.createElement('option');
-                        option.value = course.name;
-                        const priceStr = course.price ? ` - KSh ${parseFloat(course.price).toLocaleString()}` : '';
-                        option.textContent = course.name + priceStr;
-                        option.setAttribute('data-price', course.price || 0);
-                        select.appendChild(option);
-                    });
-                }
-            } catch (error) {
-                console.error('Error loading driving courses:', error);
-            }
-        }
-        
-        // Load computer courses for enrollment modal
-        async function loadComputerCoursesForEnrollmentModal() {
-            const select = document.getElementById('enrollment-modal-computer');
-            if (!select) return;
-            
-            try {
-                const response = await fetch('/api/courses?category=Computer', {
-                    headers: { 'Authorization': 'Bearer ' + auth.getToken() }
-                });
-                
-                if (response.status === 401) {
-                    auth.logout();
-                    window.location.href = 'login.html';
-                    return;
-                }
-                
-                const data = await response.json();
-                
-                if (data.success && data.courses) {
-                    select.innerHTML = '<option value="">Select Computer Course</option>';
-                    data.courses.forEach(course => {
-                        const option = document.createElement('option');
-                        option.value = course.name;
-                        const priceStr = course.price ? ` - KSh ${parseFloat(course.price).toLocaleString()}` : '';
-                        option.textContent = course.name + priceStr;
-                        option.setAttribute('data-price', course.price || 0);
-                        select.appendChild(option);
-                    });
-                }
-            } catch (error) {
-                console.error('Error loading computer courses:', error);
-            }
-        }
-        
-        // Calculate total fee from driving and computer courses for staff portal
-        function calculateEnrollmentFee() {
-            const drivingSelect = document.getElementById('enrollment-modal-driving');
-            const computerSelect = document.getElementById('enrollment-modal-computer');
-            const feeInput = document.getElementById('enrollment-modal-fee');
-            
-            let totalFee = 0;
-            
-            // Get driving course price
-            if (drivingSelect && drivingSelect.selectedOptions[0]) {
-                const drivingPrice = parseFloat(drivingSelect.selectedOptions[0].getAttribute('data-price')) || 0;
-                totalFee += drivingPrice;
-            }
-            
-            // Get computer course price
-            if (computerSelect && computerSelect.selectedOptions[0]) {
-                const computerPrice = parseFloat(computerSelect.selectedOptions[0].getAttribute('data-price')) || 0;
-                totalFee += computerPrice;
-            }
-            
-            // Update fee input
-            if (feeInput) {
-                feeInput.value = totalFee > 0 ? totalFee : '';
-            }
-            
-            // Recalculate balance
-            calculateEnrollmentBalance();
-        }
-        
-        // Calculate balance between fee and paid
-        function calculateEnrollmentBalance() {
-            const feeInput = document.getElementById('enrollment-modal-fee');
-            const paidInput = document.getElementById('enrollment-modal-paid');
-            const balanceInput = document.getElementById('enrollment-balance');
-            
-            if (feeInput && paidInput && balanceInput) {
-                const fee = parseFloat(feeInput.value) || 0;
-                const paid = parseFloat(paidInput.value) || 0;
-                const balance = fee - paid;
-                balanceInput.value = balance > 0 ? balance : 0;
-            }
-        }
-        
-        // Load locations for enrollment modal
-        async function loadLocationsForEnrollmentModal() {
-            const select = document.getElementById('enrollment-modal-location-id');
-            if (!select) return;
-            
-            // Skip if already loaded (unless staff location is set)
-            if (select.options.length > 1 && !staffLocation) return;
-            
-            try {
-                const response = await fetch('/api/locations', {
-                    headers: { 'Authorization': 'Bearer ' + auth.getToken() }
-                });
-                const data = await response.json();
-                
-                if (data.success && data.locations) {
-                    // Keep the first option (Select Location)
-                    const firstOption = select.options[0];
-                    select.innerHTML = '';
-                    select.appendChild(firstOption);
-                    
-                    data.locations.forEach(loc => {
-                        const option = document.createElement('option');
-                        // Use location_id as value
-                        option.value = loc.id || loc.location_id || loc.name;
-                        option.textContent = loc.name || loc;
-                        option.setAttribute('data-location-id', loc.id || loc.location_id);
-                        option.setAttribute('data-name', loc.name || loc); // Store name for reference
-                        select.appendChild(option);
-                    });
-                    
-                    // Set default to staff location if available
-                    if (staffLocation) {
-                        // Try to find by location_id first, then by name
-                        let found = false;
-                        for (let i = 0; i < select.options.length; i++) {
-                            const opt = select.options[i];
-                            if (opt.value === staffLocation || opt.getAttribute('data-location-id') === staffLocation) {
-                                select.selectedIndex = i;
-                                found = true;
-                                break;
-                            }
-                        }
-                        // If not found by id, try by name
-                        if (!found) {
-                            for (let i = 0; i < select.options.length; i++) {
-                                if (select.options[i].textContent === staffLocation) {
-                                    select.selectedIndex = i;
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-            } catch (error) {
-                console.error('Error loading locations:', error);
-            }
-        }
-        
-        // Handle enrollment form submission
-        async function handleEnrollmentSubmit(event) {
-            event.preventDefault();
-            
+        async function saveEnrollment() {
             const id = document.getElementById('enrollment-id').value;
-            // Use hidden student_id field if set (edit mode), otherwise use dropdown value (new mode)
-            const hiddenStudentId = document.getElementById('enrollment-student-id').value;
-            const dropdownStudentId = document.getElementById('enrollment-modal-student').value;
-            const studentId = hiddenStudentId || dropdownStudentId;
+            const studentId = document.getElementById('enrollment-modal-student').value;
+            const courseId = document.getElementById('enrollment-modal-course').value;
             const enrollmentDate = document.getElementById('enrollment-modal-date').value;
             const status = document.getElementById('enrollment-modal-status').value;
-            const licenseType = document.getElementById('enrollment-modal-license').value;
-            const drivingCourse = document.getElementById('enrollment-modal-driving').value;
-            const computerCourse = document.getElementById('enrollment-modal-computer').value;
-            const transmission = document.getElementById('enrollment-modal-transmission').value;
-            const preferredSchedule = document.getElementById('enrollment-modal-schedule').value;
-            const feeAmount = document.getElementById('enrollment-modal-fee').value;
-            const feePaid = document.getElementById('enrollment-modal-paid').value;
-            const paymentStatus = document.getElementById('enrollment-modal-payment').value;
-            const locationSelect = document.getElementById('enrollment-modal-location-id');
-            const locationId = locationSelect ? locationSelect.value : '';
-            const notes = document.getElementById('enrollment-modal-notes').value;
-            const completionDate = document.getElementById('enrollment-modal-completion').value;
-            const certificateNumber = document.getElementById('enrollment-modal-cert').value;
-            const startTime = document.getElementById('enrollment-modal-start').value;
             
-            if (!studentId || !enrollmentDate) {
-                showAlert('Please fill in student and enrollment date', 'error');
+            if (!studentId || !courseId || !enrollmentDate) {
+                showAlert('Please fill in all required fields', 'error');
                 return;
             }
             
             const formData = {
                 student_id: studentId,
+                course_id: courseId,
                 enrollment_date: enrollmentDate,
                 status: status,
-                location_id: locationId || staffLocation,
-                training_location: locationSelect && locationSelect.selectedOptions[0] ? locationSelect.selectedOptions[0].textContent || locationSelect.selectedOptions[0].getAttribute('data-name') : '',
-                license_type: licenseType,
-                driving_course: drivingCourse,
-                computer_course: computerCourse,
-                transmission: transmission,
-                preferred_schedule: preferredSchedule,
-                fee_amount: feeAmount ? parseFloat(feeAmount) : 0,
-                fee_paid: feePaid ? parseFloat(feePaid) : 0,
-                payment_status: paymentStatus,
-                notes: notes,
-                completion_date: completionDate,
-                certificate_number: certificateNumber,
-                start_time: startTime
+                location: staffLocation
             };
             
             try {
@@ -4685,10 +3078,10 @@
                 const response = await fetch(url, {
                     method: method,
                     headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Content-Type': 'application/json',
                         'Authorization': 'Bearer ' + auth.getToken()
                     },
-                    body: new URLSearchParams(formData)
+                    body: JSON.stringify(formData)
                 });
                 
                 const data = await response.json();
@@ -4706,22 +3099,7 @@
         }
         
         async function editEnrollment(id) {
-            // Show the modal first
-            openEnrollmentModal(id);
-            
-            // Show student name group for edit mode
-            const studentSelectGroup = document.getElementById('student-select-group');
-            const studentNameGroup = document.getElementById('student-name-group');
-            if (studentSelectGroup) studentSelectGroup.style.display = 'none';
-            if (studentNameGroup) studentNameGroup.style.display = 'block';
-            
             try {
-                // First load students, courses, and locations
-                await loadStudentsForEnrollmentModal();
-                await loadDrivingCoursesForEnrollmentModal();
-                await loadComputerCoursesForEnrollmentModal();
-                await loadLocationsForEnrollmentModal();
-                
                 const response = await fetch(`/api/enrollments/${id}`, {
                     headers: { 'Authorization': 'Bearer ' + auth.getToken() }
                 });
@@ -4729,113 +3107,11 @@
                 
                 if (data.success && data.enrollment) {
                     const enrollment = data.enrollment;
-                    document.getElementById('enrollment-modal-title').innerHTML = '<i class="fas fa-edit"></i> Edit Enrollment';
-                    document.getElementById('enrollment-id').value = enrollment.id || '';
-                    
-                    // Set hidden student_id field
-                    const studentIdInput = document.getElementById('enrollment-student-id');
-                    if (studentIdInput) {
-                        studentIdInput.value = enrollment.student_id || '';
-                    }
-                    
-                    // Show student name
-                    const studentLabel = document.getElementById('enrollment-student-label');
-                    const studentNameDiv = document.getElementById('enrollment-student-name');
-                    if (enrollment.student_name) {
-                        if (studentLabel) {
-                            studentLabel.textContent = enrollment.student_name;
-                            studentLabel.style.fontWeight = '600';
-                            studentLabel.style.color = '#1e3a5f';
-                        }
-                        if (studentNameDiv) {
-                            studentNameDiv.textContent = enrollment.student_name;
-                        }
-                    }
-                    
-                    // Add student to dropdown for selection
-                    const studentSelect = document.getElementById('enrollment-modal-student');
-                    if (studentSelect && enrollment.student_id && enrollment.student_name) {
-                        // Check if option already exists
-                        let exists = false;
-                        for (let i = 0; i < studentSelect.options.length; i++) {
-                            if (studentSelect.options[i].value == enrollment.student_id) {
-                                exists = true;
-                                break;
-                            }
-                        }
-                        if (!exists) {
-                            const option = document.createElement('option');
-                            option.value = enrollment.student_id;
-                            option.textContent = enrollment.student_name || 'Student #' + enrollment.student_id;
-                            studentSelect.appendChild(option);
-                        }
-                        studentSelect.value = enrollment.student_id;
-                    }
-                    
-                    document.getElementById('enrollment-modal-date').value = enrollment.enrollment_date || '';
-                    document.getElementById('enrollment-modal-status').value = enrollment.status || 'enrolled';
-                    document.getElementById('enrollment-modal-license').value = enrollment.license_type || '';
-                    document.getElementById('enrollment-modal-driving').value = enrollment.driving_course || '';
-                    document.getElementById('enrollment-modal-computer').value = enrollment.computer_course || '';
-                    document.getElementById('enrollment-modal-transmission').value = enrollment.transmission || '';
-                    document.getElementById('enrollment-modal-schedule').value = enrollment.preferred_schedule || '';
-                    document.getElementById('enrollment-modal-fee').value = enrollment.fee_amount || '';
-                    document.getElementById('enrollment-modal-paid').value = enrollment.fee_paid || '';
-                    document.getElementById('enrollment-modal-payment').value = enrollment.payment_status || 'unpaid';
-                    
-                    // Set location - try to find by location_id, training_location name, or add new option
-                    const locationSelect = document.getElementById('enrollment-modal-location-id');
-                    const locationId = enrollment.location_id || enrollment.training_location || '';
-                    const locationName = enrollment.location_name || enrollment.training_location || '';
-                    
-                    if (locationSelect && locationId) {
-                        let found = false;
-                        // First try to find existing option
-                        for (let i = 0; i < locationSelect.options.length; i++) {
-                            const opt = locationSelect.options[i];
-                            if (opt.value === locationId || opt.getAttribute('data-location-id') === String(locationId)) {
-                                locationSelect.selectedIndex = i;
-                                found = true;
-                                break;
-                            }
-                        }
-                        // If not found by id, try by name
-                        if (!found && locationName) {
-                            for (let i = 0; i < locationSelect.options.length; i++) {
-                                if (locationSelect.options[i].textContent === locationName) {
-                                    locationSelect.selectedIndex = i;
-                                    found = true;
-                                    break;
-                                }
-                            }
-                        }
-                        // If still not found, add new option
-                        if (!found && locationName) {
-                            const option = document.createElement('option');
-                            option.value = locationId;
-                            option.textContent = locationName;
-                            option.setAttribute('data-location-id', locationId);
-                            locationSelect.appendChild(option);
-                            locationSelect.value = locationId;
-                        }
-                    }
-                    
-                    document.getElementById('enrollment-modal-notes').value = enrollment.notes || '';
-                    document.getElementById('enrollment-modal-completion').value = enrollment.completion_date || '';
-                    document.getElementById('enrollment-modal-cert').value = enrollment.certificate_number || '';
-                    
-                    // Handle start_time
-                    if (enrollment.start_time) {
-                        const startTimeInput = document.getElementById('enrollment-modal-start');
-                        if (startTimeInput) {
-                            startTimeInput.value = enrollment.start_time.replace(' ', 'T').substring(0, 16);
-                        }
-                    }
-                    
-                    // Calculate balance
-                    calculateEnrollmentBalance();
-                    
-                    document.getElementById('enrollment-modal').classList.add('show');
+                    openEnrollmentModal(enrollment.id);
+                    document.getElementById('enrollment-modal-date').value = enrollment.enrollment_date;
+                    document.getElementById('enrollment-modal-student').value = enrollment.student_id || '';
+                    document.getElementById('enrollment-modal-course').value = enrollment.course_id || '';
+                    document.getElementById('enrollment-modal-status').value = enrollment.status || 'pending';
                 }
             } catch (error) {
                 showAlert('Error loading enrollment: ' + error.message, 'error');
@@ -5100,13 +3376,7 @@
         // Handle profile form submission
         document.getElementById('staff-profile-form')?.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const user = auth.getUser();
-            if (!user || !user.id) {
-                showAlert('User not logged in', 'error');
-                return;
-            }
             const formData = {
-                user_id: user.id,
                 full_name: document.getElementById('staff-fullname').value,
                 phone: document.getElementById('staff-phone').value,
                 training_location: document.getElementById('staff-location').value,

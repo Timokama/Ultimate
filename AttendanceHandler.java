@@ -463,8 +463,8 @@ class AttendanceHandler extends ApiHandler implements HttpHandler {
         }
 
         String role = JWTUtil.getRole(token);
-        if (!"admin".equals(role)) {
-            sendErrorResponse(exchange, 403, "Admin access required");
+        if (!"admin".equals(role) && !"staff".equals(role) && !"instructor".equals(role)) {
+            sendErrorResponse(exchange, 403, "Admin, staff or instructor access required");
             return;
         }
 

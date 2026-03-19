@@ -415,16 +415,27 @@ public class DBConnection {
     // Get students with their active enrollments/applications for attendance dropdown
     public static List<Map<String, Object>> getStudentsWithEnrollmentsForAttendance(String location) {
         List<Map<String, Object>> students = new ArrayList<>();
-        // Get all users except admin
-        String sql = "SELECT u.id as user_id, u.first_name, u.last_name, u.full_name, u.email, u.role, " +
-                    "cr.name as course_name, cr.category as course_category, cr.id as course_id " +
-                    "FROM users u " +
-                    "LEFT JOIN enrollments e ON u.id = e.student_id AND e.status = 'active' " +
-                    "LEFT JOIN classes c ON e.class_id = c.id " +
-                    "LEFT JOIN courses cr ON c.course_id = cr.id " +
-                    "WHERE u.role != 'admin' " +
-                    "ORDER BY u.full_name";
-        try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
+        // Get all users except admin, filtered by location if provided
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT u.id as user_id, u.first_name, u.last_name, u.full_name, u.email, u.role, u.training_location, ");
+        sql.append("cr.name as course_name, cr.category as course_category, cr.id as course_id ");
+        sql.append("FROM users u ");
+        sql.append("LEFT JOIN enrollments e ON u.id = e.student_id AND e.status = 'active' ");
+        sql.append("LEFT JOIN classes c ON e.class_id = c.id ");
+        sql.append("LEFT JOIN courses cr ON c.course_id = cr.id ");
+        sql.append("WHERE u.role != 'admin' ");
+        
+        if (location != null && !location.isEmpty()) {
+            sql.append("AND (u.training_location = ? OR u.location_id::text = ? OR e.training_location = ?) ");
+        }
+        sql.append("ORDER BY u.full_name");
+        
+        try (PreparedStatement stmt = getConnection().prepareStatement(sql.toString())) {
+            if (location != null && !location.isEmpty()) {
+                stmt.setString(1, location);
+                stmt.setString(2, location);
+                stmt.setString(3, location);
+            }
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 Map<String, Object> student = new HashMap<>();
@@ -434,6 +445,7 @@ public class DBConnection {
                 student.put("full_name", rs.getString("full_name"));
                 student.put("email", rs.getString("email"));
                 student.put("role", rs.getString("role"));
+                student.put("training_location", rs.getString("training_location"));
                 student.put("course_name", rs.getString("course_name"));
                 student.put("course_category", rs.getString("course_category"));
                 student.put("course_id", rs.getObject("course_id"));
@@ -641,6 +653,12 @@ public class DBConnection {
         // Then delete all JWT tokens for this user
         deleteUserTokens(userId);
         
+        // Clear instructor_id in classes where this user is assigned as instructor
+        clearInstructorFromClasses(userId);
+        
+        // Clear staff_location in users table for this user
+        clearStaffLocation(userId);
+        
         // Now delete the user
         String sql = "DELETE FROM users WHERE id = ?";
         try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
@@ -650,6 +668,28 @@ public class DBConnection {
             e.printStackTrace();
         }
         return false;
+    }
+    
+    // Clear instructor from classes
+    private static void clearInstructorFromClasses(int userId) {
+        String sql = "UPDATE classes SET instructor_id = NULL WHERE instructor_id = ?";
+        try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
+            stmt.setInt(1, userId);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    // Clear staff location
+    private static void clearStaffLocation(int userId) {
+        String sql = "UPDATE users SET training_location = NULL WHERE id = ?";
+        try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
+            stmt.setInt(1, userId);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
     
     // Delete all mpesa_messages for applications belonging to a user
@@ -978,6 +1018,27 @@ public class DBConnection {
                      "LEFT JOIN users u ON c.instructor_id = u.id " +
                      "ORDER BY c.start_date DESC";
         try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                classes.add(mapClass(rs));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return classes;
+    }
+    
+    public static List<Map<String, Object>> getClassesByLocation(String locationId) {
+        List<Map<String, Object>> classes = new ArrayList<>();
+        String sql = "SELECT c.*, COALESCE(cr.name, '') as course_name, COALESCE(l.name, '') as location_name, " +
+                     "COALESCE(u.full_name, '') as instructor_name FROM classes c " +
+                     "LEFT JOIN courses cr ON c.course_id = cr.id " +
+                     "LEFT JOIN locations l ON c.location_id = l.id " +
+                     "LEFT JOIN users u ON c.instructor_id = u.id " +
+                     "WHERE CAST(c.location_id AS VARCHAR) = ? " +
+                     "ORDER BY c.start_date DESC";
+        try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
+            stmt.setString(1, locationId);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 classes.add(mapClass(rs));

@@ -1442,7 +1442,25 @@ class ClassHandler extends ApiHandler {
     }
     
     private void handleGetClasses(HttpExchange exchange) throws IOException {
-        List<Map<String, Object>> classes = DBConnection.getAllClasses();
+        // Check for location parameter
+        String query = exchange.getRequestURI().getQuery();
+        String location = null;
+        if (query != null && query.contains("location=")) {
+            String[] params = query.split("&");
+            for (String param : params) {
+                if (param.startsWith("location=")) {
+                    location = param.substring("location=".length());
+                    break;
+                }
+            }
+        }
+        
+        List<Map<String, Object>> classes;
+        if (location != null && !location.isEmpty()) {
+            classes = DBConnection.getClassesByLocation(location);
+        } else {
+            classes = DBConnection.getAllClasses();
+        }
         
         StringBuilder json = new StringBuilder("{\"success\": true, \"classes\": [");
         for (int i = 0; i < classes.size(); i++) {
