@@ -524,12 +524,53 @@
                     
                     <!-- Applicants Section - Shows all applicants with their applications -->
                     <div id="section-courses" class="admin-section" style="display: none;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                            <h2 style="margin: 0;">Manage Courses</h2>
-                            <button class="btn btn-primary" onclick="openCourseModal()">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; background: linear-gradient(135deg, #1e3a5f 0%, #2d5a87 100%); padding: 20px 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(30, 58, 95, 0.3);">
+                            <div>
+                                <h2 style="margin: 0; color: #fff; font-size: 24px; font-weight: 600;">Course Management</h2>
+                                <p style="margin: 5px 0 0 0; color: rgba(255,255,255,0.7); font-size: 13px;">Manage courses, categories, and pricing</p>
+                            </div>
+                            <button class="btn btn-primary" onclick="openCourseModal()" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);">
                                 <i class="fas fa-plus"></i> Add Course
                             </button>
                         </div>
+                        
+                        <!-- Stats Grid -->
+                        <div class="stats-grid" style="margin-bottom: 30px;">
+                            <div class="stat-card">
+                                <h3 id="course-total">0</h3>
+                                <p>Total Courses</p>
+                            </div>
+                            <div class="stat-card" style="background: linear-gradient(135deg, #10b981, #059669);">
+                                <h3 id="course-active">0</h3>
+                                <p>Active</p>
+                            </div>
+                            <div class="stat-card" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+                                <h3 id="course-featured">0</h3>
+                                <p>Featured</p>
+                            </div>
+                            <div class="stat-card" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
+                                <h3 id="course-licensed">0</h3>
+                                <p>Licensed</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Filters -->
+                        <div style="margin-bottom: 25px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); padding: 15px 20px; border-radius: 10px; border-left: 4px solid #3d7ab5;">
+                            <span style="color: #1e3a5f; font-weight: 600; margin-right: 10px;"><i class="fas fa-filter"></i> Filter:</span>
+                            <input type="text" id="course-search" onkeyup="loadAllCourses()" placeholder="Search courses..." style="padding: 10px 14px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 14px; min-width: 200px;">
+                            <select id="course-category-filter" onchange="loadAllCourses()" style="padding: 10px 14px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 14px; min-width: 150px;">
+                                <option value="">All Categories</option>
+                                <option value="driving">Driving</option>
+                                <option value="computer">Computer</option>
+                            </select>
+                            <select id="course-status-filter" onchange="loadAllCourses()" style="padding: 10px 14px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 14px; min-width: 150px;">
+                                <option value="">All Status</option>
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
+                            <button onclick="loadAllCourses()" class="btn btn-small" style="background: #3d7ab5; color: white; border: none;"><i class="fas fa-sync-alt"></i> Refresh</button>
+                        </div>
+                        
                         <div id="admin-courses">
                             <div class="course-card" style="text-align: center; padding: 60px 20px;">
                                 <div class="course-loader"></div>
@@ -845,46 +886,91 @@
     </section>
 
     <!-- Course Modal -->
-    <div id="course-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 id="course-modal-title">Add New Course</h3>
-                <button class="modal-close" onclick="closeCourseModal()">&times;</button>
+    <div id="course-modal" class="modal" style="z-index: 9999;">
+        <div class="modal-content" style="background: linear-gradient(135deg, #1e3a5f 0%, #2d5a87 50%, #3d7ab5 100%); border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.5); max-width: 700px; width: 95%; position: relative; z-index: 10000; margin-top: 5vh;">
+            <div class="modal-header" style="background: rgba(255,255,255,0.1); border-bottom: 1px solid rgba(255,255,255,0.2); padding: 20px 25px; border-radius: 16px 16px 0 0;">
+                <h3 id="course-modal-title" style="color: #fff; margin: 0; font-size: 22px; font-weight: 600;"><i class="fas fa-graduation-cap"></i> Add New Course</h3>
+                <button class="modal-close" onclick="closeCourseModal()" style="color: #fff; background: rgba(255,255,255,0.2); border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: 20px; transition: all 0.3s;">&times;</button>
             </div>
             <div id="course-modal-content"></div>
-            <form id="course-form" onsubmit="handleCourseSubmit(event)">
-                <div class="modal-body">
+            <form id="course-form" onsubmit="handleCourseSubmit(event)" style="background: #fff; margin: 0; border-radius: 0 0 16px 16px;">
+                <div class="modal-body" style="max-height: 70vh; overflow-y: auto; padding: 20px;">
                     <input type="hidden" id="course-id" name="course_id">
                     
-                    <div class="form-group">
-                        <label for="course-name">Course Name *</label>
-                        <input type="text" id="course-name" name="name" required placeholder="Enter course name">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="course-code" style="color: #1e3a5f;">Course Code</label>
+                            <input type="text" id="course-code" name="code" placeholder="e.g., DRV-001" style="width: 100%; padding: 12px; border: 2px solid #dee2e6; border-radius: 8px;">
+                        </div>
+                        <div class="form-group">
+                            <label for="course-name" style="color: #1e3a5f;">Course Name *</label>
+                            <input type="text" id="course-name" name="name" required placeholder="Enter course name" style="width: 100%; padding: 12px; border: 2px solid #dee2e6; border-radius: 8px;">
+                        </div>
                     </div>
                     
                     <div class="form-group">
-                        <label for="course-description">Description</label>
-                        <textarea id="course-description" name="description" rows="3" placeholder="Enter course description"></textarea>
+                        <label for="course-description" style="color: #1e3a5f;">Description</label>
+                        <textarea id="course-description" name="description" rows="3" placeholder="Enter course description" style="width: 100%; padding: 12px; border: 2px solid #dee2e6; border-radius: 8px;"></textarea>
                     </div>
                     
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="course-duration">Duration *</label>
-                            <input type="text" id="course-duration" name="duration" required placeholder="e.g., 30 hours">
+                            <label for="course-category" style="color: #1e3a5f;">Category</label>
+                            <select id="course-category" name="category" style="width: 100%; padding: 12px; border: 2px solid #dee2e6; border-radius: 8px;">
+                                <option value="">--- Select Category ---</option>
+                                <option value="driving">Driving</option>
+                                <option value="computer">Computer</option>
+                            </select>
                         </div>
                         <div class="form-group">
-                            <label for="course-price">Price (KSh) *</label>
-                            <input type="number" id="course-price" name="price" required min="0" step="0.01" placeholder="e.g., 299.99">
+                            <label for="course-duration-hours" style="color: #1e3a5f;">Duration (Hours)</label>
+                            <input type="number" id="course-duration-hours" name="duration_hours" min="0" placeholder="e.g., 30" style="width: 100%; padding: 12px; border: 2px solid #dee2e6; border-radius: 8px;">
+                        </div>
+                        <div class="form-group">
+                            <label for="course-price" style="color: #1e3a5f;">Price (KSh) *</label>
+                            <input type="number" id="course-price" name="price" required min="0" step="0.01" placeholder="e.g., 299.99" style="width: 100%; padding: 12px; border: 2px solid #dee2e6; border-radius: 8px;">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="course-department" style="color: #1e3a5f;">Department</label>
+                            <select id="course-department" name="department_id" style="width: 100%; padding: 12px; border: 2px solid #dee2e6; border-radius: 8px;">
+                                <option value="">--- Select Department ---</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="course-license-type" style="color: #1e3a5f;">License Type</label>
+                            <select id="course-license-type" name="license_type" style="width: 100%; padding: 12px; border: 2px solid #dee2e6; border-radius: 8px;">
+                                <option value="">--- Select License Type ---</option>
+                                <option value="A">Class A</option>
+                                <option value="B">Class B</option>
+                                <option value="C">Class C</option>
+                                <option value="D">Class D</option>
+                                <option value="F">Class F</option>
+                            </select>
                         </div>
                     </div>
                     
                     <div class="form-group">
-                        <label for="course-requirements">Requirements</label>
-                        <textarea id="course-requirements" name="requirements" rows="2" placeholder="Enter course requirements (comma separated)"></textarea>
+                        <label for="course-requirements" style="color: #1e3a5f;">Requirements</label>
+                        <textarea id="course-requirements" name="requirements" rows="2" placeholder="Enter course requirements (comma separated)" style="width: 100%; padding: 12px; border: 2px solid #dee2e6; border-radius: 8px;"></textarea>
+                    </div>
+                    
+                    <div class="form-row" style="align-items: center;">
+                        <div class="form-group" style="display: flex; align-items: center; gap: 8px;">
+                            <input type="checkbox" id="course-is-licensed" name="is_licensed" style="width: auto;">
+                            <label for="course-is-licensed" style="margin: 0; color: #1e3a5f;">Is Licensed</label>
+                        </div>
+                        <div class="form-group" style="display: flex; align-items: center; gap: 8px;">
+                            <input type="checkbox" id="course-is-active" name="is_active" checked style="width: auto;">
+                            <label for="course-is-active" style="margin: 0; color: #1e3a5f;">Is Active</label>
+                        </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline" onclick="closeCourseModal()">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Save Course</button>
+                <div class="modal-footer" style="background: #f8f9fa; padding: 15px 20px; border-radius: 0 0 16px 16px; border-top: 1px solid #dee2e6;">
+                    <button type="button" class="btn btn-outline" onclick="closeCourseModal()" style="color: #6c757d; border-color: #6c757d;">Cancel</button>
+                    <button type="submit" class="btn btn-primary" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); border: none;">Save Course</button>
                 </div>
             </form>
         </div>
@@ -2093,6 +2179,22 @@
                 console.log('[DEBUG] Courses data:', data);
                 
                 coursesData = data.courses || [];
+                
+                // Update stats
+                const totalCourses = coursesData.length;
+                const activeCourses = coursesData.filter(c => c.is_active).length;
+                const featuredCourses = coursesData.filter(c => c.is_featured).length;
+                const licensedCourses = coursesData.filter(c => c.is_licensed).length;
+                
+                const totalEl = document.getElementById('course-total');
+                const activeEl = document.getElementById('course-active');
+                const featuredEl = document.getElementById('course-featured');
+                const licensedEl = document.getElementById('course-licensed');
+                
+                if (totalEl) totalEl.textContent = totalCourses;
+                if (activeEl) activeEl.textContent = activeCourses;
+                if (featuredEl) featuredEl.textContent = featuredCourses;
+                if (licensedEl) licensedEl.textContent = licensedCourses;
                 
                 container.innerHTML = '';
                 
@@ -5666,27 +5768,52 @@
         }
         
         // Course Modal Functions
-        function openCourseModal(courseId = null) {
+        async function openCourseModal(courseId = null) {
             const modal = document.getElementById('course-modal');
             const title = document.getElementById('course-modal-title');
             
+            // Load departments for dropdown
+            try {
+                const deptResponse = await fetch('/api/departments', { headers: { 'Authorization': 'Bearer ' + auth.getToken() } });
+                const deptData = await deptResponse.json();
+                const deptSelect = document.getElementById('course-department');
+                deptSelect.innerHTML = '<option value="">--- Select Department ---</option>';
+                if (deptData.success && deptData.departments) {
+                    deptData.departments.forEach(dept => {
+                        const option = document.createElement('option');
+                        option.value = dept.id;
+                        option.textContent = dept.name;
+                        deptSelect.appendChild(option);
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading departments:', error);
+            }
+            
             if (courseId) {
                 // Edit mode
-                title.textContent = 'Edit Course';
+                title.innerHTML = '<i class="fas fa-edit"></i> Edit Course';
                 const course = coursesData.find(c => c.id === courseId);
                 if (course) {
                     document.getElementById('course-id').value = course.id;
-                    document.getElementById('course-name').value = course.name;
+                    document.getElementById('course-code').value = course.code || '';
+                    document.getElementById('course-name').value = course.name || '';
                     document.getElementById('course-description').value = course.description || '';
-                    document.getElementById('course-duration').value = course.duration ? course.duration.replace(' hours', '') : '';
-                    document.getElementById('course-price').value = course.price;
+                    document.getElementById('course-category').value = course.category || '';
+                    document.getElementById('course-duration-hours').value = course.duration_hours || course.duration || '';
+                    document.getElementById('course-price').value = course.price || '';
+                    document.getElementById('course-department').value = course.department_id || '';
+                    document.getElementById('course-license-type').value = course.license_type || '';
                     document.getElementById('course-requirements').value = course.requirements || '';
+                    document.getElementById('course-is-licensed').checked = course.is_licensed || false;
+                    document.getElementById('course-is-active').checked = course.is_active !== false;
                 }
             } else {
                 // Add mode
-                title.textContent = 'Add New Course';
+                title.innerHTML = '<i class="fas fa-plus"></i> Add New Course';
                 document.getElementById('course-form').reset();
                 document.getElementById('course-id').value = '';
+                document.getElementById('course-is-active').checked = true;
             }
             
             modal.classList.add('show');
@@ -5719,10 +5846,16 @@
             
             const formData = {
                 name: form.name.value,
+                code: form.code.value,
                 description: form.description.value,
-                duration: form.duration.value,
+                category: form.category.value,
+                duration_hours: form.duration_hours.value,
                 price: parseFloat(form.price.value),
-                requirements: form.requirements.value
+                department_id: form.department_id.value,
+                license_type: form.license_type.value,
+                requirements: form.requirements.value,
+                is_licensed: form.is_licensed.checked,
+                is_active: form.is_active.checked
             };
             
             const submitBtn = form.querySelector('button[type="submit"]');
