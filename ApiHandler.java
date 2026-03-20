@@ -1361,11 +1361,23 @@ class CourseHandler extends ApiHandler {
         
         String name = params.get("name");
         String description = params.get("description");
-        String duration = params.get("duration");
-        double price = Double.parseDouble(params.get("price"));
+        String category = params.get("category");
+        String duration = params.get("duration_hours");
+        double price = params.get("price") != null ? Double.parseDouble(params.get("price")) : 0;
         String requirements = params.get("requirements");
         
-        if (DBConnection.updateCourse(courseId, name, description, price)) {
+        // Parse new fields
+        Integer departmentId = null;
+        if (params.get("department_id") != null && !params.get("department_id").isEmpty()) {
+            try {
+                departmentId = Integer.parseInt(params.get("department_id"));
+            } catch (NumberFormatException e) {
+                // Ignore
+            }
+        }
+        boolean isActive = !"false".equals(params.get("is_active")) && !"0".equals(params.get("is_active"));
+        
+        if (DBConnection.updateCourse(courseId, name, description, category, duration, price, requirements, departmentId, isActive)) {
             sendSuccessResponse(exchange, "Course updated successfully");
         } else {
             sendErrorResponse(exchange, 500, "Failed to update course");

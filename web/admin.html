@@ -939,17 +939,6 @@
                                 <option value="">--- Select Department ---</option>
                             </select>
                         </div>
-                        <div class="form-group">
-                            <label for="course-license-type" style="color: #1e3a5f;">License Type</label>
-                            <select id="course-license-type" name="license_type" style="width: 100%; padding: 12px; border: 2px solid #dee2e6; border-radius: 8px;">
-                                <option value="">--- Select License Type ---</option>
-                                <option value="A">Class A</option>
-                                <option value="B">Class B</option>
-                                <option value="C">Class C</option>
-                                <option value="D">Class D</option>
-                                <option value="F">Class F</option>
-                            </select>
-                        </div>
                     </div>
                     
                     <div class="form-group">
@@ -958,10 +947,6 @@
                     </div>
                     
                     <div class="form-row" style="align-items: center;">
-                        <div class="form-group" style="display: flex; align-items: center; gap: 8px;">
-                            <input type="checkbox" id="course-is-licensed" name="is_licensed" style="width: auto;">
-                            <label for="course-is-licensed" style="margin: 0; color: #1e3a5f;">Is Licensed</label>
-                        </div>
                         <div class="form-group" style="display: flex; align-items: center; gap: 8px;">
                             <input type="checkbox" id="course-is-active" name="is_active" checked style="width: auto;">
                             <label for="course-is-active" style="margin: 0; color: #1e3a5f;">Is Active</label>
@@ -5772,7 +5757,41 @@
             const modal = document.getElementById('course-modal');
             const title = document.getElementById('course-modal-title');
             
-            // Load departments for dropdown
+            // Load departments for dropdown first
+            await loadDepartmentsForCourseModal();
+            
+            if (courseId) {
+                // Edit mode
+                title.innerHTML = '<i class="fas fa-edit"></i> Edit Course';
+                const course = coursesData.find(c => c.id === courseId);
+                if (course) {
+                    document.getElementById('course-id').value = course.id;
+                    document.getElementById('course-code').value = course.code || '';
+                    document.getElementById('course-name').value = course.name || '';
+                    document.getElementById('course-description').value = course.description || '';
+                    document.getElementById('course-category').value = course.category || '';
+                    document.getElementById('course-duration-hours').value = course.duration_hours || course.duration || '';
+                    document.getElementById('course-price').value = course.price || '';
+                    
+                    // Set department after options are loaded
+                    const deptSelect = document.getElementById('course-department');
+                    deptSelect.value = course.department_id || '';
+                    
+                    document.getElementById('course-requirements').value = course.requirements || '';
+                    document.getElementById('course-is-active').checked = course.is_active !== false;
+                }
+            } else {
+                // Add mode
+                title.innerHTML = '<i class="fas fa-plus"></i> Add New Course';
+                document.getElementById('course-form').reset();
+                document.getElementById('course-id').value = '';
+                document.getElementById('course-is-active').checked = true;
+            }
+            
+            modal.classList.add('show');
+        }
+        
+        async function loadDepartmentsForCourseModal() {
             try {
                 const deptResponse = await fetch('/api/departments', { headers: { 'Authorization': 'Bearer ' + auth.getToken() } });
                 const deptData = await deptResponse.json();
@@ -5789,34 +5808,6 @@
             } catch (error) {
                 console.error('Error loading departments:', error);
             }
-            
-            if (courseId) {
-                // Edit mode
-                title.innerHTML = '<i class="fas fa-edit"></i> Edit Course';
-                const course = coursesData.find(c => c.id === courseId);
-                if (course) {
-                    document.getElementById('course-id').value = course.id;
-                    document.getElementById('course-code').value = course.code || '';
-                    document.getElementById('course-name').value = course.name || '';
-                    document.getElementById('course-description').value = course.description || '';
-                    document.getElementById('course-category').value = course.category || '';
-                    document.getElementById('course-duration-hours').value = course.duration_hours || course.duration || '';
-                    document.getElementById('course-price').value = course.price || '';
-                    document.getElementById('course-department').value = course.department_id || '';
-                    document.getElementById('course-license-type').value = course.license_type || '';
-                    document.getElementById('course-requirements').value = course.requirements || '';
-                    document.getElementById('course-is-licensed').checked = course.is_licensed || false;
-                    document.getElementById('course-is-active').checked = course.is_active !== false;
-                }
-            } else {
-                // Add mode
-                title.innerHTML = '<i class="fas fa-plus"></i> Add New Course';
-                document.getElementById('course-form').reset();
-                document.getElementById('course-id').value = '';
-                document.getElementById('course-is-active').checked = true;
-            }
-            
-            modal.classList.add('show');
         }
         
         function closeCourseModal() {
@@ -5852,9 +5843,7 @@
                 duration_hours: form.duration_hours.value,
                 price: parseFloat(form.price.value),
                 department_id: form.department_id.value,
-                license_type: form.license_type.value,
                 requirements: form.requirements.value,
-                is_licensed: form.is_licensed.checked,
                 is_active: form.is_active.checked
             };
             

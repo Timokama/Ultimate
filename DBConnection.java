@@ -927,6 +927,13 @@ public class DBConnection {
         course.put("description", rs.getString("description"));
         course.put("category", rs.getString("category"));
         
+        // Department ID
+        try {
+            course.put("department_id", rs.getInt("department_id"));
+        } catch (SQLException e) {
+            course.put("department_id", null);
+        }
+        
         // Format duration field for frontend compatibility
         int durationHours = rs.getInt("duration_hours");
         int durationWeeks = rs.getInt("duration_weeks");
@@ -949,8 +956,6 @@ public class DBConnection {
         course.put("price", rs.getDouble("price"));
         course.put("requirements", rs.getString("requirements"));
         course.put("course_level", rs.getString("course_level"));
-        course.put("is_licensed", rs.getBoolean("is_licensed"));
-        course.put("license_type", rs.getString("license_type"));
         course.put("is_active", rs.getBoolean("is_active"));
         course.put("is_featured", rs.getBoolean("is_featured"));
         return course;
@@ -2516,7 +2521,8 @@ public class DBConnection {
         return createCourse(code, name, description, category, durationHours, price, requirements);
     }
     
-    public static boolean updateCourse(int courseId, String name, String description, String duration, double price, String requirements) {
+    public static boolean updateCourse(int courseId, String name, String description, String category, 
+            String duration, double price, String requirements, Integer departmentId, boolean isActive) {
         // Parse duration string to extract hours and weeks
         int durationHours = 0;
         int durationWeeks = 0;
@@ -2564,15 +2570,23 @@ public class DBConnection {
             }
         }
         
-        String sql = "UPDATE courses SET name = ?, description = ?, duration_hours = ?, duration_weeks = ?, price = ?, requirements = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
+        String sql = "UPDATE courses SET name = ?, description = ?, category = ?, duration_hours = ?, duration_weeks = ?, " +
+                     "price = ?, requirements = ?, department_id = ?, is_active = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
         try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
             stmt.setString(1, name);
             stmt.setString(2, description);
-            stmt.setInt(3, durationHours);
-            stmt.setInt(4, durationWeeks);
-            stmt.setDouble(5, price);
-            stmt.setString(6, requirements);
-            stmt.setInt(7, courseId);
+            stmt.setString(3, category);
+            stmt.setInt(4, durationHours);
+            stmt.setInt(5, durationWeeks);
+            stmt.setDouble(6, price);
+            stmt.setString(7, requirements);
+            if (departmentId != null) {
+                stmt.setInt(8, departmentId);
+            } else {
+                stmt.setNull(8, java.sql.Types.INTEGER);
+            }
+            stmt.setBoolean(9, isActive);
+            stmt.setInt(10, courseId);
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
