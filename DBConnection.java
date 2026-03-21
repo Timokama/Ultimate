@@ -15,24 +15,53 @@ import java.util.Map;
 
 public class DBConnection {
     
-    // Updated to new school management database - using ultimate_driving_school
-    private static final String URL = "jdbc:postgresql://localhost:5432/ultimate_driving_school";
-    private static final String USER = "postgres";
-    private static final String PASSWORD = "secret123";
+    // Database configuration - supports both local and external (e.g., Render.com) databases
+    // For local development, uses default values
+    // For production (Render), uses environment variables
+    private static String getDbUrl() {
+        String envUrl = System.getenv("DATABASE_URL");
+        if (envUrl != null && !envUrl.isEmpty()) {
+            // Render.com provides connection string in format: postgres://user:password@host:port/database
+            return "jdbc:postgresql://" + envUrl;
+        }
+        return "jdbc:postgresql://localhost:5432/ultimate_driving_school";
+    }
+    
+    private static String getDbUser() {
+        String envUser = System.getenv("DB_USER");
+        if (envUser != null && !envUser.isEmpty()) {
+            return envUser;
+        }
+        return "postgres";
+    }
+    
+    private static String getDbPassword() {
+        String envPassword = System.getenv("DB_PASSWORD");
+        if (envPassword != null && !envPassword.isEmpty()) {
+            return envPassword;
+        }
+        return "secret123";
+    }
+    
+    private static final String URL = getDbUrl();
+    private static final String USER = getDbUser();
+    private static final String PASSWORD = getDbPassword();
     private static Connection connection = null;
     
     public static Connection getConnection() {
         try {
             if (connection == null || connection.isClosed()) {
-                // Attempting to connect silently
+                // Attempting to connect
                 Class.forName("org.postgresql.Driver");
+                System.out.println("Connecting to database: " + URL);
                 connection = DriverManager.getConnection(URL, USER, PASSWORD);
+                System.out.println("Database connected successfully!");
             }
         } catch (ClassNotFoundException e) {
             System.err.println("PostgreSQL JDBC Driver not found!");
             e.printStackTrace();
         } catch (SQLException e) {
-            System.err.println("Database connection failed!");
+            System.err.println("Database connection failed! URL: " + URL + ", User: " + USER);
             e.printStackTrace();
         }
         return connection;
