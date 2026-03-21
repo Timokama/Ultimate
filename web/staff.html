@@ -243,6 +243,20 @@
             background: var(--white);
         }
         
+        /* Fees Status Badges */
+        .status-paid {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        .status-unpaid {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        .status-partial {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
         /* Sidebar Mobile Styles */
         .sidebar-toggle-btn {
             display: none;
@@ -1413,6 +1427,9 @@
                     <div id="section-fees" class="admin-section" style="display: none;">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                             <h2 style="margin: 0;">Fees Summary</h2>
+                            <button class="btn btn-primary" onclick="loadFeesSummary()">
+                                <i class="fas fa-sync-alt"></i> Refresh
+                            </button>
                         </div>
                         <div class="stats-grid">
                             <div class="stat-card">
@@ -1432,10 +1449,17 @@
                                 <p>Total Balance (KSh)</p>
                             </div>
                         </div>
-                        <div class="filter-bar" style="margin: 20px 0;">
+                        <div class="filter-bar" style="margin: 20px 0; display: flex; gap: 15px; flex-wrap: wrap;">
                             <select id="fees-location-filter" onchange="loadFeesSummary()" style="padding: 10px; border-radius: 6px; border: 1px solid #ddd; min-width: 200px;">
                                 <option value="">Loading locations...</option>
                             </select>
+                            <select id="fees-payment-filter" onchange="filterFeesByPayment()" style="padding: 10px; border-radius: 6px; border: 1px solid #ddd; min-width: 150px;">
+                                <option value="">All Payments</option>
+                                <option value="paid">Paid</option>
+                                <option value="unpaid">Unpaid</option>
+                                <option value="partial">Partial</option>
+                            </select>
+                            <input type="text" id="fees-search" oninput="filterFeesByPayment()" placeholder="Search by name or ID..." style="padding: 10px; border-radius: 6px; border: 1px solid #ddd; min-width: 200px;">
                         </div>
                         <div id="fees-list"></div>
                     </div>
@@ -3251,9 +3275,13 @@
             }
         }
         
+        // Store fees data globally for filtering
+        let feesDataCache = [];
+        
         async function loadFeesSummary() {
             const user = auth.getUser();
-            const selectedLocation = document.querySelector('#section-fees #location-filter').value;
+            const selectedLocation = document.querySelector('#section-fees #location-filter')?.value || 
+                                    document.querySelector('#fees-location-filter')?.value;
             // Ensure location is always a string
             let location = '';
             if (typeof selectedLocation === 'string') {
@@ -3264,46 +3292,201 @@
                 location = String(user.training_location);
             }
             
-            let url = '';
+            const feesListContainer = document.getElementById('fees-list');
             
-            if (!location) {
-                // No location - show all users count
-                // Fetch all users to get count
-                fetch('/api/users', {
-                    headers: { 'Authorization': 'Bearer ' + auth.getToken() }
-                }).then(res => res.json()).then(data => {
-                    const allUsers = data.users || [];
-                    const studentCount = allUsers.filter(u => 
-                        u.role === 'user' || u.role === 'student' || u.role === 'applicant'
-                    ).length;
-                    document.getElementById('total-students').textContent = studentCount;
-                }).catch(() => {});
+            try {
+                // Show loading
+                if (feesListContainer) {
+                    feesListContainer.innerHTML = '<div class="course-card" style="text-align: center; padding: 60px 20px;"><div class="course-loader"></div><p style="margin-top: 16px; color: var(--text-light);">Loading fees...</p></div>';
+                }
                 
-                document.getElementById('total-fees').textContent = '0';
-                document.getElementById('total-paid').textContent = '0';
-                document.getElementById('total-balance').textContent = '0';
-                loadStudents();
+                // Fetch all data we need
+                const headers = { 'Authorization': 'Bearer ' + auth.getToken() };
+                
+                // Get applications for the location
+                let applicationsUrl = '/api/applications';
+                if (location) {
+                    applicationsUrl += `?location=${encodeURIComponent(location)}`;
+                }
+                
+                const [appsResponse, usersResponse] = await Promise.all([
+                    fetch(applicationsUrl, { headers }),
+                    fetch('/api/users', { headers })
+                ]);
+                
+                const appsData = await appsResponse.json();
+                const usersData = await usersResponse.json();
+                
+                const applications = appsData.applications || [];
+                const users = usersData.users || [];
+                
+                // Create a map of user_id to user data
+                const userMap = {};
+                users.forEach(u => {
+                    userMap[u.id] = u;
+                });
+                
+                // Get users who have applications or enrollments with fees data
+                const feesUsers = [];
+                let totalFees = 0;
+                let totalPaid = 0;
+                
+                applications.forEach(app => {
+                    const userId = app.user_id;
+                    const user = userMap[userId];
+                    if (!user) return;
+                    
+                    const schoolFees = parseFloat(app.school_fees) || 0;
+                    const feesPaid = parseFloat(app.fees_paid) || 0;
+                    const balance = schoolFees - feesPaid;
+                    
+                    // Only include if there's fees data
+                    if (schoolFees > 0 || feesPaid > 0) {
+                        feesUsers.push({
+                            id: app.id,
+                            userId: userId,
+                            full_name: user.full_name || user.name || 'Unknown',
+                            phone: user.phone || '-',
+                            email: user.email || '-',
+                            school_fees: schoolFees,
+                            fees_paid: feesPaid,
+                            balance: balance,
+                            status: app.status,
+                            payment_status: app.payment_status || (balance <= 0 ? 'paid' : balance > 0 && feesPaid > 0 ? 'partial' : 'unpaid')
+                        });
+                        
+                        totalFees += schoolFees;
+                        totalPaid += feesPaid;
+                    }
+                });
+                
+                // Update stats
+                document.getElementById('total-students').textContent = feesUsers.length;
+                document.getElementById('total-fees').textContent = formatNumber(totalFees);
+                document.getElementById('total-paid').textContent = formatNumber(totalPaid);
+                document.getElementById('total-balance').textContent = formatNumber(totalFees - totalPaid);
+                
+                // Store and display the fees data
+                feesDataCache = feesUsers;
+                renderFeesTable(feesUsers);
+                
+            } catch (error) {
+                console.error('Error loading fees summary:', error);
+                if (feesListContainer) {
+                    feesListContainer.innerHTML = '<p style="text-align: center; padding: 40px; color: var(--text-light);">Error loading fees data.</p>';
+                }
+            }
+        }
+        
+        function renderFeesTable(feesData) {
+            const container = document.getElementById('fees-list');
+            if (!container) return;
+            
+            if (!feesData || feesData.length === 0) {
+                container.innerHTML = '<p style="text-align: center; padding: 40px; color: var(--text-light);">No fees records found. Select a location to view fees.</p>';
                 return;
             }
             
-            try {
-                url = `/api/staff/fees-summary?location=${encodeURIComponent(location)}`;
-                const response = await fetch(url, {
-                    headers: { 'Authorization': 'Bearer ' + auth.getToken() }
-                });
-                const data = await response.json();
+            let tableHtml = `
+                <table class="applications-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Student Name</th>
+                            <th>Phone</th>
+                            <th>Email</th>
+                            <th>Application Status</th>
+                            <th>School Fees</th>
+                            <th>Amount Paid</th>
+                            <th>Balance</th>
+                            <th>Payment Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            feesData.forEach((fee, index) => {
+                const balance = fee.balance || 0;
+                let statusClass = 'status-unpaid';
+                let statusText = fee.payment_status || 'Unpaid';
                 
-                if (data.success && data.summary) {
-                    document.getElementById('total-students').textContent = data.summary.total_students || 0;
-                    document.getElementById('total-fees').textContent = formatNumber(data.summary.total_fees || 0);
-                    document.getElementById('total-paid').textContent = formatNumber(data.summary.total_paid || 0);
-                    document.getElementById('total-balance').textContent = formatNumber(data.summary.total_balance || 0);
+                if (statusText === 'paid' || (balance <= 0 && fee.school_fees > 0)) {
+                    statusClass = 'status-paid';
+                    statusText = 'Paid';
+                } else if (statusText === 'partial' || fee.fees_paid > 0) {
+                    statusClass = 'status-partial';
+                    statusText = 'Partial';
+                } else {
+                    statusText = 'Unpaid';
                 }
                 
-                loadStudents();
-            } catch (error) {
-                console.error('Error loading fees summary:', error);
+                // Format application status
+                let appStatus = fee.status || '-';
+                if (appStatus === 'approved') appStatus = 'Approved';
+                else if (appStatus === 'pending') appStatus = 'Pending';
+                else if (appStatus === 'rejected') appStatus = 'Rejected';
+                else if (appStatus === 'active') appStatus = 'Active';
+                else if (appStatus === 'completed') appStatus = 'Completed';
+                
+                tableHtml += `
+                    <tr>
+                        <td data-label="#">${index + 1}</td>
+                        <td data-label="Student Name"><strong>${fee.full_name || '-'}</strong></td>
+                        <td data-label="Phone">${fee.phone || '-'}</td>
+                        <td data-label="Email">${fee.email || '-'}</td>
+                        <td data-label="Application Status"><span style="padding: 4px 10px; border-radius: 12px; font-size: 12px; background: #e0e7ff; color: #3730a3;">${appStatus}</span></td>
+                        <td data-label="School Fees"><strong>KSh ${formatNumber(fee.school_fees || 0)}</strong></td>
+                        <td data-label="Amount Paid" style="color: #10b981;">KSh ${formatNumber(fee.fees_paid || 0)}</td>
+                        <td data-label="Balance" style="font-weight: 700; color: ${balance > 0 ? '#ef4444' : '#10b981'};">KSh ${formatNumber(balance)}</td>
+                        <td data-label="Payment Status"><span class="${statusClass}" style="padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 500;">${statusText}</span></td>
+                    </tr>
+                `;
+            });
+            
+            tableHtml += '</tbody></table>';
+            container.innerHTML = tableHtml;
+        }
+        
+        function filterFeesByPayment() {
+            const paymentFilter = document.getElementById('fees-payment-filter')?.value || '';
+            const searchQuery = document.getElementById('fees-search')?.value?.toLowerCase() || '';
+            
+            let filteredData = [...feesDataCache];
+            
+            // Filter by payment status
+            if (paymentFilter) {
+                filteredData = filteredData.filter(fee => {
+                    const balance = (fee.school_fees || 0) - (fee.fees_paid || 0);
+                    if (paymentFilter === 'paid') return balance <= 0 && fee.school_fees > 0;
+                    if (paymentFilter === 'unpaid') return !fee.fees_paid || fee.fees_paid <= 0;
+                    if (paymentFilter === 'partial') return fee.fees_paid > 0 && balance > 0;
+                    return true;
+                });
             }
+            
+            // Filter by search query
+            if (searchQuery) {
+                filteredData = filteredData.filter(fee => {
+                    const name = (fee.full_name || '').toLowerCase();
+                    const id = String(fee.id || '').toLowerCase();
+                    const phone = (fee.phone || '').toLowerCase();
+                    return name.includes(searchQuery) || id.includes(searchQuery) || phone.includes(searchQuery);
+                });
+            }
+            
+            renderFeesTable(filteredData);
+        }
+        
+        function viewFeeDetails(feeId) {
+            const fee = feesDataCache.find(f => f.id === feeId);
+            if (!fee) return;
+            
+            const balance = (fee.school_fees || 0) - (fee.fees_paid || 0);
+            let statusText = 'Unpaid';
+            if (balance <= 0 && fee.school_fees > 0) statusText = 'Paid';
+            else if (fee.fees_paid > 0) statusText = 'Partial';
+            
+            alert(`Fee Details\n\nStudent: ${fee.full_name || 'N/A'}\nPhone: ${fee.phone || 'N/A'}\nSchool Fees: KSh ${formatNumber(fee.school_fees || 0)}\nAmount Paid: KSh ${formatNumber(fee.fees_paid || 0)}\nBalance: KSh ${formatNumber(balance)}\nStatus: ${statusText}`);
         }
         
         // ==================== CLASSES SECTION ====================
