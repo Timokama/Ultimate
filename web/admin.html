@@ -920,6 +920,8 @@
                                 <option value="">--- Select Category ---</option>
                                 <option value="driving">Driving</option>
                                 <option value="computer">Computer</option>
+                                <option value="defensive">Defensive</option>
+                                <option value="general">General</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -2158,12 +2160,40 @@
             const container = document.getElementById('admin-courses');
             if (!container) return;
             
+            container.innerHTML = '<div class="course-card" style="text-align: center; padding: 60px 20px;"><div class="course-loader"></div><p style="margin-top: 16px; color: var(--text-light);">Loading courses...</p></div>';
+            
+            // Get filter values
+            const searchTerm = document.getElementById('course-search')?.value?.toLowerCase() || '';
+            const categoryFilter = document.getElementById('course-category-filter')?.value || '';
+            const statusFilter = document.getElementById('course-status-filter')?.value || '';
+            
             try {
                 console.log('[DEBUG] Fetching courses from /api/courses');
                 const data = await courses.getAll();
                 console.log('[DEBUG] Courses data:', data);
                 
                 coursesData = data.courses || [];
+                
+                // Filter courses - case insensitive
+                let filteredCourses = coursesData;
+                if (searchTerm) {
+                    filteredCourses = filteredCourses.filter(course => 
+                        (course.name || '').toLowerCase().includes(searchTerm) ||
+                        (course.code || '').toLowerCase().includes(searchTerm)
+                    );
+                }
+                if (categoryFilter) {
+                    filteredCourses = filteredCourses.filter(course => 
+                        course.category && course.category.toLowerCase() === categoryFilter.toLowerCase()
+                    );
+                }
+                if (statusFilter) {
+                    filteredCourses = filteredCourses.filter(course => {
+                        if (statusFilter === 'active') return course.is_active;
+                        if (statusFilter === 'inactive') return !course.is_active;
+                        return true;
+                    });
+                }
                 
                 // Update stats
                 const totalCourses = coursesData.length;
@@ -2183,30 +2213,43 @@
                 
                 container.innerHTML = '';
                 
-                if (coursesData.length > 0) {
+                if (filteredCourses.length > 0) {
                     let tableHtml = `
                         <table class="applications-table">
                             <thead>
                                 <tr>
                                     <th>ID</th>
                                     <th>Course Name</th>
+                                    <th>Category</th>
                                     <th>Duration</th>
                                     <th>Price</th>
-                                    <th>Requirements</th>
+                                    <th>Status</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                     `;
                     
-                    coursesData.forEach(course => {
+                    filteredCourses.forEach(course => {
+                        const cat = (course.category || '').toLowerCase();
+                        const categoryBadge = cat === 'driving' 
+                            ? '<span class="payment-paid">Driving</span>'
+                            : (cat === 'computer' 
+                                ? '<span style="background: #8b5cf6; color: white; padding: 4px 8px; border-radius: 12px; font-size: 0.75rem;">Computer</span>'
+                                : '<span style="background: #6b7280; color: white; padding: 4px 8px; border-radius: 12px; font-size: 0.75rem;">' + (course.category || 'N/A') + '</span>');
+                        
+                        const statusBadge = course.is_active 
+                            ? '<span class="payment-paid">Active</span>'
+                            : '<span class="payment-unpaid">Inactive</span>';
+                        
                         tableHtml += `
                             <tr>
                                 <td data-label="ID">${course.id}</td>
-                                <td data-label="Course">${course.name}</td>
-                                <td data-label="Duration">${course.duration}</td>
+                                <td data-label="Course"><strong>${course.name || 'N/A'}</strong></td>
+                                <td data-label="Category">${categoryBadge}</td>
+                                <td data-label="Duration">${course.duration_hours || course.duration || 'N/A'} Hours</td>
                                 <td data-label="Price" class="course-price-display">${formatCurrency(course.price)}</td>
-                                <td data-label="Requirements" style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${course.requirements || ''}">${course.requirements || 'N/A'}</td>
+                                <td data-label="Status">${statusBadge}</td>
                                 <td data-label="Actions">
                                     <div class="action-buttons">
                                         <button class="btn btn-primary btn-small" onclick="editCourse(${course.id})">
@@ -2224,7 +2267,7 @@
                     tableHtml += '</tbody></table>';
                     container.innerHTML = tableHtml;
                 } else {
-                    container.innerHTML = '<p class="text-center">No courses found.</p>';
+                    container.innerHTML = '<p class="text-center">No courses match your filters.</p>';
                 }
             } catch (error) {
                 container.innerHTML = '<p class="text-center">Unable to load courses.</p>';
@@ -5769,7 +5812,7 @@
                     document.getElementById('course-code').value = course.code || '';
                     document.getElementById('course-name').value = course.name || '';
                     document.getElementById('course-description').value = course.description || '';
-                    document.getElementById('course-category').value = course.category || '';
+                    document.getElementById('course-category').value = course.category ? course.category.toLowerCase() : '';
                     document.getElementById('course-duration-hours').value = course.duration_hours || course.duration || '';
                     document.getElementById('course-price').value = course.price || '';
                     

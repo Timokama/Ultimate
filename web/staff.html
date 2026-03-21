@@ -1318,9 +1318,43 @@
                     
                     <!-- Courses Section -->
                     <div id="section-courses" class="admin-section" style="display: none;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                            <h2 style="margin: 0;">Training Courses</h2>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; background: linear-gradient(135deg, #1e3a5f 0%, #2d5a87 100%); padding: 20px 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(30, 58, 95, 0.3);">
+                            <div>
+                                <h2 style="margin: 0; color: #fff; font-size: 24px; font-weight: 600;">Training Courses</h2>
+                                <p style="margin: 5px 0 0 0; color: rgba(255,255,255,0.7); font-size: 13px;">View available training courses</p>
+                            </div>
                         </div>
+                        
+                        <!-- Stats Grid -->
+                        <div class="stats-grid" style="margin-bottom: 30px;">
+                            <div class="stat-card">
+                                <h3 id="staff-courses-total">0</h3>
+                                <p>Total Courses</p>
+                            </div>
+                            <div class="stat-card" style="background: linear-gradient(135deg, #10b981, #059669);">
+                                <h3 id="staff-courses-driving">0</h3>
+                                <p>Driving</p>
+                            </div>
+                            <div class="stat-card" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
+                                <h3 id="staff-courses-computer">0</h3>
+                                <p>Computer</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Filters -->
+                        <div style="margin-bottom: 25px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); padding: 15px 20px; border-radius: 10px; border-left: 4px solid #3d7ab5;">
+                            <span style="color: #1e3a5f; font-weight: 600; margin-right: 10px;"><i class="fas fa-filter"></i> Filter:</span>
+                            <input type="text" id="staff-course-search" onkeyup="loadCourses()" placeholder="Search courses..." style="padding: 10px 14px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 14px; min-width: 200px;">
+                            <select id="staff-course-category" onchange="loadCourses()" style="padding: 10px 14px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 14px; min-width: 150px;">
+                                <option value="">All Categories</option>
+                                <option value="driving">Driving</option>
+                                <option value="computer">Computer</option>
+                                <option value="defensive">Defensive</option>
+                                <option value="general">General</option>
+                            </select>
+                            <button onclick="loadCourses()" class="btn btn-small" style="background: #3d7ab5; color: white; border: none;"><i class="fas fa-sync-alt"></i> Refresh</button>
+                        </div>
+                        
                         <div id="staff-courses-list" class="table-container">
                             <p style="color: var(--text-light); text-align: center; padding: 40px;">
                                 <i class="fas fa-graduation-cap" style="font-size: 3rem; margin-bottom: 16px; color: var(--primary-color);"></i><br>
@@ -5063,6 +5097,11 @@
             const container = document.getElementById('staff-courses-list');
             if (!container) return;
             
+            container.innerHTML = '<div class="course-card" style="text-align: center; padding: 60px 20px;"><div class="course-loader"></div><p style="margin-top: 16px; color: var(--text-light);">Loading courses...</p></div>';
+            
+            const searchTerm = document.getElementById('staff-course-search')?.value?.toLowerCase() || '';
+            const categoryFilter = document.getElementById('staff-course-category')?.value || '';
+            
             try {
                 const response = await fetch('/api/courses', {
                     headers: { 'Authorization': 'Bearer ' + auth.getToken() }
@@ -5070,37 +5109,73 @@
                 const data = await response.json();
                 
                 if (data.success && data.courses && data.courses.length > 0) {
-                    let html = `
-                        <table style="width: 100%; border-collapse: collapse;">
-                            <thead>
-                                <tr style="background: var(--bg-light);">
-                                    <th style="padding: 12px; text-align: left; border-bottom: 2px solid var(--border-color);">Course Name</th>
-                                    <th style="padding: 12px; text-align: left; border-bottom: 2px solid var(--border-color);">Category</th>
-                                    <th style="padding: 12px; text-align: left; border-bottom: 2px solid var(--border-color);">Duration</th>
-                                    <th style="padding: 12px; text-align: right; border-bottom: 2px solid var(--border-color);">Price</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                    `;
+                    // Update stats - case insensitive
+                    const totalCourses = data.courses.length;
+                    const drivingCourses = data.courses.filter(c => c.category && c.category.toLowerCase() === 'driving').length;
+                    const computerCourses = data.courses.filter(c => c.category && c.category.toLowerCase() === 'computer').length;
                     
-                    data.courses.forEach(course => {
-                        const categoryBadge = course.category === 'driving' 
-                            ? '<span style="background: #3b82f6; color: white; padding: 4px 8px; border-radius: 12px; font-size: 0.75rem;">Driving</span>'
-                            : '<span style="background: #8b5cf6; color: white; padding: 4px 8px; border-radius: 12px; font-size: 0.75rem;">Computer</span>';
-                        
-                        html += `
-                            <tr style="border-bottom: 1px solid var(--border-color);">
-                                <td style="padding: 12px;"><strong>${course.name || 'N/A'}</strong></td>
-                                <td style="padding: 12px;">${categoryBadge}</td>
-                                <td style="padding: 12px;">${course.duration_hours || 'N/A'} Hours</td>
-                                <td style="padding: 12px; text-align: right; font-weight: 600;">KSh ${parseFloat(course.price || 0).toLocaleString()}</td>
-                            </tr>
+                    document.getElementById('staff-courses-total').textContent = totalCourses;
+                    document.getElementById('staff-courses-driving').textContent = drivingCourses;
+                    document.getElementById('staff-courses-computer').textContent = computerCourses;
+                    
+                    // Filter courses - case insensitive
+                    let filteredCourses = data.courses;
+                    if (searchTerm) {
+                        filteredCourses = filteredCourses.filter(course => 
+                            (course.name || '').toLowerCase().includes(searchTerm)
+                        );
+                    }
+                    if (categoryFilter) {
+                        filteredCourses = filteredCourses.filter(course => course.category && course.category.toLowerCase() === categoryFilter.toLowerCase());
+                    }
+                    
+                    if (filteredCourses.length > 0) {
+                        let html = `
+                            <table class="students-table">
+                                <thead>
+                                    <tr>
+                                        <th>Course Name</th>
+                                        <th>Category</th>
+                                        <th>Duration</th>
+                                        <th>Price</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
                         `;
-                    });
-                    
-                    html += '</tbody></table>';
-                    container.innerHTML = html;
+                        
+                        filteredCourses.forEach(course => {
+                            const cat = (course.category || '').toLowerCase();
+                            const categoryBadge = cat === 'driving' 
+                                ? '<span class="payment-paid">Driving</span>'
+                                : (cat === 'computer' 
+                                    ? '<span style="background: #8b5cf6; color: white; padding: 4px 8px; border-radius: 12px; font-size: 0.75rem;">Computer</span>'
+                                    : '<span style="background: #6b7280; color: white; padding: 4px 8px; border-radius: 12px; font-size: 0.75rem;">' + (course.category || 'N/A') + '</span>');
+                            
+                            html += `
+                                <tr>
+                                    <td data-label="Course Name"><strong>${course.name || 'N/A'}</strong></td>
+                                    <td data-label="Category">${categoryBadge}</td>
+                                    <td data-label="Duration">${course.duration_hours || 'N/A'} Hours</td>
+                                    <td data-label="Price" style="font-weight: 600;">KSh ${parseFloat(course.price || 0).toLocaleString()}</td>
+                                </tr>
+                            `;
+                        });
+                        
+                        html += '</tbody></table>';
+                        container.innerHTML = html;
+                    } else {
+                        container.innerHTML = `
+                            <div style="text-align: center; padding: 40px; color: var(--text-light);">
+                                <i class="fas fa-graduation-cap" style="font-size: 3rem; margin-bottom: 16px; color: var(--primary-color);"></i>
+                                <p>No courses match your search</p>
+                            </div>
+                        `;
+                    }
                 } else {
+                    document.getElementById('staff-courses-total').textContent = '0';
+                    document.getElementById('staff-courses-driving').textContent = '0';
+                    document.getElementById('staff-courses-computer').textContent = '0';
+                    
                     container.innerHTML = `
                         <div style="text-align: center; padding: 40px; color: var(--text-light);">
                             <i class="fas fa-graduation-cap" style="font-size: 3rem; margin-bottom: 16px; color: var(--primary-color);"></i>
@@ -5109,6 +5184,10 @@
                     `;
                 }
             } catch (error) {
+                document.getElementById('staff-courses-total').textContent = '0';
+                document.getElementById('staff-courses-driving').textContent = '0';
+                document.getElementById('staff-courses-computer').textContent = '0';
+                
                 container.innerHTML = `
                     <div style="text-align: center; padding: 40px; color: var(--error-color);">
                         <i class="fas fa-exclamation-circle" style="font-size: 3rem; margin-bottom: 16px;"></i>
