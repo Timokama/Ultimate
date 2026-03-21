@@ -2371,6 +2371,9 @@
                 }
                 
                 // Applicants stats
+                let appTotalFees = 0;
+                let appTotalPaid = 0;
+                
                 if (data.success) {
                     const applicants = data.applicants || [];
                     const totalApplicants = document.getElementById('staff-total-applicants');
@@ -2381,11 +2384,17 @@
                     
                     const approvedApplicants = document.getElementById('staff-approved-applicants');
                     if (approvedApplicants) approvedApplicants.textContent = applicants.filter(a => a.status === 'approved').length;
+                    
+                    // Calculate fees from applications
+                    applicants.forEach(a => {
+                        appTotalFees += parseFloat(a.school_fees) || 0;
+                        appTotalPaid += parseFloat(a.fees_paid) || 0;
+                    });
                 }
                 
                 // Enrollments stats
-                let totalFees = 0;
-                let totalPaid = 0;
+                let enrollTotalFees = 0;
+                let enrollTotalPaid = 0;
                 let completedCount = 0;
                 let activeCount = 0;
                 let totalEnrollmentsCount = 0;
@@ -2397,10 +2406,14 @@
                     activeCount = enrollments.filter(e => e.status === 'active').length;
                     
                     enrollments.forEach(e => {
-                        totalFees += parseFloat(e.fee_amount) || 0;
-                        totalPaid += parseFloat(e.fee_paid) || 0;
+                        enrollTotalFees += parseFloat(e.fee_amount) || 0;
+                        enrollTotalPaid += parseFloat(e.fee_paid) || 0;
                     });
                 }
+                
+                // Combine fees from both applications and enrollments
+                const totalFees = appTotalFees + enrollTotalFees;
+                const totalPaid = appTotalPaid + enrollTotalPaid;
                 
                 // Update Total Enrollments
                 const totalEnrollmentsEl = document.getElementById('staff-total-enrollments');
