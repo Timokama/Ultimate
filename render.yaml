@@ -1,0 +1,37 @@
+# Render.com deployment configuration for Ultimate Defensive Driving School
+
+services:
+  # Java Web Service
+  - type: web
+    name: ultimate-defensive-school
+    env: java
+    region: oregon
+    buildCommand: |
+      # Download PostgreSQL driver if not exists
+      if [ ! -f "postgresql-42.7.8.jar" ]; then
+        curl -L -o postgresql-42.7.8.jar https://jdbc.postgresql.org/download/postgresql-42.7.8.jar
+      fi
+      # Compile Java files
+      javac -sourcepath . -cp ".:postgresql-42.7.8.jar" *.java
+    startCommand: java UltimateServer
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: ultimate-defensive-school
+          property: connectionString
+      - key: DB_USER
+        fromDatabase:
+          name: ultimate-defensive-school
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: ultimate-defensive-school
+          property: password
+      - key: JAVA_OPTS
+        value: "-Xmx512m -Xms256m"
+
+databases:
+  - name: ultimate-defensive-school
+    databaseName: ultimation
+    user: ultimation
+    plan: free
