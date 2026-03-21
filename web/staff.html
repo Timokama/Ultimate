@@ -5131,13 +5131,14 @@
                     
                     if (filteredCourses.length > 0) {
                         let html = `
-                            <table class="students-table">
+                            <div class="table-wrapper" style="overflow-x: auto;">
+                            <table class="students-table" style="width: 100%; min-width: 600px;">
                                 <thead>
                                     <tr>
                                         <th>Course Name</th>
                                         <th>Category</th>
                                         <th>Duration</th>
-                                        <th>Price</th>
+                                        <th>Price (KSh)</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -5145,11 +5146,21 @@
                         
                         filteredCourses.forEach(course => {
                             const cat = (course.category || '').toLowerCase();
-                            const categoryBadge = cat === 'driving' 
-                                ? '<span class="payment-paid">Driving</span>'
-                                : (cat === 'computer' 
-                                    ? '<span style="background: #8b5cf6; color: white; padding: 4px 8px; border-radius: 12px; font-size: 0.75rem;">Computer</span>'
-                                    : '<span style="background: #6b7280; color: white; padding: 4px 8px; border-radius: 12px; font-size: 0.75rem;">' + (course.category || 'N/A') + '</span>');
+                            let badgeColor, badgeBg;
+                            if (cat === 'driving') {
+                                badgeColor = '#fff';
+                                badgeBg = '#3b82f6';
+                            } else if (cat === 'computer') {
+                                badgeColor = '#fff';
+                                badgeBg = '#8b5cf6';
+                            } else if (cat === 'defensive') {
+                                badgeColor = '#fff';
+                                badgeBg = '#f97316';
+                            } else {
+                                badgeColor = '#fff';
+                                badgeBg = '#6b7280';
+                            }
+                            const categoryBadge = '<span style="background: ' + badgeBg + '; color: ' + badgeColor + '; padding: 4px 8px; border-radius: 12px; font-size: 0.75rem;">' + (cat.charAt(0).toUpperCase() + cat.slice(1)) + '</span>';
                             
                             html += `
                                 <tr>
@@ -5161,7 +5172,7 @@
                             `;
                         });
                         
-                        html += '</tbody></table>';
+                        html += '</tbody></table></div>';
                         container.innerHTML = html;
                     } else {
                         container.innerHTML = `
