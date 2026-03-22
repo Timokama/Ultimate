@@ -1,10 +1,10 @@
 # Render.com deployment configuration for Ultimate Defensive Driving School
 
 services:
-  - type: web
+  - type: docker
     name: ultimate-defensive-school
     region: oregon
-    dockerfilePath: ./Dockerfile
+    dockerfilePath: Dockerfile
     envVars:
       - key: DATABASE_URL
         fromDatabase:
