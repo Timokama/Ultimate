@@ -12,9 +12,3 @@ services:
         value: "ultimate_driving_school_user"
       - key: DB_PASSWORD
         value: "GUF6IzMPtUV7Atn5mUyzZYqIHVfzOp1Y"
-
-databases:
-  - name: ultimate-drivingschool
-    databaseName: ultimate_driving_school_278c
-    user: ultimate_driving_school_user
-    plan: free
