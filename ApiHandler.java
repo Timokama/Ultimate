@@ -41,7 +41,7 @@ class ApiHandler implements HttpHandler {
     }
     
     protected void sendErrorResponse(HttpExchange exchange, int statusCode, String message) throws IOException {
-        String json = "{\"success\": false, \"error\": \"" + message + "\"}";
+        String json = "{\"success\": false, \"error\": \"" + escapeJson(message) + "\"}";
         sendJsonResponse(exchange, statusCode, json);
     }
     

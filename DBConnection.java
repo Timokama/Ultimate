@@ -23,9 +23,10 @@ public class DBConnection {
         if (envUrl != null && !envUrl.isEmpty()) {
             // Render.com provides connection string in format: postgres://user:password@host:port/database
             // Convert to JDBC format: jdbc:postgresql://host:port/database?user=user&password=password
-            if (envUrl.startsWith("postgres://")) {
+            if (envUrl.startsWith("postgres://") || envUrl.startsWith("postgresql://")) {
                 // Parse the URL
-                String withoutProtocol = envUrl.substring("postgres://".length());
+                String protocol = envUrl.startsWith("postgres://") ? "postgres://" : "postgresql://";
+                String withoutProtocol = envUrl.substring(protocol.length());
                 String[] parts = withoutProtocol.split("@");
                 String userPass = parts[0];
                 String hostDb = parts[1];
@@ -46,8 +47,9 @@ public class DBConnection {
     private static String getDbUser() {
         String envUrl = System.getenv("DATABASE_URL");
         // If DATABASE_URL is set, user and password are included in the URL
-        if (envUrl != null && !envUrl.isEmpty() && envUrl.startsWith("postgres://")) {
-            String withoutProtocol = envUrl.substring("postgres://".length());
+        if (envUrl != null && !envUrl.isEmpty() && (envUrl.startsWith("postgres://") || envUrl.startsWith("postgresql://"))) {
+            String protocol = envUrl.startsWith("postgres://") ? "postgres://" : "postgresql://";
+            String withoutProtocol = envUrl.substring(protocol.length());
             String[] parts = withoutProtocol.split("@");
             if (parts.length > 0) {
                 String[] userPassParts = parts[0].split(":");
@@ -66,8 +68,9 @@ public class DBConnection {
     private static String getDbPassword() {
         String envUrl = System.getenv("DATABASE_URL");
         // If DATABASE_URL is set, user and password are included in the URL
-        if (envUrl != null && !envUrl.isEmpty() && envUrl.startsWith("postgres://")) {
-            String withoutProtocol = envUrl.substring("postgres://".length());
+        if (envUrl != null && !envUrl.isEmpty() && (envUrl.startsWith("postgres://") || envUrl.startsWith("postgresql://"))) {
+            String protocol = envUrl.startsWith("postgres://") ? "postgres://" : "postgresql://";
+            String withoutProtocol = envUrl.substring(protocol.length());
             String[] parts = withoutProtocol.split("@");
             if (parts.length > 0) {
                 String[] userPassParts = parts[0].split(":");
