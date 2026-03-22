@@ -10,6 +10,9 @@ RUN yum install -y curl && yum clean all
 # Copy all Java source files
 COPY *.java ./
 
+# Copy web directory for static files
+COPY web/ ./web/
+
 # Download PostgreSQL JDBC driver
 RUN curl -L -o postgresql-42.7.8.jar https://jdbc.postgresql.org/download/postgresql-42.7.8.jar
 
