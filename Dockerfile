@@ -22,5 +22,5 @@ RUN javac -sourcepath . -cp ".:postgresql-42.7.8.jar" *.java
 # Expose port 8080
 EXPOSE 8080
 
-# Run the Java application
-CMD ["java", "UltimateServer"]
+# Run the Java application with PostgreSQL driver in classpath
+CMD ["java", "-cp", ".:postgresql-42.7.8.jar", "UltimateServer"]
