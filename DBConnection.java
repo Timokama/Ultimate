@@ -20,7 +20,6 @@ public class DBConnection {
     // For production (Render), uses environment variables
     private static String getDbUrl() {
         String envUrl = System.getenv("DATABASE_URL");
-        System.err.println("DEBUG getDbUrl: DATABASE_URL = " + envUrl);
         
         if (envUrl != null && !envUrl.isEmpty()) {
             // Render.com provides connection string in format: postgres://user:password@host:port/database
@@ -31,7 +30,6 @@ public class DBConnection {
                 String withoutProtocol = envUrl.substring(protocol.length());
                 String[] parts = withoutProtocol.split("@");
                 if (parts.length < 2) {
-                    System.err.println("ERROR: Invalid DATABASE_URL format - no @ symbol found");
                     return "jdbc:postgresql://localhost:5432/ultimate_driving_school";
                 }
                 String userPass = parts[0];
@@ -43,13 +41,10 @@ public class DBConnection {
                 String hostPort = hostDbParts[0];
                 String database = hostDbParts.length > 1 ? hostDbParts[1] : "postgres";
                 
-                String jdbcUrl = "jdbc:postgresql://" + hostPort + "/" + database + "?user=" + user + "&password=" + password;
-                System.err.println("DEBUG getDbUrl: Parsed JDBC URL = " + jdbcUrl);
-                return jdbcUrl;
+                return "jdbc:postgresql://" + hostPort + "/" + database + "?user=" + user + "&password=" + password;
             }
             return "jdbc:postgresql://" + envUrl;
         }
-        System.err.println("DEBUG getDbUrl: Using default localhost URL");
         return "jdbc:postgresql://localhost:5432/ultimate_driving_school";
     }
     
@@ -103,16 +98,8 @@ public class DBConnection {
     public static Connection getConnection() {
         try {
             if (connection == null || connection.isClosed()) {
-                // Debug: Print connection details
-                System.err.println("DEBUG: Attempting database connection");
-                System.err.println("DEBUG: DATABASE_URL env = " + System.getenv("DATABASE_URL"));
-                System.err.println("DEBUG: URL = " + URL);
-                System.err.println("DEBUG: USER = " + USER);
-                
                 Class.forName("org.postgresql.Driver");
-                System.out.println("Connecting to database: " + URL);
                 connection = DriverManager.getConnection(URL, USER, PASSWORD);
-                System.out.println("Database connected successfully!");
             }
         } catch (ClassNotFoundException e) {
             System.err.println("PostgreSQL JDBC Driver not found!");
