@@ -1,11 +1,11 @@
 # Render.com deployment configuration for Ultimate Defensive Driving School
-# Using Docker to deploy Java application
 
 services:
   - type: web
     name: ultimate-defensive-school
-    dockerfilePath: Dockerfile
     region: oregon
+    dockerfilePath: ./Dockerfile
+    dockerCommand: []
     envVars:
       - key: DATABASE_URL
         fromDatabase:
