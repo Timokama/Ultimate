@@ -1,19 +1,11 @@
 # Render.com deployment configuration for Ultimate Defensive Driving School
+# Using Docker to deploy Java application
 
 services:
-  # Java Web Service
   - type: web
     name: ultimate-defensive-school
-    env: java
+    dockerfilePath: Dockerfile
     region: oregon
-    buildCommand: |
-      # Download PostgreSQL driver if not exists
-      if [ ! -f "postgresql-42.7.8.jar" ]; then
-        curl -L -o postgresql-42.7.8.jar https://jdbc.postgresql.org/download/postgresql-42.7.8.jar
-      fi
-      # Compile Java files
-      javac -sourcepath . -cp ".:postgresql-42.7.8.jar" *.java
-    startCommand: java UltimateServer
     envVars:
       - key: DATABASE_URL
         fromDatabase:
@@ -27,12 +19,9 @@ services:
         fromDatabase:
           name: ultimate-defensive-school
           property: password
-      - key: JAVA_OPTS
-        value: "-Xmx512m -Xms256m"
 
-# Uncomment below if you want to create a new database automatically
-# databases:
-#   - name: ultimate-defensive-school
-#     databaseName: udds
-#     user: udds
-#     plan: free
+databases:
+  - name: ultimate-defensive-school
+    databaseName: udds
+    user: udds
+    plan: free
