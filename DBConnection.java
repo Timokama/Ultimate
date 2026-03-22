@@ -22,12 +22,40 @@ public class DBConnection {
         String envUrl = System.getenv("DATABASE_URL");
         if (envUrl != null && !envUrl.isEmpty()) {
             // Render.com provides connection string in format: postgres://user:password@host:port/database
+            // Convert to JDBC format: jdbc:postgresql://host:port/database?user=user&password=password
+            if (envUrl.startsWith("postgres://")) {
+                // Parse the URL
+                String withoutProtocol = envUrl.substring("postgres://".length());
+                String[] parts = withoutProtocol.split("@");
+                String userPass = parts[0];
+                String hostDb = parts[1];
+                String[] userPassParts = userPass.split(":");
+                String user = userPassParts[0];
+                String password = userPassParts.length > 1 ? userPassParts[1] : "";
+                String[] hostDbParts = hostDb.split("/");
+                String hostPort = hostDbParts[0];
+                String database = hostDbParts.length > 1 ? hostDbParts[1] : "postgres";
+                
+                return "jdbc:postgresql://" + hostPort + "/" + database + "?user=" + user + "&password=" + password;
+            }
             return "jdbc:postgresql://" + envUrl;
         }
         return "jdbc:postgresql://localhost:5432/ultimate_driving_school";
     }
     
     private static String getDbUser() {
+        String envUrl = System.getenv("DATABASE_URL");
+        // If DATABASE_URL is set, user and password are included in the URL
+        if (envUrl != null && !envUrl.isEmpty() && envUrl.startsWith("postgres://")) {
+            String withoutProtocol = envUrl.substring("postgres://".length());
+            String[] parts = withoutProtocol.split("@");
+            if (parts.length > 0) {
+                String[] userPassParts = parts[0].split(":");
+                if (userPassParts.length > 0) {
+                    return userPassParts[0];
+                }
+            }
+        }
         String envUser = System.getenv("DB_USER");
         if (envUser != null && !envUser.isEmpty()) {
             return envUser;
@@ -36,6 +64,18 @@ public class DBConnection {
     }
     
     private static String getDbPassword() {
+        String envUrl = System.getenv("DATABASE_URL");
+        // If DATABASE_URL is set, user and password are included in the URL
+        if (envUrl != null && !envUrl.isEmpty() && envUrl.startsWith("postgres://")) {
+            String withoutProtocol = envUrl.substring("postgres://".length());
+            String[] parts = withoutProtocol.split("@");
+            if (parts.length > 0) {
+                String[] userPassParts = parts[0].split(":");
+                if (userPassParts.length > 1) {
+                    return userPassParts[1];
+                }
+            }
+        }
         String envPassword = System.getenv("DB_PASSWORD");
         if (envPassword != null && !envPassword.isEmpty()) {
             return envPassword;

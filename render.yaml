@@ -30,8 +30,9 @@ services:
       - key: JAVA_OPTS
         value: "-Xmx512m -Xms256m"
 
-databases:
-  - name: ultimate-defensive-school
-    databaseName: ultimation
-    user: ultimation
-    plan: free
+# Uncomment below if you want to create a new database automatically
+# databases:
+#   - name: ultimate-defensive-school
+#     databaseName: udds
+#     user: udds
+#     plan: free
