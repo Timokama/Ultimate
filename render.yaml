@@ -7,20 +7,14 @@ services:
     dockerfilePath: Dockerfile
     envVars:
       - key: DATABASE_URL
-        fromDatabase:
-          name: ultimate-defensive-school
-          property: connectionString
+        value: "postgresql://ultimate_driving_school_user:GUF6IzMPtUV7Atn5mUyzZYqIHVfzOp1Y@dpg-d6vpp01r0fns73cei38g-a/ultimate_driving_school_278c"
       - key: DB_USER
-        fromDatabase:
-          name: ultimate-defensive-school
-          property: user
+        value: "ultimate_driving_school_user"
       - key: DB_PASSWORD
-        fromDatabase:
-          name: ultimate-defensive-school
-          property: password
+        value: "GUF6IzMPtUV7Atn5mUyzZYqIHVfzOp1Y"
 
 databases:
-  - name: ultimate-defensive-school
-    databaseName: udds
-    user: udds
+  - name: ultimate-drivingschool
+    databaseName: ultimate_driving_school_278c
+    user: ultimate_driving_school_user
     plan: free
