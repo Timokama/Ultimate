@@ -5,7 +5,6 @@ services:
     name: ultimate-defensive-school
     region: oregon
     dockerfilePath: ./Dockerfile
-    dockerCommand: []
     envVars:
       - key: DATABASE_URL
         fromDatabase:
