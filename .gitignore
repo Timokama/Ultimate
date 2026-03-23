@@ -1,5 +1,8 @@
 # SQL files (database scripts should be in separate repo)
 *.sql
+# Allow specific SQL files to be tracked
+!ultimate_db_data.sql
+!database.sql
 
 # Compiled Java class files
 *.class
