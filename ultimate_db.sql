@@ -8,9 +8,14 @@
 -- - timo.munyiri@gmail.com / admin123
 --
 -- Import command:
--- psql -U your_username -d your_database -f ultimate_db.sql
+-- psql -U your_username -d ultimate_driving_school -f ultimate_db.sql
 --
 -- ============================================================================
+
+-- Create database
+DROP DATABASE IF EXISTS ultimate_driving_school;
+CREATE DATABASE ultimate_driving_school;
+\c ultimate_driving_school;
 
 -- ============================================================================
 -- LOCATIONS TABLE

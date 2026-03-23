@@ -69,3 +69,22 @@ INSERT INTO applications (id, user_id, first_name, last_name, email, phone, date
 (14, 3, 'Timothy', 'Kamau', 'motiv.mot@ultimat.udd', '0790722419', '2001-05-19', '38479955', '127', 'Nairobi', '10100', 1, 'Class B', 'Class C License', '', 2, 'Sunton', 'Manual', 'Morning', '2026-02-15', false, 'Timothy Munyiri', '0790722419', 'No Comments', NULL, 'approved', 23000.00, 17000.00, 6000.00, 'partial'),
 (15, 4, 'John', 'Maina', 'john@gmial.com', '0790722419', '2001-05-19', '38479955', '', 'Nairobi', '101100', 14, 'Class B', 'Class B License', '', 7, 'Zimmerman Branch', 'Both', 'Morning', '2026-02-17', false, '', '', '', NULL, 'approved', 15000.00, 10000.00, 5000.00, 'partial'),
 (16, 5, 'Mark', 'Waweru', 'mark@gmail.com', '0790000000', '2001-05-19', '356479698', '127', 'Nairobi', '10100', NULL, 'Class B', 'Class B License', '', 2, 'Sunton', 'Both', 'Morning', '2026-02-23', true, 'Timothy Munyiri', '0790722419', 'Not yet', NULL, 'approved', 25000.00, 10000.00, 15000.00, 'partial');
+
+-- ============================================================================
+-- CLASSES
+-- ============================================================================
+INSERT INTO classes (id, course_id, name, code, description, location_id, start_date, end_date, start_time, end_time, days_of_week, instructor_id, max_students, current_students, status, class_fee) VALUES 
+(1, 1, 'Class B License - Morning', 'CLS-B-001', 'Light vehicle driving course for cars and small trucks - Morning session', 2, '2026-03-01', '2026-04-30', '08:00', '12:00', 'Mon,Wed,Fri', 6, 20, 5, 'open', 15000.00),
+(2, 1, 'Class B License - Afternoon', 'CLS-B-002', 'Light vehicle driving course - Afternoon session', 2, '2026-03-01', '2026-04-30', '14:00', '18:00', 'Tue,Thu,Sat', 6, 20, 3, 'open', 15000.00),
+(3, 2, 'Class C License - Full Day', 'CLS-C-001', 'Heavy commercial vehicle driving course', 2, '2026-03-15', '2026-05-15', '08:00', '17:00', 'Mon,Tue,Wed', 6, 15, 2, 'open', 25000.00),
+(4, 5, 'Defensive Driving Course', 'CLS-DEF-001', 'Advanced driving techniques for experienced drivers', 7, '2026-04-01', '2026-04-20', '09:00', '13:00', 'Sat', 6, 25, 8, 'open', 10000.00),
+(5, 8, 'Computer Accounting - Evening', 'CLS-ACC-001', 'Accounting software training - Evening classes', 2, '2026-03-10', '2026-05-10', '18:00', '21:00', 'Mon,Wed', 7, 20, 12, 'open', 10000.00);
+
+-- ============================================================================
+-- ENROLLMENTS
+-- ============================================================================
+INSERT INTO enrollments (id, student_id, class_id, enrollment_number, enrollment_date, status, progress_percentage, fee_amount, fee_paid, fee_balance, payment_status) VALUES 
+(1, 3, 1, 'ENR-2026-001', '2026-03-05', 'enrolled', 25.00, 15000.00, 10000.00, 5000.00, 'partial'),
+(2, 3, 4, 'ENR-2026-002', '2026-04-01', 'enrolled', 10.00, 10000.00, 10000.00, 0.00, 'paid'),
+(3, 4, 1, 'ENR-2026-003', '2026-03-10', 'enrolled', 15.00, 15000.00, 5000.00, 10000.00, 'partial'),
+(4, 5, 2, 'ENR-2026-004', '2026-03-12', 'enrolled', 20.00, 15000.00, 15000.00, 0.00, 'paid');
