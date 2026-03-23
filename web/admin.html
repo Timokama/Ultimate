@@ -4698,7 +4698,6 @@
                 // Filter to show only applicants (role='user')
                 const applicants = usersData.users ? usersData.users.filter(u => u.role === 'user' || u.role === 'applicant') : [];
                 console.log('[DEBUG] Filtered applicants:', applicants.length);
-                console.log('[DEBUG] Total applications loaded:', window.allApplicationsData?.length || 0);
                 
                 // Store all applications globally for course information
                 window.allApplicationsData = appsData.applications || [];
