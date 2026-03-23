@@ -1705,6 +1705,7 @@ public class DBConnection {
                 applications.add(mapApplication(rs));
             }
         } catch (SQLException e) {
+            System.err.println("[ERROR] getAllApplications() failed: " + e.getMessage());
             e.printStackTrace();
         }
         return applications;
