@@ -589,9 +589,22 @@
                     container.innerHTML = '';
                     
                     // Show first 6 courses
-                    data.courses.slice(0, 6).forEach(course => {
+                    data.courses.slice(0, 6).forEach((course, index) => {
                         const card = document.createElement('div');
                         card.className = 'service-card';
+                        
+                        // Assign gradient colors based on index
+                        const colors = [
+                            { bg: '#f0f0ff', border: '#6366f1' },
+                            { bg: '#e6f0ff', border: '#3b82f6' },
+                            { bg: '#e6fff5', border: '#10b981' },
+                            { bg: '#fff8e6', border: '#f59e0b' },
+                            { bg: '#ffe6f0', border: '#ec4899' },
+                            { bg: '#ffe6e6', border: '#ef4444' },
+                        ];
+                        const colorScheme = colors[index % colors.length];
+                        card.style.background = `linear-gradient(135deg, ${colorScheme.bg} 0%, white 100%)`;
+                        card.style.borderTop = `4px solid ${colorScheme.border}`;
                         
                         // Get icon based on course category
                         const icon = getCourseIcon(course.category, course.name);
@@ -609,8 +622,8 @@
                         ` : '';
                         
                         card.innerHTML = `
-                            <div class="service-icon">
-                                <i class="fas ${icon}"></i>
+                            <div class="service-icon" style="background: ${colorScheme.border}; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                                <i class="fas ${icon}" style="color: white;"></i>
                             </div>
                             ${badgeHtml}
                             <h3>${course.name}</h3>
