@@ -233,9 +233,24 @@
                 const data = await courses.getAll();
                 
                 if (data.success && data.courses && data.courses.length > 0) {
-                    data.courses.forEach(course => {
+                    data.courses.forEach((course, index) => {
                         const card = document.createElement('div');
                         card.className = 'service-card';
+                        
+                        // Assign gradient colors based on index
+                        const colors = [
+                            { bg: '#f0f0ff', border: '#6366f1' },
+                            { bg: '#e6f0ff', border: '#3b82f6' },
+                            { bg: '#e6fff5', border: '#10b981' },
+                            { bg: '#fff8e6', border: '#f59e0b' },
+                            { bg: '#ffe6f0', border: '#ec4899' },
+                            { bg: '#ffe6e6', border: '#ef4444' },
+                            { bg: '#e6fff5', border: '#14b8a6' },
+                            { bg: '#f0e6ff', border: '#8b5cf6' },
+                        ];
+                        const colorScheme = colors[index % colors.length];
+                        card.style.background = `linear-gradient(135deg, ${colorScheme.bg} 0%, white 100%)`;
+                        card.style.borderTop = `4px solid ${colorScheme.border}`;
                         
                         const icon = getCourseIcon(course.category, course.name);
                         
@@ -247,8 +262,8 @@
                                 : 'Contact for duration');
                         
                         card.innerHTML = `
-                            <div class="service-icon">
-                                <i class="fas ${icon}"></i>
+                            <div class="service-icon" style="background: ${colorScheme.border}; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                                <i class="fas ${icon}" style="color: white;"></i>
                             </div>
                             <h3>${course.name}</h3>
                             <p>${course.description || 'Course description not available'}</p>
