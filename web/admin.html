@@ -4687,6 +4687,10 @@
                 const usersData = await usersResponse.json();
                 const appsData = await appsResponse.json();
                 
+                console.log('[DEBUG] Users response OK:', usersResponse.ok);
+                console.log('[DEBUG] Apps response OK:', appsResponse.ok);
+                console.log('[DEBUG] appsData:', appsData);
+                
                 // Store globally for edit functions
                 window.usersData = usersData.users || [];
                 
