@@ -563,28 +563,61 @@ public class UltimateServer {
      */
     private static void migrateExistingEnrollments(Statement stmt) {
         try {
-            // Update enrollments with fee_amount >= 15000 to set license_type if not set
-            String updateSql = "UPDATE enrollments SET license_type = 'Class B' " +
-                "WHERE (license_type IS NULL OR license_type = '') AND fee_amount >= 15000";
-            stmt.executeUpdate(updateSql);
+            // First, let's see what enrollments we have and their fee amounts
+            ResultSet rs = stmt.executeQuery("SELECT id, fee_amount, license_type, driving_course, computer_course FROM enrollments");
+            System.out.println("Found enrollments, checking for missing course data...");
             
-            // Update enrollments with fee_amount 10000-14999 to driving course
-            updateSql = "UPDATE enrollments SET driving_course = 'Defensive Driving' " +
-                "WHERE (driving_course IS NULL OR driving_course = '') AND fee_amount >= 10000 AND fee_amount < 15000";
-            stmt.executeUpdate(updateSql);
-            
-            // Update enrollments with computer courses based on fee
-            updateSql = "UPDATE enrollments SET computer_course = 'Computer Basics' " +
-                "WHERE (computer_course IS NULL OR computer_course = '') AND fee_amount = 5000";
-            stmt.executeUpdate(updateSql);
-            
-            updateSql = "UPDATE enrollments SET computer_course = 'Programming' " +
-                "WHERE (computer_course IS NULL OR computer_course = '') AND fee_amount = 25000";
-            stmt.executeUpdate(updateSql);
-            
-            updateSql = "UPDATE enrollments SET computer_course = 'Graphic Design' " +
-                "WHERE (computer_course IS NULL OR computer_course = '') AND fee_amount = 12000";
-            stmt.executeUpdate(updateSql);
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                double feeAmount = rs.getDouble("fee_amount");
+                String licenseType = rs.getString("license_type");
+                String drivingCourse = rs.getString("driving_course");
+                String computerCourse = rs.getString("computer_course");
+                
+                boolean needsUpdate = false;
+                String updateSql = "UPDATE enrollments SET ";
+                
+                // If license_type is not set and fee >= 15000, set to Class B
+                if ((licenseType == null || licenseType.isEmpty()) && feeAmount >= 15000) {
+                    updateSql += "license_type = 'Class B'";
+                    needsUpdate = true;
+                }
+                
+                // If driving_course is not set and fee >= 10000, set to Defensive Driving
+                if ((drivingCourse == null || drivingCourse.isEmpty()) && feeAmount >= 10000 && feeAmount < 20000) {
+                    if (needsUpdate) updateSql += ", ";
+                    updateSql += "driving_course = 'Defensive Driving'";
+                    needsUpdate = true;
+                }
+                
+                // If computer_course is not set and fee < 15000 (likely computer course)
+                if ((computerCourse == null || computerCourse.isEmpty()) && feeAmount <= 12000) {
+                    if (needsUpdate) updateSql += ", ";
+                    if (feeAmount == 5000) {
+                        updateSql += "computer_course = 'Computer Basics'";
+                    } else if (feeAmount == 10000) {
+                        updateSql += "computer_course = 'Computer Accounting'";
+                    } else if (feeAmount == 8000) {
+                        updateSql += "computer_course = 'Secretarial'";
+                    } else if (feeAmount == 7500) {
+                        updateSql += "computer_course = 'SPSS'";
+                    } else if (feeAmount == 12000) {
+                        updateSql += "computer_course = 'Graphic Design'";
+                    } else if (feeAmount == 25000) {
+                        updateSql += "computer_course = 'Programming'";
+                    } else if (feeAmount <= 10000) {
+                        updateSql += "computer_course = 'Computer Basics'";
+                    }
+                    needsUpdate = true;
+                }
+                
+                if (needsUpdate) {
+                    updateSql += " WHERE id = " + id;
+                    stmt.executeUpdate(updateSql);
+                    System.out.println("Updated enrollment #" + id + " with fee amount " + feeAmount);
+                }
+            }
+            rs.close();
             
             System.out.println("Enrollment migration completed.");
         } catch (Exception e) {
