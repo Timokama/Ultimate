@@ -152,9 +152,6 @@ public class UltimateServer {
                 // Create all tables if they don't exist
                 createAllTablesIfNotExist();
                 
-                // Add missing columns to existing tables
-                addMissingColumns();
-                
                 // Check if admin user exists
                 if (!adminUserExists()) {
                     createAdminUser();
@@ -379,24 +376,7 @@ public class UltimateServer {
                 System.out.println("Created enrollments table.");
             }
             
-            // Migration: Add missing columns to enrollments table if they don't exist
-            try {
-                stmt.executeUpdate("ALTER TABLE enrollments ADD COLUMN IF NOT EXISTS license_type VARCHAR(50) DEFAULT 'Class B'");
-                stmt.executeUpdate("ALTER TABLE enrollments ADD COLUMN IF NOT EXISTS driving_course VARCHAR(100)");
-                stmt.executeUpdate("ALTER TABLE enrollments ADD COLUMN IF NOT EXISTS computer_course VARCHAR(100)");
-                stmt.executeUpdate("ALTER TABLE enrollments ADD COLUMN IF NOT EXISTS transmission VARCHAR(50)");
-                stmt.executeUpdate("ALTER TABLE enrollments ADD COLUMN IF NOT EXISTS preferred_schedule VARCHAR(20)");
-                stmt.executeUpdate("ALTER TABLE enrollments ADD COLUMN IF NOT EXISTS training_location VARCHAR(255)");
-                stmt.executeUpdate("ALTER TABLE enrollments ADD COLUMN IF NOT EXISTS progress_percentage INTEGER DEFAULT 0");
-                stmt.executeUpdate("ALTER TABLE enrollments ADD COLUMN IF NOT EXISTS end_time TIME");
-                stmt.executeUpdate("ALTER TABLE enrollments ADD COLUMN IF NOT EXISTS location_id INTEGER");
-                stmt.executeUpdate("ALTER TABLE enrollments ADD COLUMN IF NOT EXISTS completion_date DATE");
-                stmt.executeUpdate("ALTER TABLE enrollments ADD COLUMN IF NOT EXISTS certificate_number VARCHAR(100)");
-                System.out.println("Added missing columns to enrollments table.");
-            } catch (SQLException e) {
-                // Columns might already exist, ignore error
-                System.out.println(" enrollments columns migration: " + e.getMessage());
-            }
+            // Enrollments table schema is now defined in database.sql
             
             // Create applications table if not exists
             if (!tableExists(stmt, "applications")) {
@@ -460,19 +440,7 @@ public class UltimateServer {
                 System.out.println("Created attendance table.");
             }
             
-            // Migration: Add missing columns to attendance table if they don't exist
-            try {
-                stmt.executeUpdate("ALTER TABLE attendance ADD COLUMN IF NOT EXISTS location VARCHAR(255)");
-                stmt.executeUpdate("ALTER TABLE attendance ADD COLUMN IF NOT EXISTS license_type VARCHAR(50)");
-                stmt.executeUpdate("ALTER TABLE attendance ADD COLUMN IF NOT EXISTS driving_course VARCHAR(100)");
-                stmt.executeUpdate("ALTER TABLE attendance ADD COLUMN IF NOT EXISTS computer_course VARCHAR(100)");
-                stmt.executeUpdate("ALTER TABLE attendance ADD COLUMN IF NOT EXISTS transmission VARCHAR(50)");
-                stmt.executeUpdate("ALTER TABLE attendance ADD COLUMN IF NOT EXISTS preferred_schedule VARCHAR(20)");
-                System.out.println("Added missing columns to attendance table.");
-            } catch (SQLException e) {
-                // Columns might already exist, ignore error
-                System.out.println(" attendance columns migration: " + e.getMessage());
-            }
+            // Attendance table schema is now defined in database.sql
             
             // Create contact_messages table if not exists
             if (!tableExists(stmt, "contact_messages")) {
@@ -554,187 +522,6 @@ public class UltimateServer {
             stmt.executeUpdate("CREATE INDEX IF NOT EXISTS idx_mpesa_messages_status ON mpesa_messages(status)");
         } catch (Exception e) {
             // Ignore index creation errors (they may already exist)
-        }
-    }
-    
-    /**
-     * Add missing columns to existing tables (for tables created from database.sql)
-     */
-    private static void addMissingColumns() {
-        System.out.println("Checking for missing columns...");
-        try (Statement stmt = DBConnection.getConnection().createStatement()) {
-            // Add missing columns to users table (NOT adding fees columns - they belong to applications/enrollments)
-            addColumnIfNotExists(stmt, "users", "first_name", "VARCHAR(100)");
-            addColumnIfNotExists(stmt, "users", "last_name", "VARCHAR(100)");
-            addColumnIfNotExists(stmt, "users", "full_name", "VARCHAR(255)");
-            addColumnIfNotExists(stmt, "users", "alternative_phone", "VARCHAR(50)");
-            addColumnIfNotExists(stmt, "users", "date_of_birth", "DATE");
-            addColumnIfNotExists(stmt, "users", "gender", "VARCHAR(20)");
-            addColumnIfNotExists(stmt, "users", "id_number", "VARCHAR(50)");
-            addColumnIfNotExists(stmt, "users", "profile_photo", "VARCHAR(500)");
-            addColumnIfNotExists(stmt, "users", "address", "TEXT");
-            addColumnIfNotExists(stmt, "users", "city", "VARCHAR(100)");
-            addColumnIfNotExists(stmt, "users", "postal_code", "VARCHAR(20)");
-            addColumnIfNotExists(stmt, "users", "county", "VARCHAR(100)");
-            addColumnIfNotExists(stmt, "users", "role", "VARCHAR(20) NOT NULL DEFAULT 'applicant'");
-            addColumnIfNotExists(stmt, "users", "status", "VARCHAR(20) DEFAULT 'active'");
-            addColumnIfNotExists(stmt, "users", "department_id", "INTEGER");
-            addColumnIfNotExists(stmt, "users", "location_id", "INTEGER");
-            addColumnIfNotExists(stmt, "users", "position", "VARCHAR(100)");
-            addColumnIfNotExists(stmt, "users", "hire_date", "DATE");
-            addColumnIfNotExists(stmt, "users", "salary", "DECIMAL(12, 2)");
-            addColumnIfNotExists(stmt, "users", "admission_number", "VARCHAR(50)");
-            addColumnIfNotExists(stmt, "users", "enrollment_date", "DATE");
-            addColumnIfNotExists(stmt, "users", "graduation_date", "DATE");
-            addColumnIfNotExists(stmt, "users", "guardian_name", "VARCHAR(255)");
-            addColumnIfNotExists(stmt, "users", "guardian_phone", "VARCHAR(50)");
-            addColumnIfNotExists(stmt, "users", "guardian_email", "VARCHAR(255)");
-            addColumnIfNotExists(stmt, "users", "emergency_contact_name", "VARCHAR(255)");
-            addColumnIfNotExists(stmt, "users", "emergency_contact_phone", "VARCHAR(50)");
-            addColumnIfNotExists(stmt, "users", "emergency_contact_relation", "VARCHAR(100)");
-            addColumnIfNotExists(stmt, "users", "medical_conditions", "TEXT");
-            addColumnIfNotExists(stmt, "users", "allergies", "TEXT");
-            addColumnIfNotExists(stmt, "users", "blood_group", "VARCHAR(10)");
-            addColumnIfNotExists(stmt, "users", "training_location", "VARCHAR(255)");
-            addColumnIfNotExists(stmt, "users", "updated_at", "TIMESTAMP DEFAULT CURRENT_TIMESTAMP");
-            
-            // NOTE: school_fees, fees_paid, fees_balance are NOT added to users
-            // Fees are tracked in applications and enrollments tables
-            // This avoids duplicate columns and ensures single source of truth
-            
-            // Add missing columns to courses table
-            addColumnIfNotExists(stmt, "courses", "code", "VARCHAR(20) UNIQUE");
-            addColumnIfNotExists(stmt, "courses", "category", "VARCHAR(50) NOT NULL");
-            addColumnIfNotExists(stmt, "courses", "duration_hours", "INTEGER");
-            addColumnIfNotExists(stmt, "courses", "duration_weeks", "INTEGER");
-            addColumnIfNotExists(stmt, "courses", "requirements", "TEXT");
-            addColumnIfNotExists(stmt, "courses", "learning_outcomes", "TEXT");
-            addColumnIfNotExists(stmt, "courses", "department_id", "INTEGER");
-            addColumnIfNotExists(stmt, "courses", "course_level", "VARCHAR(50)");
-            addColumnIfNotExists(stmt, "courses", "is_licensed", "BOOLEAN DEFAULT false");
-            addColumnIfNotExists(stmt, "courses", "license_type", "VARCHAR(50)");
-            addColumnIfNotExists(stmt, "courses", "is_active", "BOOLEAN DEFAULT true");
-            addColumnIfNotExists(stmt, "courses", "is_featured", "BOOLEAN DEFAULT false");
-            addColumnIfNotExists(stmt, "courses", "created_by", "INTEGER REFERENCES users(id)");
-            addColumnIfNotExists(stmt, "courses", "updated_at", "TIMESTAMP DEFAULT CURRENT_TIMESTAMP");
-            
-            // Add missing columns to applications table
-            addColumnIfNotExists(stmt, "applications", "user_id", "INTEGER REFERENCES users(id)");
-            addColumnIfNotExists(stmt, "applications", "first_name", "VARCHAR(100)");
-            addColumnIfNotExists(stmt, "applications", "last_name", "VARCHAR(100)");
-            addColumnIfNotExists(stmt, "applications", "email", "VARCHAR(255) NOT NULL");
-            addColumnIfNotExists(stmt, "applications", "phone", "VARCHAR(50) NOT NULL");
-            addColumnIfNotExists(stmt, "applications", "date_of_birth", "DATE");
-            addColumnIfNotExists(stmt, "applications", "address", "TEXT");
-            addColumnIfNotExists(stmt, "applications", "city", "VARCHAR(100)");
-            addColumnIfNotExists(stmt, "applications", "postal_code", "VARCHAR(20)");
-            addColumnIfNotExists(stmt, "applications", "id_number", "VARCHAR(50)");
-            addColumnIfNotExists(stmt, "applications", "license_type", "VARCHAR(50) DEFAULT 'Class B'");
-            addColumnIfNotExists(stmt, "applications", "course_id", "INTEGER REFERENCES courses(id)");
-            addColumnIfNotExists(stmt, "applications", "driving_course", "VARCHAR(100)");
-            addColumnIfNotExists(stmt, "applications", "computer_course", "VARCHAR(100)");
-            addColumnIfNotExists(stmt, "applications", "location_id", "INTEGER REFERENCES locations(id)");
-            addColumnIfNotExists(stmt, "applications", "transmission", "VARCHAR(50)");
-            addColumnIfNotExists(stmt, "applications", "preferred_schedule", "VARCHAR(20)");
-            addColumnIfNotExists(stmt, "applications", "driving_experience", "VARCHAR(20)");
-            addColumnIfNotExists(stmt, "applications", "preferred_start", "DATE");
-            addColumnIfNotExists(stmt, "applications", "emergency_contact_name", "VARCHAR(255)");
-            addColumnIfNotExists(stmt, "applications", "emergency_contact_phone", "VARCHAR(50)");
-            addColumnIfNotExists(stmt, "applications", "emergency_contact_relation", "VARCHAR(100)");
-            addColumnIfNotExists(stmt, "applications", "comments", "TEXT");
-            addColumnIfNotExists(stmt, "applications", "medical_conditions", "TEXT");
-            addColumnIfNotExists(stmt, "applications", "previous_driving_experience", "BOOLEAN DEFAULT FALSE");
-            addColumnIfNotExists(stmt, "applications", "status", "VARCHAR(50) DEFAULT 'pending'");
-            addColumnIfNotExists(stmt, "applications", "training_location", "VARCHAR(255)");
-            addColumnIfNotExists(stmt, "applications", "school_fees", "DECIMAL(10, 2) DEFAULT 0.00");
-            addColumnIfNotExists(stmt, "applications", "fees_paid", "DECIMAL(10, 2) DEFAULT 0.00");
-            addColumnIfNotExists(stmt, "applications", "fees_balance", "DECIMAL(10, 2) DEFAULT 0.00");
-            addColumnIfNotExists(stmt, "applications", "payment_status", "VARCHAR(50) DEFAULT 'unpaid'");
-            addColumnIfNotExists(stmt, "applications", "payment_method", "VARCHAR(50)");
-            addColumnIfNotExists(stmt, "applications", "staff_id", "INTEGER REFERENCES users(id)");
-            addColumnIfNotExists(stmt, "applications", "created_at", "TIMESTAMP DEFAULT CURRENT_TIMESTAMP");
-            addColumnIfNotExists(stmt, "applications", "updated_at", "TIMESTAMP DEFAULT CURRENT_TIMESTAMP");
-            
-            // Add missing columns to mpesa_messages table
-            addColumnIfNotExists(stmt, "mpesa_messages", "application_id", "INTEGER REFERENCES applications(id)");
-            addColumnIfNotExists(stmt, "mpesa_messages", "message", "TEXT NOT NULL");
-            addColumnIfNotExists(stmt, "mpesa_messages", "phone", "VARCHAR(50)");
-            addColumnIfNotExists(stmt, "mpesa_messages", "amount", "DECIMAL(10, 2) DEFAULT 0.00");
-            addColumnIfNotExists(stmt, "mpesa_messages", "mpesa_code", "VARCHAR(50)");
-            addColumnIfNotExists(stmt, "mpesa_messages", "status", "VARCHAR(50) DEFAULT 'pending'");
-            addColumnIfNotExists(stmt, "mpesa_messages", "verified_by", "INTEGER REFERENCES users(id)");
-            addColumnIfNotExists(stmt, "mpesa_messages", "verified_at", "TIMESTAMP");
-            addColumnIfNotExists(stmt, "mpesa_messages", "created_at", "TIMESTAMP DEFAULT CURRENT_TIMESTAMP");
-            
-            // Add missing columns to users table (fees columns)
-            addColumnIfNotExists(stmt, "users", "school_fees", "DECIMAL(10, 2) DEFAULT 0.00");
-            addColumnIfNotExists(stmt, "users", "fees_paid", "DECIMAL(10, 2) DEFAULT 0.00");
-            addColumnIfNotExists(stmt, "users", "fees_balance", "DECIMAL(10, 2) DEFAULT 0.00");
-            
-            // Rename 'location' column to 'location_id' if it exists (legacy fix)
-            try {
-                ResultSet rs = stmt.executeQuery("SELECT 1 FROM information_schema.columns WHERE table_name = 'applications' AND column_name = 'location'");
-                if (rs.next()) {
-                    // Check if location_id doesn't exist
-                    ResultSet rs2 = stmt.executeQuery("SELECT 1 FROM information_schema.columns WHERE table_name = 'applications' AND column_name = 'location_id'");
-                    if (!rs2.next()) {
-                        // Rename location to location_id
-                        stmt.executeUpdate("ALTER TABLE applications RENAME COLUMN location TO location_id");
-                        System.out.println("Renamed 'location' to 'location_id' in applications table.");
-                    }
-                    rs2.close();
-                }
-                rs.close();
-            } catch (Exception e) {
-                // Ignore - column may not exist
-            }
-            
-            // Fix preferred_schedule column type from DATE to VARCHAR
-            try {
-                ResultSet rs = stmt.executeQuery("SELECT data_type FROM information_schema.columns WHERE table_name = 'applications' AND column_name = 'preferred_schedule'");
-                if (rs.next()) {
-                    String dataType = rs.getString("data_type");
-                    if ("date".equalsIgnoreCase(dataType)) {
-                        // Column is DATE but should be VARCHAR
-                        stmt.executeUpdate("ALTER TABLE applications ALTER COLUMN preferred_schedule TYPE VARCHAR(50)");
-                        System.out.println("Fixed preferred_schedule column type from DATE to VARCHAR.");
-                    }
-                }
-                rs.close();
-            } catch (Exception e) {
-                System.out.println("Could not fix preferred_schedule column: " + e.getMessage());
-            }
-            
-            System.out.println("Missing columns check completed.");
-        } catch (Exception e) {
-            System.err.println("Failed to add missing columns: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-    
-    /**
-     * Add a column to a table if it doesn't exist
-     */
-    private static void addColumnIfNotExists(Statement stmt, String tableName, String columnName, String columnType) {
-        try {
-            // Check if column exists
-            String checkSql = "SELECT 1 FROM information_schema.columns " +
-                             "WHERE table_name = '" + tableName + "' " +
-                             "AND column_name = '" + columnName + "'";
-            ResultSet rs = stmt.executeQuery(checkSql);
-            if (rs.next()) {
-                rs.close();
-                return; // Column already exists
-            }
-            rs.close();
-            
-            // Add column
-            String alterSql = "ALTER TABLE " + tableName + " ADD COLUMN IF NOT EXISTS " + columnName + " " + columnType;
-            stmt.executeUpdate(alterSql);
-            System.out.println("Added column: " + tableName + "." + columnName);
-        } catch (Exception e) {
-            // Ignore if column already exists or other minor errors
-            System.out.println("Column " + columnName + " already exists or could not be added: " + e.getMessage());
         }
     }
     
