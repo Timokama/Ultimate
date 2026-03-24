@@ -636,6 +636,7 @@ public class UltimateServer {
             addColumnIfNotExists(stmt, "applications", "location_id", "INTEGER REFERENCES locations(id)");
             addColumnIfNotExists(stmt, "applications", "transmission", "VARCHAR(50)");
             addColumnIfNotExists(stmt, "applications", "preferred_schedule", "VARCHAR(20)");
+            addColumnIfNotExists(stmt, "applications", "driving_experience", "VARCHAR(20)");
             addColumnIfNotExists(stmt, "applications", "preferred_start", "DATE");
             addColumnIfNotExists(stmt, "applications", "emergency_contact_name", "VARCHAR(255)");
             addColumnIfNotExists(stmt, "applications", "emergency_contact_phone", "VARCHAR(50)");
