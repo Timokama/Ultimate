@@ -1751,7 +1751,6 @@ public class DBConnection {
         app.put("emergency_contact_name", rs.getString("emergency_contact_name"));
         app.put("emergency_contact_phone", rs.getString("emergency_contact_phone"));
         app.put("emergency_contact_relation", rs.getString("emergency_contact_relation"));
-        app.put("emergency_contact_relation", rs.getString("emergency_contact_relation"));
         app.put("medical_conditions", rs.getString("medical_conditions"));
         app.put("comments", rs.getString("comments"));
         app.put("school_fees", rs.getDouble("school_fees"));
