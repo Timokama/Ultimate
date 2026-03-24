@@ -3,7 +3,6 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 
 /**
@@ -151,6 +150,9 @@ public class UltimateServer {
                 
                 // Create all tables if they don't exist
                 createAllTablesIfNotExist();
+                
+                // Add missing columns to existing tables
+                addMissingColumns();
                 
                 // Check if admin user exists
                 if (!adminUserExists()) {
@@ -522,6 +524,54 @@ public class UltimateServer {
             stmt.executeUpdate("CREATE INDEX IF NOT EXISTS idx_mpesa_messages_status ON mpesa_messages(status)");
         } catch (Exception e) {
             // Ignore index creation errors (they may already exist)
+        }
+    }
+    
+    /**
+     * Add missing columns to existing tables
+     */
+    private static void addMissingColumns() {
+        System.out.println("Checking for missing columns...");
+        try (Statement stmt = DBConnection.getConnection().createStatement()) {
+            // Add missing columns to enrollments table
+            addColumnIfNotExists(stmt, "enrollments", "location_id", "INTEGER");
+            addColumnIfNotExists(stmt, "enrollments", "license_type", "VARCHAR(50)");
+            addColumnIfNotExists(stmt, "enrollments", "driving_course", "VARCHAR(100)");
+            addColumnIfNotExists(stmt, "enrollments", "computer_course", "VARCHAR(100)");
+            addColumnIfNotExists(stmt, "enrollments", "transmission", "VARCHAR(50)");
+            addColumnIfNotExists(stmt, "enrollments", "preferred_schedule", "VARCHAR(50)");
+            addColumnIfNotExists(stmt, "enrollments", "training_location", "VARCHAR(200)");
+            addColumnIfNotExists(stmt, "enrollments", "preferred_start", "DATE");
+            addColumnIfNotExists(stmt, "enrollments", "emergency_contact_name", "VARCHAR(255)");
+            addColumnIfNotExists(stmt, "enrollments", "emergency_contact_phone", "VARCHAR(50)");
+            
+            // Add missing columns to applications table
+            addColumnIfNotExists(stmt, "applications", "driving_experience", "VARCHAR(20)");
+            addColumnIfNotExists(stmt, "applications", "license_type", "VARCHAR(50) DEFAULT 'Class B'");
+            
+            System.out.println("Missing columns check completed.");
+        } catch (Exception e) {
+            System.err.println("Error adding missing columns: " + e.getMessage());
+        }
+    }
+    
+    /**
+     * Add a column to a table if it doesn't exist
+     */
+    private static void addColumnIfNotExists(Statement stmt, String tableName, String columnName, String columnDefinition) {
+        try {
+            // Check if column exists
+            ResultSet rs = stmt.executeQuery(
+                "SELECT column_name FROM information_schema.columns " +
+                "WHERE table_name = '" + tableName + "' AND column_name = '" + columnName + "'");
+            if (!rs.next()) {
+                // Column doesn't exist, add it
+                stmt.executeUpdate("ALTER TABLE " + tableName + " ADD COLUMN " + columnName + " " + columnDefinition);
+                System.out.println("Added missing column: " + tableName + "." + columnName);
+            }
+            rs.close();
+        } catch (Exception e) {
+            // Column may already exist or other error, ignore
         }
     }
     
