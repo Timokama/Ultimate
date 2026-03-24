@@ -549,9 +549,46 @@ public class UltimateServer {
             addColumnIfNotExists(stmt, "applications", "driving_experience", "VARCHAR(20)");
             addColumnIfNotExists(stmt, "applications", "license_type", "VARCHAR(50) DEFAULT 'Class B'");
             
+            // Migrate existing enrollments that don't have course data
+            migrateExistingEnrollments(stmt);
+            
             System.out.println("Missing columns check completed.");
         } catch (Exception e) {
             System.err.println("Error adding missing columns: " + e.getMessage());
+        }
+    }
+    
+    /**
+     * Migrate existing enrollments to populate course fields based on fee amounts
+     */
+    private static void migrateExistingEnrollments(Statement stmt) {
+        try {
+            // Update enrollments with fee_amount >= 15000 to set license_type if not set
+            String updateSql = "UPDATE enrollments SET license_type = 'Class B' " +
+                "WHERE (license_type IS NULL OR license_type = '') AND fee_amount >= 15000";
+            stmt.executeUpdate(updateSql);
+            
+            // Update enrollments with fee_amount 10000-14999 to driving course
+            updateSql = "UPDATE enrollments SET driving_course = 'Defensive Driving' " +
+                "WHERE (driving_course IS NULL OR driving_course = '') AND fee_amount >= 10000 AND fee_amount < 15000";
+            stmt.executeUpdate(updateSql);
+            
+            // Update enrollments with computer courses based on fee
+            updateSql = "UPDATE enrollments SET computer_course = 'Computer Basics' " +
+                "WHERE (computer_course IS NULL OR computer_course = '') AND fee_amount = 5000";
+            stmt.executeUpdate(updateSql);
+            
+            updateSql = "UPDATE enrollments SET computer_course = 'Programming' " +
+                "WHERE (computer_course IS NULL OR computer_course = '') AND fee_amount = 25000";
+            stmt.executeUpdate(updateSql);
+            
+            updateSql = "UPDATE enrollments SET computer_course = 'Graphic Design' " +
+                "WHERE (computer_course IS NULL OR computer_course = '') AND fee_amount = 12000";
+            stmt.executeUpdate(updateSql);
+            
+            System.out.println("Enrollment migration completed.");
+        } catch (Exception e) {
+            System.err.println("Error migrating enrollments: " + e.getMessage());
         }
     }
     
