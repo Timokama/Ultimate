@@ -83,8 +83,8 @@ INSERT INTO classes (id, course_id, name, code, description, location_id, start_
 -- ============================================================================
 -- ENROLLMENTS
 -- ============================================================================
-INSERT INTO enrollments (id, student_id, class_id, enrollment_number, enrollment_date, status, progress_percentage, fee_amount, fee_paid, fee_balance, payment_status) VALUES 
-(1, 3, 1, 'ENR-2026-001', '2026-03-05', 'enrolled', 25.00, 15000.00, 10000.00, 5000.00, 'partial'),
-(2, 3, 4, 'ENR-2026-002', '2026-04-01', 'enrolled', 10.00, 10000.00, 10000.00, 0.00, 'paid'),
-(3, 4, 1, 'ENR-2026-003', '2026-03-10', 'enrolled', 15.00, 15000.00, 5000.00, 10000.00, 'partial'),
-(4, 5, 2, 'ENR-2026-004', '2026-03-12', 'enrolled', 20.00, 15000.00, 15000.00, 0.00, 'paid');
+INSERT INTO enrollments (id, student_id, class_id, enrollment_number, enrollment_date, status, progress_percentage, fee_amount, fee_paid, fee_balance, payment_status, license_type, driving_course, computer_course, transmission, preferred_schedule, training_location) VALUES 
+(1, 3, 1, 'ENR-2026-001', '2026-03-05', 'enrolled', 25.00, 15000.00, 10000.00, 5000.00, 'partial', 'Class B', 'Defensive Driving', '', 'Automatic', 'Weekday', 'Nairobi'),
+(2, 3, 4, 'ENR-2026-002', '2026-04-01', 'enrolled', 10.00, 10000.00, 10000.00, 0.00, 'paid', 'Class C', 'Computer Basics', '', 'Manual', 'Evening', 'Mombasa'),
+(3, 4, 1, 'ENR-2026-003', '2026-03-10', 'enrolled', 15.00, 15000.00, 5000.00, 10000.00, 'partial', 'Class B', 'Defensive Driving', 'Graphic Design', 'Automatic', 'Weekend', 'Kisumu'),
+(4, 5, 2, 'ENR-2026-004', '2026-03-12', 'enrolled', 20.00, 15000.00, 15000.00, 0.00, 'paid', 'Class D', 'Refresher Course', '', 'Automatic', 'Weekday', 'Nairobi');
