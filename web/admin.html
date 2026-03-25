@@ -3746,7 +3746,7 @@
                     students.forEach(user => {
                         const option = document.createElement('option');
                         option.value = user.id;
-                        option.textContent = `#${user.id} - ${user.full_name || user.email || `${user.first_name} ${user.last_name}`}`;
+                        option.textContent = `${user.full_name || user.email || `${user.first_name} ${user.last_name}`}`;
                         select.appendChild(option);
                     });
                 }
