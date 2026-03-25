@@ -4574,7 +4574,8 @@
             const category = categoryFilter ? categoryFilter.value : '';
             const searchFilter = document.getElementById('enrollment-search');
             const search = searchFilter ? searchFilter.value : '';
-            const location = staffLocation || '';
+            // Don't filter enrollments by staffLocation as it filters by location_id which may not match
+            const location = '';
             
             try {
                 let url = `/api/enrollments?location=${encodeURIComponent(location)}`;
@@ -4856,8 +4857,8 @@
             if (!select) return;
             
             try {
-                const location = staffLocation || '';
-                const response = await fetch(`/api/staff/students?location=${encodeURIComponent(location)}`, {
+                // Don't filter by location to show all users with role 'user' or 'applicant'
+                const response = await fetch('/api/staff/students', {
                     headers: { 'Authorization': 'Bearer ' + auth.getToken() }
                 });
                 

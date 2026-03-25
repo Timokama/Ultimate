@@ -970,28 +970,14 @@ class StaffHandler extends ApiHandler implements HttpHandler {
                     students = DBConnection.getUsersByRoles(new String[]{"user", "applicant"});
                 }
             } else {
-                // For staff/instructor, only return users/applicants (not students) from their assigned location
-                // Get staff's location from token or database
-                String staffLocation = null;
-                Object locationIdObj = JWTUtil.validateToken(token).get("location_id");
-                if (locationIdObj != null) {
-                    staffLocation = locationIdObj.toString();
-                }
-                
-                // If no location in token, get from database
-                if (staffLocation == null || staffLocation.isEmpty()) {
-                    int userId = JWTUtil.getUserId(token);
-                    staffLocation = DBConnection.getUserLocation(userId);
-                }
-                
-                // Use requested location if provided, otherwise use staff's location
-                String filterLocation = (requestedLocation != null && !requestedLocation.isEmpty()) ? requestedLocation : staffLocation;
-                
-                if (filterLocation != null && !filterLocation.isEmpty()) {
-                    students = DBConnection.getStudentsByLocation(filterLocation);
-                } else {
-                    // No location - return only user/applicant roles
+                // For staff/instructor: if no location parameter is provided, return all users with role user or applicant
+                // This allows staff to see all students for enrollment purposes
+                if (requestedLocation == null || requestedLocation.isEmpty()) {
+                    // No location requested - return all users with role user or applicant
                     students = DBConnection.getUsersByRoles(new String[]{"user", "applicant"});
+                } else {
+                    // Filter by requested location
+                    students = DBConnection.getStudentsByLocation(requestedLocation);
                 }
             }
             

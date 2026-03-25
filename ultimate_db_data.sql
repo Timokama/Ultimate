@@ -35,9 +35,9 @@ INSERT INTO users (id, email, password_hash, first_name, last_name, full_name, p
 (8, 'admin@ultimate.edu', '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9', 'System', 'Administrator', 'Administrator', '+254 700 000 000', 'staff', 'active', NULL, 2, NULL, 'Sunton - Sunton Shopping Center, Nairobi'),
 (6, 'motivkama@gmail.com', '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9', 'Motiv', 'Kamau', 'Motiv Kamau', '+254790722419', 'instructor', 'active', NULL, 2, NULL, 'Sunton - Sunton Shopping Center, Nairobi'),
 (7, '', '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9', 'Timothy', 'Munyiri', 'Timothy Munyiri', '+254 700 000 000', 'staff', 'active', NULL, 2, NULL, 'Sunton'),
-(3, 'motiv.mot@ultimat.udd', '39fbaa5f806c772ca53ddfc3bf4419faa9894336c08787bd3ec28fd1e97ec8bb', 'Timothy', 'Munyiri', 'Timothy ', '0790722419', 'user', 'active', NULL, 1, NULL, 'Sunton - Sunton Shopping Center, Nairobi'),
-(4, 'john@gmial.com', '96d9632f363564cc3032521409cf22a852f2032eec099ed5967c0d000cec607a', 'John', 'Maina', 'John Main', '0790722419', 'applicant', 'active', NULL, 7, NULL, 'Sunton - Sunton Shopping Center, Nairobi'),
-(5, 'mark@gmail.com', '6201eb4dccc956cc4fa3a78dca0c2888177ec52efd48f125df214f046eb43138', 'Mark', 'Waweru', 'Mark Waweru', '0790000000', 'applicant', 'active', NULL, 7, NULL, 'Sunton - Sunton Shopping Center, Nairobi');
+(3, 'motiv.mot@ultimat.udd', '39fbaa5f806c772ca53ddfc3bf4419faa9894336c08787bd3ec28fd1e97ec8bb', 'Timothy', 'Munyiri', 'Timothy ', '0790722419', 'user', 'active', NULL, 2, NULL, 'Sunton - Sunton Shopping Center, Nairobi'),
+(4, 'john@gmial.com', '96d9632f363564cc3032521409cf22a852f2032eec099ed5967c0d000cec607a', 'John', 'Maina', 'John Main', '0790722419', 'applicant', 'active', NULL, 2, NULL, 'Sunton - Sunton Shopping Center, Nairobi'),
+(5, 'mark@gmail.com', '6201eb4dccc956cc4fa3a78dca0c2888177ec52efd48f125df214f046eb43138', 'Mark', 'Waweru', 'Mark Waweru', '0790000000', 'applicant', 'active', NULL, 2, NULL, 'Sunton - Sunton Shopping Center, Nairobi');
 
 -- ============================================================================
 -- COURSES (only columns that are saved)
