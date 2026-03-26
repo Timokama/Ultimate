@@ -2201,6 +2201,27 @@ class UserHandler extends ApiHandler {
             return;
         }
         
+        // Populate training_location from location_id if not set
+        if (user.get("training_location") == null) {
+            Object locIdObj = user.get("location_id");
+            if (locIdObj != null) {
+                try {
+                    int locationId;
+                    if (locIdObj instanceof Number) {
+                        locationId = ((Number) locIdObj).intValue();
+                    } else {
+                        locationId = Integer.parseInt(locIdObj.toString());
+                    }
+                    Map<String, Object> location = DBConnection.getLocationById(locationId);
+                    if (location != null && location.get("name") != null) {
+                        user.put("training_location", location.get("name"));
+                    }
+                } catch (Exception e) {
+                    // Ignore location lookup errors
+                }
+            }
+        }
+        
         // Convert to JSON
         String json = mapToJson(user);
         sendJsonResponse(exchange, 200, json);
@@ -2264,7 +2285,7 @@ class UserHandler extends ApiHandler {
             
             // Also update profile fields if provided
             boolean profileUpdated = false;
-            if (trainingLocation != null || (password != null && !password.isEmpty())) {
+            if (fullName != null || email != null || phone != null || trainingLocation != null || (password != null && !password.isEmpty())) {
                 DBConnection.updateUserProfile(userId, fullName, email, phone, password, trainingLocation);
                 profileUpdated = true;
             }

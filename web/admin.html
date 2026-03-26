@@ -1012,35 +1012,35 @@
         </div>
     </div>
 <!-- User Edit Modal -->
-    <div id="user-modal" class="modal">
-        <div class="modal-content" style="max-width: 500px;">
-            <div class="modal-header">
-                <h3 id="user-modal-title">Edit User</h3>
-                <button class="modal-close" onclick="closeUserModal()">&times;</button>
+    <div id="user-modal" class="modal" style="z-index: 9999;">
+        <div class="modal-content" style="background: linear-gradient(135deg, #1e3a5f 0%, #2d5a87 50%, #3d7ab5 100%); border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.5); max-width: 500px; width: 95%; position: relative; z-index: 10000; margin-top: 5vh;">
+            <div class="modal-header" style="background: rgba(255,255,255,0.1); border-bottom: 1px solid rgba(255,255,255,0.2); padding: 20px 25px; border-radius: 16px 16px 0 0;">
+                <h3 id="user-modal-title" style="color: #fff; margin: 0; font-size: 22px; font-weight: 600;"><i class="fas fa-user-edit"></i> Edit User</h3>
+                <button class="modal-close" onclick="closeUserModal()" style="color: #fff; background: rgba(255,255,255,0.2); border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: 20px; transition: all 0.3s;">&times;</button>
             </div>
             <div class="modal-body" style="padding: 0;">
                 <form id="user-form">
                     <input type="hidden" id="user-id" name="user_id">
                     
-                    <div style="padding: 24px;">
+                    <div style="padding: 24px; background: #fff; border-radius: 0 0 16px 16px;">
                         <div class="form-group">
-                            <label for="user-fullname">Full Name</label>
-                            <input type="text" id="user-fullname" readonly style="background: #f3f4f6; cursor: not-allowed;" placeholder="Full name">
+                            <label for="user-fullname" style="color: #1e3a5f;">Full Name *</label>
+                            <input type="text" id="user-fullname" name="full_name" required placeholder="Enter full name" style="width: 100%; padding: 12px; border: 2px solid #dee2e6; border-radius: 8px;">
                         </div>
                         
                         <div class="form-group">
-                            <label for="user-email">Email</label>
-                            <input type="email" id="user-email" readonly style="background: #f3f4f6; cursor: not-allowed;" placeholder="Email">
+                            <label for="user-email" style="color: #1e3a5f;">Email</label>
+                            <input type="email" id="user-email" name="email" placeholder="Enter email" style="width: 100%; padding: 12px; border: 2px solid #dee2e6; border-radius: 8px;">
                         </div>
                         
                         <div class="form-group">
-                            <label for="user-phone">Phone</label>
-                            <input type="text" id="user-phone" readonly style="background: #f3f4f6; cursor: not-allowed;" placeholder="Phone">
+                            <label for="user-phone" style="color: #1e3a5f;">Phone *</label>
+                            <input type="text" id="user-phone" name="phone" required placeholder="Enter phone number" style="width: 100%; padding: 12px; border: 2px solid #dee2e6; border-radius: 8px;">
                         </div>
                         
                         <div class="form-group">
-                            <label for="user-role">Role</label>
-                            <select id="user-role" name="role">
+                            <label for="user-role" style="color: #1e3a5f;">Role</label>
+                            <select id="user-role" name="role" style="width: 100%; padding: 12px; border: 2px solid #dee2e6; border-radius: 8px;">
                                 <option value="user">User</option>
                                 <option value="applicant">Applicant</option>
                                 <option value="instructor">Instructor</option>
@@ -1050,21 +1050,21 @@
                         </div>
                         
                         <div class="form-group">
-                            <label for="user-location-id">Training Location</label>
-                            <select id="user-location-id" name="location_id">
+                            <label for="user-location-id" style="color: #1e3a5f;">Training Location</label>
+                            <select id="user-location-id" name="location_id" style="width: 100%; padding: 12px; border: 2px solid #dee2e6; border-radius: 8px;">
                                 <option value="">-- Select Location --</option>
                             </select>
                         </div>
                         
                         <div class="form-group">
-                            <label for="user-password">New Password (leave blank to keep current)</label>
-                            <input type="password" id="user-password" name="password" autocomplete="new-password" placeholder="Enter new password">
+                            <label for="user-password" style="color: #1e3a5f;">New Password (leave blank to keep current)</label>
+                            <input type="password" id="user-password" name="password" autocomplete="new-password" placeholder="Enter new password" style="width: 100%; padding: 12px; border: 2px solid #dee2e6; border-radius: 8px;">
                         </div>
                     </div>
                     
-                    <div class="modal-footer" style="margin-top: 0; padding: 16px 24px; border-top: 1px solid #e5e7eb;">
-                        <button type="button" class="btn btn-outline" onclick="closeUserModal()">Cancel</button>
-                        <button type="button" class="btn btn-primary" onclick="saveUserDetails()" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+                    <div class="modal-footer" style="margin-top: 0; padding: 16px 24px; border-top: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.1);">
+                        <button type="button" class="btn btn-outline" onclick="closeUserModal()" style="color: #fff; border-color: rgba(255,255,255,0.5);">Cancel</button>
+                        <button type="button" class="btn btn-primary" onclick="saveUserDetails()" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); border: none;">
                             <i class="fas fa-save"></i> Save Changes
                         </button>
                     </div>
@@ -5028,6 +5028,9 @@
             }
             
             const formData = {
+                full_name: document.getElementById('user-fullname')?.value || '',
+                email: document.getElementById('user-email')?.value || '',
+                phone: document.getElementById('user-phone')?.value || '',
                 role: document.getElementById('user-role')?.value || 'user',
                 location_id: document.getElementById('user-location-id')?.value || '',
                 training_location: document.getElementById('user-location-id')?.options[document.getElementById('user-location-id')?.selectedIndex]?.text || '',
@@ -6032,59 +6035,61 @@
         }
         
         // Edit user profile
-        async function editUser(userId) {
-            try {
-                const response = await fetch(`/api/users/${userId}`, {
-                    headers: {
-                        'Authorization': 'Bearer ' + auth.getToken()
-                    }
-                });
-                
-                if (!response.ok) {
-                    throw new Error('Failed to fetch user data');
-                }
-                
-                const user = await response.json();
-                
-                // Store globally for save function
-                window.currentEditUserId = userId;
-                
-                // Populate user fields
-                setElementValue('user-id', user.id);
-                setElementValue('user-fullname', user.full_name || 'N/A');
-                setElementValue('user-email', user.email || 'N/A');
-                setElementValue('user-phone', user.phone || 'N/A');
-                setElementValue('user-role', user.role || 'user');
-                setElementValue('user-password', '');
-                
-                // Set location dropdown - try to match by ID or name
-                const locationSelect = document.getElementById('user-location-id');
-                if (locationSelect && window.allLocations) {
-                    // First try to find by location_id
-                    let found = false;
-                    window.allLocations.forEach(loc => {
-                        if (String(loc.id) === String(user.location_id)) {
-                            locationSelect.value = loc.id;
-                            found = true;
-                        }
-                    });
-                    // If not found by ID, try by training_location (legacy)
-                    if (!found && user.training_location) {
-                        window.allLocations.forEach(loc => {
-                            if (loc.name === user.training_location) {
-                                locationSelect.value = loc.id;
+        function editUser(userId) {
+            // Get all input elements first
+            var modal = document.getElementById('user-modal');
+            var emailInput = document.getElementById('user-email');
+            var nameInput = document.getElementById('user-fullname');
+            var phoneInput = document.getElementById('user-phone');
+            var roleInput = document.getElementById('user-role');
+            var passInput = document.getElementById('user-password');
+            var locationSelect = document.getElementById('user-location-id');
+            
+            // Create XMLHttpRequest
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', '/api/users/' + userId, true);
+            xhr.setRequestHeader('Authorization', 'Bearer ' + auth.getToken());
+            
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        try {
+                            var data = JSON.parse(xhr.responseText);
+                            var user = data.user || data;
+                            
+                            // Log for debugging
+                            console.log('User data:', user);
+                            console.log('Email:', user.email);
+                            
+                            // Set values
+                            emailInput.value = user.email || '';
+                            nameInput.value = user.full_name || '';
+                            phoneInput.value = user.phone || '';
+                            roleInput.value = user.role || 'user';
+                            passInput.value = '';
+                            
+                            // Set location
+                            if (locationSelect && window.allLocations) {
+                                for (var i = 0; i < window.allLocations.length; i++) {
+                                    if (String(window.allLocations[i].id) === String(user.location_id)) {
+                                        locationSelect.value = window.allLocations[i].id;
+                                        break;
+                                    }
+                                }
                             }
-                        });
+                            
+                            window.currentEditUserId = userId;
+                            modal.classList.add('show');
+                        } catch (e) {
+                            console.error('Parse error:', e);
+                        }
+                    } else {
+                        console.error('API error:', xhr.status);
                     }
                 }
-                
-                // Show the user modal
-                document.getElementById('user-modal').classList.add('show');
-                
-            } catch (error) {
-                console.error('Error fetching user:', error);
-                showToast('Error loading user: ' + error.message);
-            }
+            };
+            
+            xhr.send();
         }
         
         // Delete application by ID
