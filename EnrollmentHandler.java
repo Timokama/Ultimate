@@ -641,8 +641,10 @@ class EnrollmentHandler extends ApiHandler implements HttpHandler {
             sql.append("AND e.status = ? ");
             params.add(statusFilter);
         }
-        if (dateFilter != null && !dateFilter.isEmpty()) {
-            sql.append("AND DATE(e.enrollment_date) = ? ");
+        // Date filter - only apply if dateFilter is provided and has 10 characters (YYYY-MM-DD format)
+        if (dateFilter != null && !dateFilter.isEmpty() && dateFilter.length() == 10) {
+            // Cast the string to DATE type for comparison
+            sql.append("AND DATE(e.enrollment_date) = CAST(? AS DATE) ");
             params.add(dateFilter);
         }
         if (locationFilter != null && !locationFilter.isEmpty()) {

@@ -2134,6 +2134,7 @@
                 params.append('student_id', user.id);
             }
             if (courseId) params.append('course_id', courseId);
+            // Only send date if it has a value
             if (date) params.append('date', date);
             if (status) params.append('status', status);
             
@@ -2158,6 +2159,9 @@
                 const data = await response.json();
                 
                 if (data.success && data.enrollments) {
+                    displayEnrollmentRecords(data.enrollments);
+                    updateEnrollmentStats(data.enrollments);
+                } else if (data.enrollments && data.enrollments.length > 0) {
                     displayEnrollmentRecords(data.enrollments);
                     updateEnrollmentStats(data.enrollments);
                 } else {
@@ -2210,8 +2214,20 @@
                     statusText = 'Suspended';
                 }
                 
+                // Get course name - try multiple fields
+                let courseName = '-';
+                if (enrollment.course_name) {
+                    courseName = enrollment.course_name;
+                } else if (enrollment.driving_course) {
+                    courseName = enrollment.driving_course;
+                } else if (enrollment.computer_course) {
+                    courseName = enrollment.computer_course;
+                } else if (enrollment.license_type) {
+                    courseName = enrollment.license_type;
+                }
+                
                 html += '<tr style="border-bottom: 1px solid #e2e8f0;">';
-                html += '<td style="padding: 12px;">' + (enrollment.course_name || '-') + '</td>';
+                html += '<td style="padding: 12px;">' + courseName + '</td>';
                 html += '<td style="padding: 12px;">' + formatDate(enrollment.enrollment_date) + '</td>';
                 html += '<td style="padding: 12px;"><span style="background: ' + statusClass + '; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px;">' + statusText + '</span></td>';
                 html += '<td style="padding: 12px;">' + (enrollment.progress_percentage || enrollment.progress || '0') + '%</td>';
