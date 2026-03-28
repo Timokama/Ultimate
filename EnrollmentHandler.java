@@ -218,11 +218,15 @@ class EnrollmentHandler extends ApiHandler implements HttpHandler {
         }
 
         // Create enrollment
+        System.out.println("[ENROLLMENT] Calling createEnrollment with: studentId=" + studentId + ", courseId=" + courseId);
         int enrollmentId = createEnrollment(studentId, courseId, enrollmentDate, status, startTime, feeAmount, feePaid, feeBalance, paymentStatus, notes, licenseType, drivingCourse, computerCourse, transmission, preferredSchedule, trainingLocation, completionDate, certificateNumber, locationId);
+        System.out.println("[ENROLLMENT] createEnrollment returned: " + enrollmentId);
+        
         if (enrollmentId > 0) {
             String json = "{\"success\": true, \"message\": \"Enrollment created successfully\", \"id\": " + enrollmentId + "}";
             sendJsonResponse(exchange, 201, json);
         } else {
+            System.err.println("[ENROLLMENT] Failed to create enrollment - returned 0");
             sendErrorResponse(exchange, 500, "Failed to create enrollment");
         }
     }
