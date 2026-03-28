@@ -369,8 +369,25 @@ class AuthHandler extends ApiHandler {
         String fullName = params.get("full_name");
         String phone = params.get("phone");
         
+        System.out.println("[REGISTER] Attempting to register user: " + email);
+        
         if (email == null || password == null || fullName == null) {
+            System.err.println("[REGISTER] Missing required fields - email: " + email + ", password: " + (password != null ? "***" : "null") + ", fullName: " + fullName);
             sendErrorResponse(exchange, 400, "Missing required fields");
+            return;
+        }
+        
+        // Validate email format
+        if (!email.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+            System.err.println("[REGISTER] Invalid email format: " + email);
+            sendErrorResponse(exchange, 400, "Invalid email format");
+            return;
+        }
+        
+        // Validate password length
+        if (password.length() < 6) {
+            System.err.println("[REGISTER] Password too short");
+            sendErrorResponse(exchange, 400, "Password must be at least 6 characters");
             return;
         }
         
@@ -387,21 +404,31 @@ class AuthHandler extends ApiHandler {
         String passwordHash = hashPassword(password);
         
         if (DBConnection.emailExists(email)) {
+            System.err.println("[REGISTER] Email already exists: " + email);
             sendErrorResponse(exchange, 409, "Email already registered");
             return;
         }
         
-        int userId = DBConnection.registerUser(email, passwordHash, firstName, lastName, phone, "applicant");
-        if (userId > 0) {
-            // Generate JWT token
-            String token = JWTUtil.generateToken(userId, email, "applicant", phone);
-            DBConnection.saveToken(token, userId);
+        try {
+            int userId = DBConnection.registerUser(email, passwordHash, firstName, lastName, phone, "applicant");
+            System.out.println("[REGISTER] Registration result - userId: " + userId);
             
-            String json = "{\"success\": true, \"token\": \"" + token + "\", \"user\": {\"id\": " + userId + 
-                         ", \"email\": \"" + email + "\", \"full_name\": \"" + fullName + "\", \"role\": \"applicant\"}}";
-            sendJsonResponse(exchange, 201, json);
-        } else {
-            sendErrorResponse(exchange, 500, "Failed to register user");
+            if (userId > 0) {
+                // Generate JWT token
+                String token = JWTUtil.generateToken(userId, email, "applicant", phone);
+                DBConnection.saveToken(token, userId);
+                
+                String json = "{\"success\": true, \"token\": \"" + token + "\", \"user\": {\"id\": " + userId + 
+                             ", \"email\": \"" + email + "\", \"full_name\": \"" + fullName + "\", \"role\": \"applicant\"}}";
+                sendJsonResponse(exchange, 201, json);
+            } else {
+                System.err.println("[REGISTER] Failed to create user - returned userId: " + userId);
+                sendErrorResponse(exchange, 500, "Failed to register user");
+            }
+        } catch (Exception e) {
+            System.err.println("[REGISTER] Exception during registration: " + e.getMessage());
+            e.printStackTrace();
+            sendErrorResponse(exchange, 500, "Registration failed: " + e.getMessage());
         }
     }
     
