@@ -2620,6 +2620,8 @@ public class DBConnection {
     
     // Course methods with old signatures
     public static int createCourse(String name, String description, String duration, double price, String requirements) {
+        System.out.println("[DB] createCourse called: name=" + name + ", price=" + price);
+        
         // Default values for missing fields
         String code = "CRS" + System.currentTimeMillis();
         String category = "general";
@@ -2629,7 +2631,13 @@ public class DBConnection {
             durationHours = Integer.parseInt(duration.replaceAll("[^0-9]", ""));
         } catch (Exception e) {}
         
-        return createCourse(code, name, description, category, durationHours, price, requirements);
+        try {
+            return createCourse(code, name, description, category, durationHours, price, requirements);
+        } catch (Exception e) {
+            System.err.println("[DB] createCourse error: " + e.getMessage());
+            e.printStackTrace();
+            return 0;
+        }
     }
     
     public static boolean updateCourse(int courseId, String name, String description, String category, 

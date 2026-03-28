@@ -1349,19 +1349,44 @@ class CourseHandler extends ApiHandler {
         }
         
         String body = getRequestBody(exchange);
+        System.out.println("[COURSE] Create course request body: " + body);
         Map<String, String> params = parseFormData(body);
+        
+        System.out.println("[COURSE] Parsed params: " + params);
         
         String name = params.get("name");
         String description = params.get("description");
-        String duration = params.get("duration");
-        double price = Double.parseDouble(params.get("price"));
+        String category = params.get("category");
+        String duration = params.get("duration_hours");
+        String priceStr = params.get("price");
         String requirements = params.get("requirements");
         
+        // Validate required fields
+        if (name == null || name.isEmpty()) {
+            sendErrorResponse(exchange, 400, "Course name is required");
+            return;
+        }
+        
+        double price = 0;
+        if (priceStr != null && !priceStr.isEmpty()) {
+            try {
+                price = Double.parseDouble(priceStr);
+            } catch (NumberFormatException e) {
+                sendErrorResponse(exchange, 400, "Invalid price format");
+                return;
+            }
+        }
+        
+        System.out.println("[COURSE] Creating course: name=" + name + ", price=" + price);
+        
         int courseId = DBConnection.createCourse(name, description, duration, price, requirements);
+        System.out.println("[COURSE] createCourse returned: " + courseId);
+        
         if (courseId > 0) {
             String json = "{\"success\": true, \"message\": \"Course created successfully\", \"course_id\": " + courseId + "}";
             sendJsonResponse(exchange, 201, json);
         } else {
+            System.err.println("[COURSE] Failed to create course - returned: " + courseId);
             sendErrorResponse(exchange, 500, "Failed to create course");
         }
     }
