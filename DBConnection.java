@@ -98,8 +98,12 @@ public class DBConnection {
     public static Connection getConnection() {
         try {
             if (connection == null || connection.isClosed()) {
+                System.out.println("[DB] Creating new database connection...");
+                System.out.println("[DB] URL: " + URL.substring(0, Math.min(50, URL.length())) + "...");
+                System.out.println("[DB] USER: " + USER);
                 Class.forName("org.postgresql.Driver");
                 connection = DriverManager.getConnection(URL, USER, PASSWORD);
+                System.out.println("[DB] Connection established successfully!");
             }
         } catch (ClassNotFoundException e) {
             System.err.println("PostgreSQL JDBC Driver not found!");
@@ -324,6 +328,19 @@ public class DBConnection {
     
     public static int createUser(String email, String password, String firstName, String lastName, 
                                   String phone, String role) {
+        System.out.println("[DB] createUser called - email: " + email + ", firstName: " + firstName + ", lastName: " + lastName + ", role: " + role);
+        
+        // Validate inputs
+        if (email == null || email.isEmpty()) {
+            System.err.println("[DB] createUser failed: email is null or empty");
+            return -1;
+        }
+        if (firstName == null || firstName.isEmpty()) {
+            System.err.println("[DB] createUser failed: firstName is null or empty");
+            return -1;
+        }
+        if (lastName == null) lastName = "";
+        
         String sql = "INSERT INTO users (email, password_hash, first_name, last_name, full_name, phone, role) " +
                      "VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id";
         try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
@@ -335,8 +352,15 @@ public class DBConnection {
             stmt.setString(6, phone);
             stmt.setString(7, role);
             ResultSet rs = stmt.executeQuery();
-            if (rs.next()) return rs.getInt("id");
+            if (rs.next()) {
+                int userId = rs.getInt("id");
+                System.out.println("[DB] createUser succeeded - userId: " + userId);
+                return userId;
+            }
         } catch (SQLException e) {
+            System.err.println("[DB] createUser SQLException: " + e.getMessage());
+            System.err.println("[DB] SQL State: " + e.getSQLState());
+            System.err.println("[DB] Error Code: " + e.getErrorCode());
             e.printStackTrace();
         }
         return -1;
@@ -392,12 +416,16 @@ public class DBConnection {
     }
     
     public static boolean emailExists(String email) {
+        System.out.println("[DB] emailExists checking: " + email);
         String sql = "SELECT id FROM users WHERE email = ?";
         try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
             stmt.setString(1, email);
             ResultSet rs = stmt.executeQuery();
-            return rs.next();
+            boolean exists = rs.next();
+            System.out.println("[DB] emailExists result: " + exists);
+            return exists;
         } catch (SQLException e) {
+            System.err.println("[DB] emailExists SQLException: " + e.getMessage());
             e.printStackTrace();
         }
         return false;
@@ -1836,13 +1864,16 @@ public class DBConnection {
     // ==================== JWT TOKENS ====================
     
     public static void saveToken(String token, int userId) {
+        System.out.println("[DB] saveToken called - userId: " + userId + ", token length: " + (token != null ? token.length() : 0));
         String sql = "INSERT INTO jwt_tokens (token, user_id, expires_at) VALUES (?, ?, " +
                      "(CURRENT_TIMESTAMP + INTERVAL '24 hours'))";
         try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
             stmt.setString(1, token);
             stmt.setInt(2, userId);
             stmt.executeUpdate();
+            System.out.println("[DB] Token saved successfully!");
         } catch (SQLException e) {
+            System.err.println("[DB] saveToken SQLException: " + e.getMessage());
             e.printStackTrace();
         }
     }
