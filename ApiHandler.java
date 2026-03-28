@@ -410,7 +410,9 @@ class AuthHandler extends ApiHandler {
         }
         
         try {
-            int userId = DBConnection.registerUser(email, passwordHash, firstName, lastName, phone, "applicant");
+            int userId = DBConnection.registerUser(email, passwordHash, firstName != null ? firstName : "", 
+                                                   lastName != null ? lastName : "", 
+                                                   phone != null ? phone : "", "applicant");
             System.out.println("[REGISTER] Registration result - userId: " + userId);
             
             if (userId > 0) {

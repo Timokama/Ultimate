@@ -328,7 +328,7 @@ public class DBConnection {
     
     public static int createUser(String email, String password, String firstName, String lastName, 
                                   String phone, String role) {
-        System.out.println("[DB] createUser called - email: " + email + ", firstName: " + firstName + ", lastName: " + lastName + ", role: " + role);
+        System.out.println("[DB] createUser called - email: " + email + ", firstName: '" + firstName + "', lastName: '" + lastName + "', phone: '" + phone + "', role: " + role);
         
         // Validate inputs
         if (email == null || email.isEmpty()) {
@@ -340,10 +340,17 @@ public class DBConnection {
             return -1;
         }
         if (lastName == null) lastName = "";
+        if (phone == null) phone = "";
+        
+        Connection conn = getConnection();
+        if (conn == null) {
+            System.err.println("[DB] createUser failed: database connection is null!");
+            return -1;
+        }
         
         String sql = "INSERT INTO users (email, password_hash, first_name, last_name, full_name, phone, role) " +
                      "VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id";
-        try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, email);
             stmt.setString(2, password); // Already hashed by caller
             stmt.setString(3, firstName);
