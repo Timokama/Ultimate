@@ -125,7 +125,10 @@ class EnrollmentHandler extends ApiHandler implements HttpHandler {
 
         // Parse request body as form data
         String body = getRequestBody(exchange);
+        System.out.println("[ENROLLMENT] Request body: " + body);
         Map<String, String> params = parseFormData(body);
+        
+        System.out.println("[ENROLLMENT] Parsed params - student_id: " + params.get("student_id") + ", course_id: " + params.get("course_id") + ", fee_amount: " + params.get("fee_amount"));
 
         String studentIdStr = params.get("student_id");
         String courseIdStr = params.get("course_id");
@@ -533,6 +536,8 @@ class EnrollmentHandler extends ApiHandler implements HttpHandler {
             double feeAmount, double feePaid, double feeBalance, String paymentStatus, String notes,
             String licenseType, String drivingCourse, String computerCourse, String transmission, 
             String preferredSchedule, String trainingLocation, String completionDate, String certificateNumber, int locationId) {
+        System.out.println("[ENROLLMENT] createEnrollment called - studentId: " + studentId + ", courseId: " + courseId + ", feeAmount: " + feeAmount);
+        
         // Generate enrollment number
         String enrollmentNumber = "ENR-" + System.currentTimeMillis();
         // Use provided values or defaults - cast date/timestamp fields in SQL
@@ -599,9 +604,13 @@ class EnrollmentHandler extends ApiHandler implements HttpHandler {
             }
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                return rs.getInt("id");
+                int id = rs.getInt("id");
+                System.out.println("[ENROLLMENT] Created successfully - id: " + id);
+                return id;
             }
         } catch (SQLException e) {
+            System.err.println("[ENROLLMENT] SQLException: " + e.getMessage());
+            System.err.println("[ENROLLMENT] SQL State: " + e.getSQLState());
             e.printStackTrace();
         }
         return 0;
