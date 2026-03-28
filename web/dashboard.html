@@ -1990,24 +1990,35 @@
                 return;
             }
             
+            // Group records by date and course for better display
             let html = '<div class="table-container" style="overflow-x: auto;">';
             html += '<table style="width: 100%; border-collapse: collapse;">';
             html += '<thead><tr style="background: var(--primary-color); color: white;">';
             html += '<th style="padding: 12px; text-align: left;">Date</th>';
-            html += '<th style="padding: 12px; text-align: left;">Course</th>';
+            html += '<th style="padding: 12px; text-align: left;">Course/Class</th>';
+            html += '<th style="padding: 12px; text-align: left;">Time In</th>';
+            html += '<th style="padding: 12px; text-align: left;">Time Out</th>';
             html += '<th style="padding: 12px; text-align: left;">Status</th>';
-            html += '<th style="padding: 12px; text-align: left;">Time</th>';
             html += '<th style="padding: 12px; text-align: left;">Notes</th>';
             html += '</tr></thead><tbody>';
             
             records.forEach(record => {
                 const statusClass = record.status === 'present' ? '#10b981' : record.status === 'absent' ? '#ef4444' : '#f59e0b';
                 const displayStatus = record.status ? record.status.charAt(0).toUpperCase() + record.status.slice(1) : 'Unknown';
+                
+                // Format time from time_in/time_out fields
+                const timeIn = record.time_in || record.time || '-';
+                const timeOut = record.time_out || '-';
+                
+                // Get course name - try different possible field names
+                const courseName = record.course_name || record.class_name || record.class_code || '-';
+                
                 html += '<tr style="border-bottom: 1px solid #e2e8f0;">';
                 html += '<td style="padding: 12px;">' + (record.date || '-') + '</td>';
-                html += '<td style="padding: 12px;">' + (record.course_name || '-') + '</td>';
+                html += '<td style="padding: 12px;">' + courseName + '</td>';
+                html += '<td style="padding: 12px;">' + timeIn + '</td>';
+                html += '<td style="padding: 12px;">' + timeOut + '</td>';
                 html += '<td style="padding: 12px;"><span style="background: ' + statusClass + '; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px;">' + displayStatus + '</span></td>';
-                html += '<td style="padding: 12px;">' + (record.time || '-') + '</td>';
                 html += '<td style="padding: 12px;">' + (record.notes || '-') + '</td>';
                 html += '</tr>';
             });
